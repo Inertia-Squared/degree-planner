@@ -13,7 +13,7 @@ interface StateType {
     progress: number;
     targetProgress: number;
     targetProgressLock: boolean;
-    progressTracker: NodeJS.Timeout | undefined;
+    progressTracker?: NodeJS.Timeout;
 }
 
 const state = {
@@ -52,6 +52,8 @@ async function searchPage() {
         }
     }));
     stopTrackingProgress();
+    await page.close();
+    await browser.close();
 }
 
 // this function shouldn't be called too much in order to avoid deadlock/starvation

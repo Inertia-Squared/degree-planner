@@ -10,8 +10,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@lmstudio/sdk": "^1.2.2",
     "playwright": "^1.53.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@types/node": "^24.0.4"
