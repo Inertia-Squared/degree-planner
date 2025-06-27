@@ -27,6 +27,7 @@ const requirementSchema = z.object({
 })
 
 interface SubjectData {
+    subject?: string;
     creditPoints?: number;
     coordinator?: string;
     description?: string;
@@ -83,6 +84,7 @@ async function searchPage(link: string) {
         data.set(key, entry?.replace(' Opens in new window', ''));
     }
     state.scrapedData.push({
+        subject: data.get('subject'),
         creditPoints: Number(data.get('Credit Points')),
         coordinator: data.get('Coordinator'),
         description: data.get('Description'),
