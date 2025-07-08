@@ -1,5 +1,6 @@
 import playwright from 'playwright';
 import fs from 'fs/promises';
+import {startTrackingProgress, stopTrackingProgress, TimerObjectType} from "./util";
 
 
 const CONFIG = {
@@ -10,18 +11,14 @@ const CONFIG = {
 
 interface StateType {
     links: Map<string, (string | null)[]>;
-    progress: number;
-    targetProgress: number;
+    timerObject?: TimerObjectType;
     targetProgressLock: boolean;
-    progressTracker?: NodeJS.Timeout;
 }
 
 const state = {
     links: new Map<string, (string | null)[]>,
-    progress: 0,
-    targetProgress: 0,
+    timerObject: undefined,
     targetProgressLock: false,
-    progressTracker: undefined,
 } as StateType;
 
 async function searchPage() {
@@ -34,7 +31,8 @@ async function searchPage() {
     console.log('Navigating to page...');
     await page.goto(CONFIG.targetPage);
     console.log('Extracting data...');
-    startTrackingProgress();
+    state.timerObject = startTrackingProgress(0);
+    while (!state.timerObject){}
     await Promise.all((await page.locator('ul').all()).map(async (locator) => {
         const id = await locator.getAttribute('id');
         if (id && CONFIG.targetLists.includes(id)) {
@@ -43,7 +41,7 @@ async function searchPage() {
             const data = await Promise.all(
                 (await elements.all()).map(
                     async (selector) => selector.getAttribute('href').then((result)=> {
-                        state.progress++;
+                        if(state.timerObject) state.timerObject.progress++;
                         return (result && result.startsWith('http')) ? result : CONFIG.targetPage + result;
                     })
                 )
@@ -51,7 +49,7 @@ async function searchPage() {
             if(data) state.links.set(id, data);
         }
     }));
-    stopTrackingProgress();
+    stopTrackingProgress(state.timerObject);
     await page.close();
     await browser.close();
 }
@@ -62,24 +60,8 @@ async function addTargetProgress(amt: number) {
         // wait for target progress
     }
     state.targetProgressLock = true;
-    state.targetProgress += amt;
+    if(state.timerObject) state.timerObject.targetProgress += amt;
     state.targetProgressLock = false;
-}
-
-function startTrackingProgress(){
-    let last = state.progress;
-    state.progressTracker = setInterval(()=>{
-        if (state.progress !== last){
-            console.log(`Progress: ${(state.progress/state.targetProgress * 100).toFixed(1)}% (${state.progress}/${state.targetProgress})`);
-            last = state.progress;
-        }
-    },50);
-}
-
-function stopTrackingProgress(){
-    if (state.progressTracker) {
-        clearInterval(state.progressTracker);
-    }
 }
 
 async function saveData(){

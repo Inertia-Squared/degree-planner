@@ -1,32 +1,28 @@
 import playwright, {Browser} from "playwright";
 import fs from "fs/promises";
-import {LLM, LMStudioClient} from "@lmstudio/sdk";
-import { z } from "zod";
-import {clearTimeout} from "node:timers";
+import {LLM} from "@lmstudio/sdk";
+import {startTrackingProgress, stopTrackingProgress, TimerObjectType} from "./util";
+import {enrollRequirements} from "./subject-refiner";
+
+// todo program is currently heavily single-threaded, should divide targets into chunks and allocate to worker threads to take full advantage of parallelisation, currently is fast enough that network is likely to cap out first, but could already benefit on faster networks.
 
 const CONFIG = {
     subjectFile: './links/subject-details.json',
     useHardwareAcceleration: true,
-    modelName: 'gemma-3-12b-it-GGUF',
     desiredTerms: ['Credit Points','Coordinator','Description','School','Discipline','Pre-requisite(s)'],
-    concurrentPages: 10,
-
-    systemPrompt: 'You are an AI that takes the requirements for a subject in plaintext and converts the data into a rigid format. In cases where the order of AND/OR is ambiguous, treat treat the AND as a separator and the OR as a comma in a list, unless brackets or other instructions indicate otherwise. If there is no course specified for a set of prerequisites, use \'any\'.',
+    concurrentPages: 8,
 }
 
-interface enrollRequirements {
-    enrollmentProgram: string;
-    prerequisiteSubjectCodes?: string[];
+export interface AssessmentData {
+    type: string;
+    length: string;
+    percent: number;
+    threshold: boolean;
+    task_type?: string;
+    mandatory?: boolean;
 }
 
-const requirementSchema = z.object({
-    studyProgram: z.string(),
-    requirements: z.object({
-        preRequisiteCombinations: z.string().array().array()
-    })
-})
-
-interface SubjectData {
+export interface SubjectData {
     subject?: string;
     creditPoints?: number;
     coordinator?: string;
@@ -34,13 +30,12 @@ interface SubjectData {
     school?: string;
     discipline?: string;
     prerequisites?: string | enrollRequirements[]; // captures requirements that vary based on enrolled course, to be eligible user must have completed at least one subject of every enrollRequirements item
+    assessments?: AssessmentData[];
 }
 
 interface StateType {
     targetPages: string[];
-    progress: number;
-    targetProgress: number;
-    progressTracker?: NodeJS.Timeout;
+    timerObject?: TimerObjectType;
     activeSites: number;
     browser?: Browser;
     model?: LLM;
@@ -49,15 +44,12 @@ interface StateType {
 
 const state = {
     targetPages: [],
-    progress: 0,
-    targetProgress: 0,
-    progressTracker: undefined,
+    timerObject: undefined,
     activeSites: 0,
     browser: undefined,
     model: undefined,
     scrapedData: [],
 } as StateType;
-
 
 async function searchPage(link: string) {
     if(!state.browser) {
@@ -70,7 +62,7 @@ async function searchPage(link: string) {
     }
     const page = await state.browser.newPage();
     await page.goto(link);
-    page.setDefaultTimeout(800);
+    page.setDefaultTimeout(850);
     let data = new Map<string,string>;
     data.set('subject',await page.locator('.page-title').textContent()??'')
     for(let term of CONFIG.desiredTerms){
@@ -83,6 +75,40 @@ async function searchPage(link: string) {
     for(let[key, entry] of data){
         data.set(key, entry?.replace(' Opens in new window', ''));
     }
+
+    const assessmentTable = await page.locator('.table').locator('tbody').locator('tr').all();
+    page.setDefaultTimeout(600);
+    let assessmentData = []
+    for (const assessmentLocator of assessmentTable){
+        try {
+            const type = await assessmentLocator.locator('.column0').textContent();
+            const length = await assessmentLocator.locator('.column1').textContent();
+            const percent = Number((await assessmentLocator.locator('.column2').textContent())?.replace('%', ''));
+            const threshold = (await assessmentLocator.locator('.column3').textContent()) === 'Y';
+            let task_type;
+            let mandatory;
+            try {
+                task_type = await assessmentLocator.locator('.column4', {hasNotText: /^Y$|^N$|^$/}).textContent(); // workaround for handbook site bug where two last columns are both named 'column4'
+            } catch (e) {
+            }
+            try {
+                mandatory = (await assessmentLocator.locator('.column4', {hasText: /^Y$|^N$/}).textContent()) === 'Y'
+            } catch (e) {
+            }
+            const assessment = {
+                type: type,
+                length: length,
+                percent: percent,
+                threshold: threshold,
+                task_type: task_type,
+                mandatory: mandatory,
+            } as AssessmentData;
+            assessmentData.push(assessment);
+        } catch (e) {
+            console.log(`Subject ${data.get('subject')} failed: ${e}`); // TODO: log to file
+        }
+    }
+
     state.scrapedData.push({
         subject: data.get('subject'),
         creditPoints: Number(data.get('Credit Points')),
@@ -91,29 +117,9 @@ async function searchPage(link: string) {
         school: data.get('School'),
         discipline: data.get('Discipline'),
         prerequisites: data.get('Pre-requisite(s)'),
+        assessments: assessmentData,
     })
     await page.close();
-}
-
-function startTrackingProgress(){
-    let last = state.progress;
-    state.progressTracker = setInterval(()=>{
-        if (state.progress !== last){
-            console.log(`Progress: ${(state.progress/state.targetProgress * 100).toFixed(1)}% (${state.progress}/${state.targetProgress})`);
-            last = state.progress;
-        }
-    },50);
-}
-
-function stopTrackingProgress(){
-    if (state.progressTracker) {
-        clearInterval(state.progressTracker);
-    }
-}
-
-async function startModel(){
-    const client = new LMStudioClient();
-    state.model = await client.llm.model(CONFIG.modelName);
 }
 
 async function main(){
@@ -124,22 +130,21 @@ async function main(){
         process.exit();
     }
 
-    console.log('Pages: ', state.targetPages);
+    console.log(`Initialising scrape of ${state.targetPages.length} pages.`);
 
     state.browser = await playwright.chromium.launch({
         args: ['--no-sandbox', CONFIG.useHardwareAcceleration ? '' : '--disable-gpu'],
     });
 
-    console.log('Launched Browser')
+    console.log('Browser Setup Complete')
 
-    state.targetProgress = state.targetPages.length;
-    startTrackingProgress();
+    state.timerObject = startTrackingProgress(0, state.targetPages.length);
     while (state.targetPages.length > 0 || state.activeSites > 0){
         if (state.activeSites < CONFIG.concurrentPages && state.targetPages.length - state.activeSites > 0){
             const targetPage = state.targetPages.pop();
             state.activeSites++;
             searchPage(targetPage ?? '').finally(()=>{
-                state.progress++;
+                if(state.timerObject) state.timerObject.progress++
                 state.activeSites--;
             });
         } else {
@@ -148,13 +153,14 @@ async function main(){
             });
         }
     }
+
     console.log('wrapping up...')
-    stopTrackingProgress();
+    stopTrackingProgress(state.timerObject);
     try{
         await fs.mkdir('./data');
     } catch(err) {}
     console.log('Writing data to file...')
-    await fs.writeFile('./data/out.json', JSON.stringify(state.scrapedData,null,2), 'utf8');
+    await fs.writeFile('./data/subjects-unrefined.json', JSON.stringify(state.scrapedData,null,2), 'utf8');
     await state.browser.close();
 }
 
