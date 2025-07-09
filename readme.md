@@ -1,3 +1,8 @@
+# Script Run Order
+1. link-collector.ts
+2. subject-scraper.ts
+3. subject-refiner.ts
+
 # Extra Stuff
 ## Local LLM for Processing Aide
 Some fields (such as the subject prerequisites) are done manually and are thus near impossible to process programmatically without an absurd amount of edge-case handling. To remedy this, the application uses local LLMs to process the data.
