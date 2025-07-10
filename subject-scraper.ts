@@ -36,6 +36,7 @@ export interface SubjectData {
     discipline?: string;
     teachingPeriods?: TeachingPeriodData[];
     prerequisites?: string | enrollRequirements[]; // captures requirements that vary based on enrolled course, to be eligible user must have completed at least one subject of every enrollRequirements item
+    originalPrerequisites?: string;
     assessments?: AssessmentData[];
 }
 
@@ -45,7 +46,11 @@ interface StateType {
     activeSites: number;
     browser?: Browser;
     model?: LLM;
-    scrapedData: SubjectData[]
+    scrapedData: SubjectData[];
+    debugInfo: {
+        skipped: string[];
+        termNotFound: string[];
+    };
 }
 
 const state = {
@@ -55,6 +60,10 @@ const state = {
     browser: undefined,
     model: undefined,
     scrapedData: [],
+    debugInfo: {
+        skipped: [],
+        termNotFound: [],
+    },
 } as StateType;
 
 async function searchPage(link: string) {
@@ -67,7 +76,12 @@ async function searchPage(link: string) {
         return;
     }
     const page = await state.browser.newPage();
-    await page.goto(link);
+    try {
+        await page.goto(link);
+    } catch(e) {
+        console.log(`Page ${link} took too long to load, skipping!`);
+        state.debugInfo.skipped.push(link);
+    }
     page.setDefaultTimeout(850);
 
     /**
@@ -83,7 +97,8 @@ async function searchPage(link: string) {
                 (await page.locator('p').filter({has: page.locator('strong', {hasText: term})}).first().textContent())?.slice(term.length + 1)??''
             )
         } catch (e) {
-            console.log("Could not find term: " + term + " for page " + link + " within required time limit. Is either missing or default timeout period must be increased.");
+            //console.log("Could not find term: " + term + " for page " + link + " within required time limit. Is either missing or default timeout period must be increased.");
+            state.debugInfo.termNotFound.push(`Could not find ${term} at ${link}!`);
         }
     }
     for(let[key, entry] of data){
@@ -163,6 +178,7 @@ async function searchPage(link: string) {
         school: data.get('School'),
         discipline: data.get('Discipline'),
         prerequisites: data.get('Pre-requisite(s)'),
+        originalPrerequisites: data.get('Pre-requisite(s)'),
         assessments: assessmentData,
         teachingPeriods: finalPeriods,
     });
@@ -208,6 +224,7 @@ async function main(){
     } catch(err) {}
     console.log('Writing data to file...')
     await fs.writeFile('./data/subjects-unrefined.json', JSON.stringify(state.scrapedData,null,2), 'utf8');
+    await fs.writeFile('./data/debugInfo.json', JSON.stringify(state.debugInfo,null,2), 'utf8');
     await state.browser.close();
 }
 

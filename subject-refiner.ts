@@ -6,22 +6,42 @@ import {startTrackingProgress, stopTrackingProgress, TimerObjectType} from "./ut
 
 const CONFIG = {
     dataFile: './data/subjects-unrefined.json',
-    modelName: 'gemma-3-12b-it-qat',
-    systemPrompt: 'Take the requirements for this subject in plaintext and convert the data into a rigid format. If there is no study program/course specified for a set of prerequisites, use \'any\'. In cases where the order of AND/OR is ambiguous, treat the AND as a separator and the OR as a comma in a list, unless brackets or other instructions indicate otherwise. As a pseudo-structured example, \"A AND B OR C OR D for course X\" evaluates to [any,[[A, B]], [A, C]]], [X,[[A,D]]]. Not all prerequisites will be this complex, and many will not include a study program field, but they can get quite lengthy.',
+    modelName: 'mistralai/mistral-small-3.2',
+    manualErrorMsg: "MANUAL INTERVENTION REQUIRED",
+    maxTries: 20,
+    systemPrompt:
+        'You are a data processor who reads in and outputs prerequisite information based on some simple rules. ' +
+        'Subject codes are formatted as "ABCD 1234", some examples below simplifies this to a single letter for succinctness, but the rules are applying to these expanded values. ' +
+        'Generalise all examples to any small or large number of subjects in any variation. ' +
+        'The rules are as follows:\n' +
+        'i. Subjects have the format "ABCD 1234 [sometimes some text on subject title or topic]".\n' +
+        '1. Every time you see "[ABCD 1234] OR" without a newline, group them together in the SAME array e.g. for "A OR B OR C" -> [{course: any, prerequisites:[[A,B,C]]}], if there is a line break after an OR, or an OR is by itself, create an extra course entry for starting from the right of the OR instead of grouping them e.g. "A OR\nB AND C" -> [{course: any, prerequisites:[[A]]},{course: any, prerequisites:[[B],[C]]}]\n' +
+        '2. Every time you see "[ABCD 1234] AND", put elements following in a new array e.g. "A AND B AND C" -> [{course: any, prerequisites:[[A],[B],[C]]}]\n' +
+        '3. These values can be mixed to create complex arrays of string arrays e.g. "A AND B OR C" -> [{course: any, prerequisites:[[A],[B,C]]}], "A AND B OR\n C" -> [{course: any, prerequisites:[[A],[B]]},{course: any, prerequisites:[[C]]}]\n' +
+        '4. Some prerequisites specify a course requirement e.g. "A AND B OR for Course with this long name 1234 C" -> [{course: any, prerequisites:[[A],[B]]},{course: 1234, prerequisites: [[C]]}]\n' +
+        '5. For each OR with a line break directly after, create a new entry with the same course name starting from the right/after the OR. The subject with the OR is merged into the ORIGINAL array (see example 5a)\n' +
+        '5a. IMPORTANT EXAMPLE: A AND\n B AND\n C AND\n D OR\nE AND F -> [{course: any, prerequisites:[[A],[B],[C],[D]]},{course: any, prerequisites: [[E,F]]}]. Generalise this case as much as possible.\n' +
+        '6. Returned subject values must follow this format.\n' +
+        '7. Courses have the format "[Some long name and info] 1234".\n' +
+        '8. Returned course values must always be in the course field, and may only be "any" or in the format "1234", where 1234 is replaced with the course\'s actual code.\n' +
+        '9. Do not include the subject title or description in your output.\n' +
+        '10. Ignore erroneous ORs and ANDs, only count operators which (ignoring newlines) have a subject code immediately before them e.g. "WELF 7008 This and That in Magic and Mystery\nOr\nWELF 6001 Witchcraft or Wizardry in Season" is ALWAYS equal to {course: any, prerequisites: [[WELF 7008, WELF 6001]]}\n' +
+        '11. Typically an AND or OR will be capitalised, but will not always, treat all terms equally regardless of capitalisation, so long as it follows rule 11.\n' +
+        '\nApply the rules above on the following data:\n'
 }
 
-
 const requirementSchema = z.object({
-    studyProgram: z.string(),
-    requirements: z.object({
-        preRequisiteCombinations: z.string().array().array(),
-        // structured with extra room for additional requirements later on
-    })
+    course: z.string().refine((input)=>{
+        return /^any$|^\d{4}$|^SPECIAL$/.test(input ?? "");
+    }, "Should match pattern /^any$|^\\d{4}$|^SPECIAL$/"),
+    prerequisites: z.string().refine((input)=>{
+        return /^SPECIAL$|^[A-Z]{4} \d{4}$|^\d{4}$/.test(input ?? "");
+    }, "Should match pattern /^SPECIAL$|^[A-Z]{4} \\d{4}$|^\\d{4}$/").array().array(),
 }).array();
 
 export interface enrollRequirements {
-    studyProgram: string;
-    prerequisiteSubjectCodes?: string[][];
+    course: string;
+    prerequisites?: string[][];
 }
 
 interface StateType {
@@ -29,6 +49,7 @@ interface StateType {
     prunedSubjectData: SubjectData[];
     progressTracker?: TimerObjectType;
     model?: LLM;
+    manualSubjects: SubjectData[];
 }
 
 const state = {
@@ -36,6 +57,7 @@ const state = {
     prunedSubjectData: [],
     progressTracker: undefined,
     model: undefined,
+    manualSubjects: [],
 } as StateType;
 
 async function startModel(){
@@ -45,20 +67,32 @@ async function startModel(){
     console.log('Model loaded!')
 }
 
-async function queryModel(subject: SubjectData){
+
+async function queryModel(subject: SubjectData, attempts: number = 0){
     if(state.model){
         const query = CONFIG.systemPrompt + `
-        Prerequisites: ${subject.prerequisites}`;
-        return state.model.respond(query, {structured: requirementSchema});
+        Prerequisites:\n${processQueryString(subject.prerequisites as string)}`;
+        try{return await state.model.respond(query, {structured: requirementSchema, temperature: Math.max(attempts/10,1)});}
+        catch(err){
+            console.log(`Received bad response\n\n${err}\n\n, retrying... (attempt number ${attempts+2}/${CONFIG.maxTries})`);
+            if(attempts >= CONFIG.maxTries + 2){
+                return {parsed: {program: CONFIG.manualErrorMsg, prerequisites: [[CONFIG.manualErrorMsg]]}, content: CONFIG.manualErrorMsg}
+            }
+            return await queryModel(subject, ++attempts);
+        }
     }
     throw "No Model Loaded";
+}
+
+function processQueryString(query: string){
+    return query.replace(/ /g, ' ').replace(/-/g,'');
 }
 
 // Since both pruned and non-pruned are ordered, we can just scan through once and replace as we go
 // this looks O(N^2) but it's actually O(N)
 // This only works if state.subjectData has not had an element removed since prunedSubjectData was set,
 //  as the removed element may cause the loop to get stuck
-async function recombineSubjectData(){
+function recombineSubjectData(){
     let j = 0;
     let subjectsAreMatching;
     for (let i = 0; i < state.prunedSubjectData.length; i++) {
@@ -77,15 +111,25 @@ async function main(){
         await exitProcedure();
     }
     state.prunedSubjectData = state.subjectData.filter((subject)=>{
-        return subject.prerequisites;
+        return subject.prerequisites && subject.prerequisites.length > 6; // length check to prune 'NONE' and other variants of blank entries
     }) as SubjectData[] ?? [];
     await loadModelTask;
     state.progressTracker = startTrackingProgress(0,state.prunedSubjectData.length);
     for(let queryData of state.prunedSubjectData){
-        console.log(`\nQuerying based on subject: ${queryData.subject}Prerequisites: ${queryData.prerequisites}`);
+        console.log(`\nQuerying based on subject: ${queryData.subject}Prerequisites:\n${processQueryString(queryData.prerequisites as string)}`);
+        queryData.originalPrerequisites = queryData.prerequisites as string; // compatibility for old data, remove this
         const queryResult = await queryModel(queryData);
         queryData.prerequisites = queryResult.parsed as enrollRequirements[];
         console.log("Query Result: ",queryResult.content)
+        if(queryResult.content === CONFIG.manualErrorMsg){
+            state.subjectData = state.subjectData.filter((subject)=>{
+                return subject !== queryData;
+            });
+            state.prunedSubjectData = state.prunedSubjectData.filter((subject)=>{
+                return subject !== queryData;
+            });
+            state.manualSubjects.push(queryData);
+        }
         state.progressTracker.progress++;
     }
     stopTrackingProgress(state.progressTracker);
@@ -93,6 +137,11 @@ async function main(){
 
 main().then(async ()=>{
     console.log('Subject refinement complete!');
+    console.log("Recombining data...");
+    recombineSubjectData();
+    console.log("Saving data...");
+    await fs.writeFile("./data/subjects-manual-required.json", JSON.stringify(state.manualSubjects,null,2), {encoding: "utf-8"});
+    await fs.writeFile("./data/subjects-refined.json", JSON.stringify(state.subjectData,null,2), {encoding: "utf-8"});
     await exitProcedure();
 });
 
