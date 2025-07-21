@@ -15,3 +15,29 @@ The subject-scraper.ts file uses LM Studio to process the data locally. You can 
 ```npm install @lmstudio/sdk --save```
 get a model downloaded, and set the model name in the config to match!
 
+example hard-case:
+Querying based on subject: TEAC 5019 Mathematics Curriculum 1
+Prerequisites:
+TEAC 7004 OR TEAC 7161 AND
+TEAC 7032 AND
+TEAC 7027 OR TEAC 7160
+Query Result:  
+[
+{
+"course": "any",
+"prerequisites": [
+[
+"TEAC 7004",
+"TEAC 7161"
+],
+[
+"TEAC 7032"
+],
+[
+"TEAC 7027",
+"TEAC 7160"
+]
+]
+}
+]
+

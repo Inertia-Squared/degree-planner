@@ -1,6 +1,5 @@
 import playwright, {Browser} from "playwright";
 import fs from "fs/promises";
-import {LLM} from "@lmstudio/sdk";
 import {startTrackingProgress, stopTrackingProgress, TimerObjectType} from "./util";
 import {enrollRequirements} from "./subject-refiner";
 
@@ -45,7 +44,6 @@ interface StateType {
     timerObject?: TimerObjectType;
     activeSites: number;
     browser?: Browser;
-    model?: LLM;
     scrapedData: SubjectData[];
     debugInfo: {
         skipped: string[];
@@ -58,7 +56,6 @@ const state = {
     timerObject: undefined,
     activeSites: 0,
     browser: undefined,
-    model: undefined,
     scrapedData: [],
     debugInfo: {
         skipped: [],
