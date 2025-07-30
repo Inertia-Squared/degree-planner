@@ -9,7 +9,7 @@ const CONFIG = {
     subjectFile: './links/subject-details.json',
     useHardwareAcceleration: true,
     desiredTerms: ['Credit Points','Coordinator','Description','School','Discipline','Pre-requisite(s)'],
-    concurrentPages: 3,
+    concurrentPages: 8,
 }
 
 export interface AssessmentData {

@@ -62,56 +62,70 @@ export function constructStringRule(name: string, filter?: string, searchForNot:
  * @param rules
  * @param headings
  */
-export async function extractTableData(locators: Locator[], rules: TableColumnExtractionRules[], headings?: Locator){
+export async function extractTableDataStructured(locators: Locator[], rules: TableColumnExtractionRules[]){
     let data = [];
     for (const locator of locators){
         try {
             const map = new Map<string, string>;
             for (const rule of rules){
                 const value = await locator.locator(rule.selectorClass, rule.selectorFilters).textContent();
-                if (!headings) {
-                    map.set(rule.selectorClass, value ?? '');
-                } else {
-                    const name = await headings.locator(rule.selectorClass).textContent();
-                    map.set(name ?? rule.selectorClass, value ?? '');
-                }
+                map.set(rule.selectorClass, value ?? '');
             }
             data.push(map);
         } catch (e) {
-            console.error('Table extraction failed. Continuing anyway but check the error!\n', e);
+            console.error(`Table extraction failed for ${locator.page().url()}. Continuing anyway but check the error!\n`, e);
         }
     }
     return data;
 }
 
-export async function getTableRows(page: Page, uniqueTableIdentifier: string){
-    return await page.locator(uniqueTableIdentifier).getByRole('row').all();
-}
-
-export async function getTableHeadings(page: Page, uniqueTableIdentifier: string){
-    const elements = await page.locator(uniqueTableIdentifier).all();
-    return elements.find(element => {
-        return element.evaluate(e=> {
-            return e.tagName.match(/^colgroup$|^thead$/);
-        })
-    })
-}
-
-export async function getTableColumnClasses(locator: Locator){
-    const locators = await locator.all();
-    const headings = (await Promise.all(locators.map(async loc => {
-        return await loc.evaluate(e=>{
-            if (e.tagName.match(/^th$|^col$/)) return loc;
-        })
-    }))).filter(Boolean);
-    const classNames = await Promise.all(headings.map(async h=>{
-        return await h?.textContent() ?? '';
+export async function extractTableData(table: Locator){
+    const rows = await table.locator('tr').all();
+    return await Promise.all(rows.map(async row=>{
+        return await row.locator('td').or(row.locator('th')).allTextContents();
     }));
-    console.log(classNames);
+}
+
+async function getElements(locator: Locator, elementTags: string[]){
+    const elements = [] as Locator[];
+    for (const elementTag of elementTags){
+        (await locator.locator(elementTag).all()).forEach(l=>elements.push(l));
+    }
+    return elements;
+}
+
+/**
+ * @deprecated
+ */
+export async function getTableColumnClasses(locator: Locator){
+    const headings = await getElements(locator,[
+        'col',
+        'th'
+    ])
+    const classNames = (await Promise.all(headings.map(async h=>{
+        return await h?.textContent() ?? '';
+    }))).filter(s=>s.length>0);
     return classNames;
 }
 
-export function getTablesBySimilarClass(className: string){
-    const tables = new Map<string, Map<string, string>>;
-
+export async function getElementBySimilarId(locator: Locator, id: string){
+    return (await Promise.all((await locator.all()).map(async loc=>{
+        return await loc.getAttribute('id').then(result=> {
+            if (result && result.includes(id)) return loc;
+        });
+    }))).filter(Boolean);
 }
+
+export async function getTablesBySimilarId(locator: Locator, id: string){
+    const tableData = new Map<string, string[][]>;
+    const tables = await getElementBySimilarId(locator, id);
+    for (const table of tables) {
+        if(!table) return;
+        const tableName = await table.getAttribute('id');
+        if(!tableName) return;
+        const data = await extractTableData(table);
+        tableData.set(tableName, data);
+    }
+    return tableData;
+}
+

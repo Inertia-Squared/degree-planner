@@ -1,0 +1,168 @@
+import playwright, {Browser} from "playwright";
+import fs from "fs/promises";
+import {
+    constructStringRule, extractTableData,
+    extractTableDataStructured, getElementBySimilarId, getTablesBySimilarId,
+    startTrackingProgress,
+    stopTrackingProgress,
+    TimerObjectType
+} from "./util";
+
+/*  UNFIXABLE MAJORS/MINORS DUE TO MAJOR ERRORS:
+    - Culture and Society, Major (0264) -- incorrect tab headings set, placeholders used for major content -- uniquely identifiable, can be manually dealt with, but not ideal
+*/
+
+// todo scrape course majors and minors
+
+const CONFIG = {
+    subjectFile: './links/majors-minors.json',
+    useHardwareAcceleration: true,
+    // desiredTerms: ['Credit Points','Coordinator','Description','School','Discipline','Pre-requisite(s)'],
+    concurrentPages: 8,
+}
+
+export enum SpecialisationType {
+    testamurMajor = 0,
+    major,
+    minor,
+    concentration,
+    other
+}
+
+export interface MajorMinorData {
+    type: SpecialisationType
+    name: string
+    locations: { [k: string]: string;}[]
+    sequences: { [k: string]: string[][];}
+    related: string[][]
+}
+
+interface StateType {
+    targetPages: string[];
+    timerObject?: TimerObjectType;
+    activeSites: number;
+    browser?: Browser;
+    scrapedData: MajorMinorData[];
+    debugInfo: {
+        skipped: string[];
+        termNotFound: string[];
+    };
+}
+
+const state = {
+    targetPages: [],
+    timerObject: undefined,
+    activeSites: 0,
+    browser: undefined,
+    scrapedData: [],
+    debugInfo: {
+        skipped: [],
+        termNotFound: [],
+    }
+} as StateType;
+
+async function searchPage(link: string) {
+    if(!state.browser) {
+        console.error('Browser not found!');
+        process.exit();
+    }
+    if(link === ''){
+        console.error('Link not found!');
+        return;
+    }
+    const page = await state.browser.newPage();
+    try {
+        await page.goto(link);
+    } catch(e) {
+        console.log(`Page ${link} took too long to load, skipping!`);
+        state.debugInfo.skipped.push(link);
+    }
+    page.setDefaultTimeout(850);
+
+    const overview = page.locator('id=textcontainer')
+    let sequence = (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'structure'))[0] ?? page
+    const related = page.locator('id=relatedprogramstextcontainer')
+
+    const programName = await page.locator('h1').and(page.locator('.page-title')).textContent();
+    if (!programName) throw `Could not find major/minor name for ${link}!`
+    let type = SpecialisationType.other;
+    const matches = [/[[Tt]estamur [Mm]ajor/, /[Mm]ajor/,/[Mm]inor/,/[Cc]oncentration/];
+    for (let i = 0; i < matches.length; i++){
+        if (programName.match(matches[i])) type = i; // works because matches array is ordered to enums, janky but it shouldn't change so it's fine... ish
+    }
+
+    const locationTableRows = await overview.locator('.tbl_location_specialisation').or(overview.locator('.tbl_location')).locator('tr').all();
+    const locationTableData = await extractTableDataStructured(
+        locationTableRows,
+        [
+            constructStringRule('column0'),
+            constructStringRule('column1'),
+            constructStringRule('column2'),
+        ]
+    );
+
+    const relatedPrograms = await extractTableData(related.locator('table'));
+
+    let sequences = await getTablesBySimilarId(sequence.locator('div', {has: sequence.locator('table')}), 'tgl');
+    if(sequences?.size == 0) sequences = (new Map<string, string[][]>).set('structure', await extractTableData(sequence.locator('table').and(sequence.locator('.sc_courselist').or(sequence.locator('.sc_plangrid')))));
+    if (sequences?.size == 0) sequences = (new Map<string, string[][]>).set('structure', await extractTableData(sequence.locator('table'))); // fallback to generic
+
+
+    state.scrapedData.push({
+        type: type,
+        name: programName,
+        locations: locationTableData.map(l=> Object.fromEntries(l)),
+        sequences: Object.fromEntries(sequences ?? []),
+        related: relatedPrograms,
+    })
+
+    await page.close();
+}
+
+async function main(){
+    try {
+        state.targetPages = JSON.parse(await fs.readFile(CONFIG.subjectFile, {encoding: "utf-8"}));
+    } catch (e) {
+        console.error(e, '\nCould not locate file specified. Please check input.');
+        process.exit();
+    }
+
+    console.log(`Initialising scrape of ${state.targetPages.length} pages.`);
+
+    state.browser = await playwright.chromium.launch({
+        args: ['--no-sandbox', CONFIG.useHardwareAcceleration ? '' : '--disable-gpu'],
+    });
+
+    console.log('Browser Setup Complete')
+
+    state.timerObject = startTrackingProgress(0, state.targetPages.length);
+    while (state.targetPages.length > 0 || state.activeSites > 0){
+        if (state.activeSites < CONFIG.concurrentPages && state.targetPages.length - state.activeSites > 0){
+            const targetPage = state.targetPages.pop();
+            state.activeSites++;
+            searchPage(targetPage ?? '').finally(()=>{
+                if(state.timerObject) state.timerObject.progress++
+                state.activeSites--;
+            });
+        } else {
+            await new Promise(resolve => {
+                setTimeout(resolve, 100);
+            });
+        }
+    }
+
+    console.log('wrapping up...');
+    stopTrackingProgress(state.timerObject);
+    try{
+        await fs.mkdir('./data');
+    } catch(err) {}
+    console.log('Writing data to file...')
+    await fs.writeFile('./data/majors-minors-unrefined.json', JSON.stringify(state.scrapedData,null,2), 'utf8');
+    await fs.writeFile('./data/debugInfo.json', JSON.stringify(state.debugInfo,null,2), 'utf8');
+    await state.browser.close();
+}
+
+main().then(()=>{
+    console.log('Program scraper complete!');
+    process.exit();
+});

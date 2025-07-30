@@ -1,25 +1,34 @@
 import playwright, {Browser} from "playwright";
 import fs from "fs/promises";
 import {
-    constructStringRule,
-    extractTableData, getTableColumnClasses, getTableHeadings,
-    getTableRows,
+    constructStringRule, extractTableData,
+    extractTableDataStructured, getElementBySimilarId, getTablesBySimilarId,
     startTrackingProgress,
     stopTrackingProgress,
     TimerObjectType
 } from "./util";
 
-// todo program is currently heavily single-threaded, should divide targets into chunks and allocate to worker threads to take full advantage of parallelisation, currently is fast enough that network is likely to cap out first, but could already benefit on faster networks.
+// todo make the scraper generic and only implement search interface with the page context already open (i.e. hide the repetitive connection code)
 
 const CONFIG = {
-    subjectFile: './links/programs-test.json',
+    subjectFile: './links/programs-SCDMS.json',
     useHardwareAcceleration: true,
     // desiredTerms: ['Credit Points','Coordinator','Description','School','Discipline','Pre-requisite(s)'],
-    concurrentPages: 3,
+    concurrentPages: 8,
 }
 
-export interface ProgramData {
 
+export interface ProgramData {
+    name: string
+    locations: { [k: string]: string;}[]
+    sequence: { [k: string]: string[][];}
+    links?: ProgramLinkData
+}
+
+export interface ProgramLinkData {
+    majors: string[]
+    minors: string[]
+    subjects: string[]
 }
 
 interface StateType {
@@ -47,6 +56,11 @@ const state = {
 } as StateType;
 
 async function searchPage(link: string) {
+    /**
+     * Connect to the page, and set a quick timeout so we don't get stuck if an expected object is missing
+     *
+     * Due to short timeout period, scraping is not tolerant to network instability or processing delays
+     */
     if(!state.browser) {
         console.error('Browser not found!');
         process.exit();
@@ -62,25 +76,82 @@ async function searchPage(link: string) {
         console.log(`Page ${link} took too long to load, skipping!`);
         state.debugInfo.skipped.push(link);
     }
-    page.setDefaultTimeout(850);
+    page.setDefaultTimeout(850); // increase this value if scrape keeps failing, min: ~300, recommended: ~800, max: as much as it takes, ~15 000 is sensible for < 30 concurrent pages on most networks/processors
 
-    const locationTableHeaders = await getTableHeadings(page, '.tbl_location');
-    const classNames = (locationTableHeaders) ? (await getTableColumnClasses(locationTableHeaders)) : undefined;
-    console.log(classNames)
-    const locationTableRows = await getTableRows(page, '.tbl_location');
-    const tableData = await extractTableData(
+    /**
+     * Locators (Narrowed by Tab where possible)
+     * **/
+    const overview = page.locator('id=textcontainer')
+    let sequenceLocator = (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'sequence2024'))[0] ?? /* prioritise more recent sequence, if possible */
+                                        (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'sequence'))[0] ??
+                                        page
+    /**
+     * Get program name
+     */
+    const programName = await page.locator('h1').and(page.locator('.page-title')).textContent();
+    if (!programName) throw `Could not find program name for ${link}!`
+
+    let links = {} as ProgramLinkData;
+
+    /**
+     * Get links to majors
+     */
+    links.majors = (await Promise.all((await sequenceLocator.locator('.sc_screlatedcurricmjr').locator('a').all()).map(async link =>{
+        return await link.getAttribute('href');
+    }))).filter(str=>str!==null); // linting doesn't like boolean filter for some reason
+
+    /**
+     * Get links to minors
+     */
+    links.minors = (await Promise.all((await sequenceLocator.locator('.sc_screlatedcurricmnr').locator('a').all()).map(async link =>{
+        return await link.getAttribute('href');
+    }))).filter(str=>str!==null);
+
+    /**
+     * Get links to subjects
+     */
+    links.subjects = (await Promise.all((await sequenceLocator.locator('a').and(sequenceLocator.locator('.code')).all()).map(async link =>{
+        try{
+            const href = await link.getAttribute('href');
+            if(href?.includes('search')) {
+                const subjectHref = "https://hbook.westernsydney.edu.au/subject-details/" + (await link.innerText()).replace(' ', '-').toLowerCase()
+                return subjectHref ?? undefined;
+            }
+        } catch (e){
+            return undefined;
+        }
+    }))).filter(str=>str!==undefined);
+
+    /**
+     * Get all data on delivery locations - unprocessed table
+     */
+    const locationTableRows = await overview.locator('.tbl_location').locator('tr').all();
+    const locationTableData = await extractTableDataStructured(
         locationTableRows,
         [
             constructStringRule('column0'),
             constructStringRule('column1'),
             constructStringRule('column2'),
-            constructStringRule('column3'),
-        ],
-        locationTableHeaders
+        ]
     );
-    console.log(tableData);
 
+    /**
+     * Get all data on course structure options - also unprocessed
+     * todo collect and preserve table headers/names
+     */
+    let sequence = await getTablesBySimilarId(sequenceLocator.locator('div', {has: sequenceLocator.locator('table')}), 'tgl');
+    if(sequence?.size == 0) sequence = (new Map<string, string[][]>).set('structure', await extractTableData(sequenceLocator.locator('table').and(sequenceLocator.locator('.sc_courselist').or(sequenceLocator.locator('.sc_plangrid')))));
+    if (sequence?.size == 0) sequence = (new Map<string, string[][]>).set('structure', await extractTableData(sequenceLocator.locator('table'))); // fallback to generic
 
+    /**
+     * Ship it!
+     */
+    state.scrapedData.push({
+        name: programName,
+        locations: locationTableData.map(l=> Object.fromEntries(l)),
+        sequence: Object.fromEntries(sequence ?? []),
+        links: links,
+    })
 
     await page.close();
 }
@@ -123,12 +194,12 @@ async function main(){
         await fs.mkdir('./data');
     } catch(err) {}
     console.log('Writing data to file...')
-    await fs.writeFile('./data/subjects-unrefined.json', JSON.stringify(state.scrapedData,null,2), 'utf8');
+    await fs.writeFile('./data/programs-scdms-unrefined.json', JSON.stringify(state.scrapedData,null,2), 'utf8');
     await fs.writeFile('./data/debugInfo.json', JSON.stringify(state.debugInfo,null,2), 'utf8');
     await state.browser.close();
 }
 
 main().then(()=>{
-    console.log('Subject scraper complete!');
+    console.log('Program scraper complete!');
     process.exit();
 });
