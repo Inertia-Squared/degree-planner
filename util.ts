@@ -1,5 +1,4 @@
 import playwright, {Locator, Page} from "playwright";
-import {string} from "zod";
 import fs from "fs/promises";
 
 export interface TimerObjectType {
@@ -61,7 +60,6 @@ export function constructStringRule(name: string, filter?: string, searchForNot:
  * based on user-defined rules.
  * @param locators
  * @param rules
- * @param headings
  */
 export async function extractTableDataStructured(locators: Locator[], rules: TableColumnExtractionRules[]){
     let data = [];
@@ -85,28 +83,6 @@ export async function extractTableData(table: Locator){
     return await Promise.all(rows.map(async row=>{
         return await row.locator('td').or(row.locator('th')).allTextContents();
     }));
-}
-
-async function getElements(locator: Locator, elementTags: string[]){
-    const elements = [] as Locator[];
-    for (const elementTag of elementTags){
-        (await locator.locator(elementTag).all()).forEach(l=>elements.push(l));
-    }
-    return elements;
-}
-
-/**
- * @deprecated
- */
-export async function getTableColumnClasses(locator: Locator){
-    const headings = await getElements(locator,[
-        'col',
-        'th'
-    ])
-    const classNames = (await Promise.all(headings.map(async h=>{
-        return await h?.textContent() ?? '';
-    }))).filter(s=>s.length>0);
-    return classNames;
 }
 
 export async function getElementBySimilarId(locator: Locator, id: string){
@@ -188,4 +164,24 @@ async function logDebugState(debugInfo: any){
         await fs.mkdir('./data');
     } catch(err) {}
     await fs.writeFile('./data/debugInfo.json', JSON.stringify(debugInfo,null,2), 'utf8');
+}
+
+export async function initSearch(state: any, link: string){
+    if(!state.browser) {
+        console.error('Browser not found!');
+        process.exit();
+    }
+    if(link === ''){
+        console.error('Link not found!');
+        return;
+    }
+    const page = await state.browser.newPage() as Page;
+    try {
+        await page.goto(link);
+    } catch(e) {
+        console.log(`Page ${link} took too long to load, skipping!`);
+        state.debugInfo.skipped.push(link);
+        return undefined;
+    }
+    return page;
 }

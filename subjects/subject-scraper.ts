@@ -1,6 +1,6 @@
-import playwright, {Browser} from "playwright";
+import {Browser} from "playwright";
 import fs from "fs/promises";
-import {scrape, setConfig, startTrackingProgress, stopTrackingProgress, TimerObjectType} from "../util";
+import {initSearch, scrape, setConfig,TimerObjectType} from "../util";
 import {enrollRequirements} from "./subject-refiner";
 
 // todo program is currently heavily single-threaded, should divide targets into chunks and allocate to worker threads to take full advantage of parallelisation, currently is fast enough that network is likely to cap out first, but could already benefit on faster networks.
@@ -65,21 +65,8 @@ const state = {
 } as StateType;
 
 async function searchPage(link: string) {
-    if(!state.browser) {
-        console.error('Browser not found!');
-        process.exit();
-    }
-    if(link === ''){
-        console.error('Link not found!');
-        return;
-    }
-    const page = await state.browser.newPage();
-    try {
-        await page.goto(link);
-    } catch(e) {
-        console.log(`Page ${link} took too long to load, skipping!`);
-        state.debugInfo.skipped.push(link);
-    }
+    const page = await initSearch(state, link);
+    if(!page) return;
     page.setDefaultTimeout(850);
 
     /**

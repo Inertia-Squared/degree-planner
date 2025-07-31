@@ -45,8 +45,7 @@ function runScript(scriptPath: string, args: string[]): Promise<void> {
             console.log(data.toString('utf-8').slice(0,data.toString().length-1));
         })
 
-        process.on('exit', (val:any)=> {
-            //console.log(val)
+        process.on('exit', ()=> {
             resolve()
         });
     })

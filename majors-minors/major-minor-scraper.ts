@@ -1,10 +1,8 @@
-import playwright, {Browser} from "playwright";
+import {Browser} from "playwright";
 import fs from "fs/promises";
 import {
     constructStringRule, extractTableData,
-    extractTableDataStructured, getElementBySimilarId, getTablesBySimilarId, scrape, setConfig,
-    startTrackingProgress,
-    stopTrackingProgress,
+    extractTableDataStructured, getElementBySimilarId, getTablesBySimilarId, initSearch, scrape, setConfig,
     TimerObjectType
 } from "../util";
 
@@ -63,21 +61,8 @@ const state = {
 } as StateType;
 
 async function searchPage(link: string) {
-    if(!state.browser) {
-        console.error('Browser not found!');
-        process.exit();
-    }
-    if(link === ''){
-        console.error('Link not found!');
-        return;
-    }
-    const page = await state.browser.newPage();
-    try {
-        await page.goto(link);
-    } catch(e) {
-        console.log(`Page ${link} took too long to load, skipping!`);
-        state.debugInfo.skipped.push(link);
-    }
+    const page = await initSearch(state, link);
+    if(!page) return;
     page.setDefaultTimeout(850);
 
     const overview = page.locator('id=textcontainer')
