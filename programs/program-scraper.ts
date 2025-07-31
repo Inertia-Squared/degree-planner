@@ -2,19 +2,18 @@ import playwright, {Browser} from "playwright";
 import fs from "fs/promises";
 import {
     constructStringRule, extractTableData,
-    extractTableDataStructured, getElementBySimilarId, getTablesBySimilarId,
+    extractTableDataStructured, getElementBySimilarId, getTablesBySimilarId, scrape, setConfig,
     startTrackingProgress,
     stopTrackingProgress,
     TimerObjectType
-} from "./util";
+} from "../util";
 
 // todo make the scraper generic and only implement search interface with the page context already open (i.e. hide the repetitive connection code)
-
 const CONFIG = {
-    subjectFile: './links/programs-SCDMS.json',
+    programsFile: '../links/programs.json',
+    outputFile: './data/programs-subset-unrefined.json',
     useHardwareAcceleration: true,
-    // desiredTerms: ['Credit Points','Coordinator','Description','School','Discipline','Pre-requisite(s)'],
-    concurrentPages: 8,
+    concurrentPages: 10,
 }
 
 
@@ -97,15 +96,17 @@ async function searchPage(link: string) {
      * Get links to majors
      */
     links.majors = (await Promise.all((await sequenceLocator.locator('.sc_screlatedcurricmjr').locator('a').all()).map(async link =>{
-        return await link.getAttribute('href');
-    }))).filter(str=>str!==null); // linting doesn't like boolean filter for some reason
+        const href = await link.getAttribute('href');
+        return 'https://hbook.westernsydney.edu.au' + (href ?? '');
+    }))).filter(str=>str!=='https://hbook.westernsydney.edu.au'); // linting doesn't like boolean filter for some reason
 
     /**
      * Get links to minors
      */
     links.minors = (await Promise.all((await sequenceLocator.locator('.sc_screlatedcurricmnr').locator('a').all()).map(async link =>{
-        return await link.getAttribute('href');
-    }))).filter(str=>str!==null);
+        const href = await link.getAttribute('href');
+        return 'https://hbook.westernsydney.edu.au' + (href ?? '');
+    }))).filter(str=>str!=='https://hbook.westernsydney.edu.au');
 
     /**
      * Get links to subjects
@@ -156,50 +157,21 @@ async function searchPage(link: string) {
     await page.close();
 }
 
-async function main(){
+async function main() {
     try {
-        state.targetPages = JSON.parse(await fs.readFile(CONFIG.subjectFile, {encoding: "utf-8"}));
+        state.targetPages = JSON.parse(await fs.readFile(CONFIG.programsFile, {encoding: "utf-8"}));
     } catch (e) {
         console.error(e, '\nCould not locate file specified. Please check input.');
         process.exit();
     }
-
-    console.log(`Initialising scrape of ${state.targetPages.length} pages.`);
-
-    state.browser = await playwright.chromium.launch({
-        args: ['--no-sandbox', CONFIG.useHardwareAcceleration ? '' : '--disable-gpu'],
-    });
-
-    console.log('Browser Setup Complete')
-
-    state.timerObject = startTrackingProgress(0, state.targetPages.length);
-    while (state.targetPages.length > 0 || state.activeSites > 0){
-        if (state.activeSites < CONFIG.concurrentPages && state.targetPages.length - state.activeSites > 0){
-            const targetPage = state.targetPages.pop();
-            state.activeSites++;
-            searchPage(targetPage ?? '').finally(()=>{
-                if(state.timerObject) state.timerObject.progress++
-                state.activeSites--;
-            });
-        } else {
-            await new Promise(resolve => {
-                setTimeout(resolve, 100);
-            });
-        }
-    }
-
-    console.log('wrapping up...');
-    stopTrackingProgress(state.timerObject);
-    try{
-        await fs.mkdir('./data');
-    } catch(err) {}
-    console.log('Writing data to file...')
-    await fs.writeFile('./data/programs-scdms-unrefined.json', JSON.stringify(state.scrapedData,null,2), 'utf8');
-    await fs.writeFile('./data/debugInfo.json', JSON.stringify(state.debugInfo,null,2), 'utf8');
-    await state.browser.close();
+    await scrape(state, CONFIG, searchPage);
 }
 
-main().then(()=>{
-    console.log('Program scraper complete!');
-    process.exit();
+setConfig(CONFIG.programsFile).then((r)=> {
+    CONFIG.programsFile = r.inputFile;
+    CONFIG.outputFile = r.outputFile;
+    main().then(() => {
+        console.log('Program scraper complete!');
+        process.exit();
+    })
 });

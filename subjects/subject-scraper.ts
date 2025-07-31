@@ -1,15 +1,16 @@
 import playwright, {Browser} from "playwright";
 import fs from "fs/promises";
-import {startTrackingProgress, stopTrackingProgress, TimerObjectType} from "./util";
+import {scrape, setConfig, startTrackingProgress, stopTrackingProgress, TimerObjectType} from "../util";
 import {enrollRequirements} from "./subject-refiner";
 
 // todo program is currently heavily single-threaded, should divide targets into chunks and allocate to worker threads to take full advantage of parallelisation, currently is fast enough that network is likely to cap out first, but could already benefit on faster networks.
 
 const CONFIG = {
-    subjectFile: './links/subject-details.json',
+    subjectFile: '../links/subject-details.json',
+    outputFile: './data/subjects-unrefined.json',
     useHardwareAcceleration: true,
     desiredTerms: ['Credit Points','Coordinator','Description','School','Discipline','Pre-requisite(s)'],
-    concurrentPages: 8,
+    concurrentPages: 10,
 }
 
 export interface AssessmentData {
@@ -189,43 +190,14 @@ async function main(){
         console.error(e, '\nCould not locate file specified. Please check input.');
         process.exit();
     }
-
-    console.log(`Initialising scrape of ${state.targetPages.length} pages.`);
-
-    state.browser = await playwright.chromium.launch({
-        args: ['--no-sandbox', CONFIG.useHardwareAcceleration ? '' : '--disable-gpu'],
-    });
-
-    console.log('Browser Setup Complete')
-
-    state.timerObject = startTrackingProgress(0, state.targetPages.length);
-    while (state.targetPages.length > 0 || state.activeSites > 0){
-        if (state.activeSites < CONFIG.concurrentPages && state.targetPages.length - state.activeSites > 0){
-            const targetPage = state.targetPages.pop();
-            state.activeSites++;
-            searchPage(targetPage ?? '').finally(()=>{
-                if(state.timerObject) state.timerObject.progress++
-                state.activeSites--;
-            });
-        } else {
-            await new Promise(resolve => {
-                setTimeout(resolve, 100);
-            });
-        }
-    }
-
-    console.log('wrapping up...');
-    stopTrackingProgress(state.timerObject);
-    try{
-        await fs.mkdir('./data');
-    } catch(err) {}
-    console.log('Writing data to file...')
-    await fs.writeFile('./data/subjects-unrefined.json', JSON.stringify(state.scrapedData,null,2), 'utf8');
-    await fs.writeFile('./data/debugInfo.json', JSON.stringify(state.debugInfo,null,2), 'utf8');
-    await state.browser.close();
+    await scrape(state,CONFIG,searchPage);
 }
 
-main().then(()=>{
-    console.log('Subject scraper complete!');
-    process.exit();
+setConfig(CONFIG.subjectFile).then((r)=> {
+    CONFIG.subjectFile = r.inputFile;
+    CONFIG.outputFile = r.outputFile;
+    main().then(() => {
+        console.log('Program scraper complete!');
+        process.exit();
+    })
 });

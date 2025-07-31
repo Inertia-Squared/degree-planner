@@ -2,11 +2,11 @@ import playwright, {Browser} from "playwright";
 import fs from "fs/promises";
 import {
     constructStringRule, extractTableData,
-    extractTableDataStructured, getElementBySimilarId, getTablesBySimilarId,
+    extractTableDataStructured, getElementBySimilarId, getTablesBySimilarId, scrape, setConfig,
     startTrackingProgress,
     stopTrackingProgress,
     TimerObjectType
-} from "./util";
+} from "../util";
 
 /*  UNFIXABLE MAJORS/MINORS DUE TO MAJOR ERRORS:
     - Culture and Society, Major (0264) -- incorrect tab headings set, placeholders used for major content -- uniquely identifiable, can be manually dealt with, but not ideal
@@ -15,10 +15,11 @@ import {
 // todo scrape course majors and minors
 
 const CONFIG = {
-    subjectFile: './links/majors-minors.json',
+    majorMinorFile: '../links/majors-minors.json',
     useHardwareAcceleration: true,
+    outputFile: './data/majors-minors-unrefined.json',
     // desiredTerms: ['Credit Points','Coordinator','Description','School','Discipline','Pre-requisite(s)'],
-    concurrentPages: 8,
+    concurrentPages: 10,
 }
 
 export enum SpecialisationType {
@@ -121,48 +122,19 @@ async function searchPage(link: string) {
 
 async function main(){
     try {
-        state.targetPages = JSON.parse(await fs.readFile(CONFIG.subjectFile, {encoding: "utf-8"}));
+        state.targetPages = JSON.parse(await fs.readFile(CONFIG.majorMinorFile, {encoding: "utf-8"}));
     } catch (e) {
         console.error(e, '\nCould not locate file specified. Please check input.');
         process.exit();
     }
-
-    console.log(`Initialising scrape of ${state.targetPages.length} pages.`);
-
-    state.browser = await playwright.chromium.launch({
-        args: ['--no-sandbox', CONFIG.useHardwareAcceleration ? '' : '--disable-gpu'],
-    });
-
-    console.log('Browser Setup Complete')
-
-    state.timerObject = startTrackingProgress(0, state.targetPages.length);
-    while (state.targetPages.length > 0 || state.activeSites > 0){
-        if (state.activeSites < CONFIG.concurrentPages && state.targetPages.length - state.activeSites > 0){
-            const targetPage = state.targetPages.pop();
-            state.activeSites++;
-            searchPage(targetPage ?? '').finally(()=>{
-                if(state.timerObject) state.timerObject.progress++
-                state.activeSites--;
-            });
-        } else {
-            await new Promise(resolve => {
-                setTimeout(resolve, 100);
-            });
-        }
-    }
-
-    console.log('wrapping up...');
-    stopTrackingProgress(state.timerObject);
-    try{
-        await fs.mkdir('./data');
-    } catch(err) {}
-    console.log('Writing data to file...')
-    await fs.writeFile('./data/majors-minors-unrefined.json', JSON.stringify(state.scrapedData,null,2), 'utf8');
-    await fs.writeFile('./data/debugInfo.json', JSON.stringify(state.debugInfo,null,2), 'utf8');
-    await state.browser.close();
+    await scrape(state,CONFIG,searchPage);
 }
 
-main().then(()=>{
-    console.log('Program scraper complete!');
-    process.exit();
+setConfig(CONFIG.majorMinorFile).then((r)=> {
+    CONFIG.majorMinorFile = r.inputFile;
+    CONFIG.outputFile = r.outputFile;
+    main().then(() => {
+        console.log('Program scraper complete!');
+        process.exit();
+    })
 });

@@ -2,7 +2,7 @@ import 'dotenv/config';
 import {LLM, LMStudioClient} from "@lmstudio/sdk";
 import fs from "fs/promises";
 import {SubjectData} from "./subject-scraper";
-import {startTrackingProgress, stopTrackingProgress, TimerObjectType} from "./util";
+import {startTrackingProgress, stopTrackingProgress, TimerObjectType} from "../util";
 import {GoogleGenAI} from "@google/genai";
 
 

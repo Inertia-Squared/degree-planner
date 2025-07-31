@@ -1,5 +1,6 @@
-import {Locator, Page} from "playwright";
+import playwright, {Locator, Page} from "playwright";
 import {string} from "zod";
+import fs from "fs/promises";
 
 export interface TimerObjectType {
     progress: number,
@@ -129,3 +130,62 @@ export async function getTablesBySimilarId(locator: Locator, id: string){
     return tableData;
 }
 
+export async function setConfig(defaultInput: string) {
+    const inputFile = process.argv[2];
+    const outputFile = process.argv[3];
+    let result: {
+        inputFile: string,
+        outputFile: string
+    } = {
+        inputFile: defaultInput,
+        outputFile: outputFile,
+    };
+    try {
+        await fs.open(inputFile).then(async f=>await f.close());
+        result.inputFile = inputFile;
+    } catch (e) {
+        console.log(`Path ${inputFile} for input file is not valid.`)
+    }
+
+    return result;
+}
+
+export async function scrape(state: any, CONFIG: any, searchPage: (a:string)=>Promise<void>){
+    console.log(`Initialising scrape of ${state.targetPages.length} pages.`);
+
+    state.browser = await playwright.chromium.launch({
+        args: ['--no-sandbox', CONFIG.useHardwareAcceleration ? '' : '--disable-gpu'],
+    });
+
+    console.log('Browser Setup Complete')
+
+    state.timerObject = startTrackingProgress(0, state.targetPages.length);
+    while (state.targetPages.length > 0 || state.activeSites > 0){
+        if (state.activeSites < CONFIG.concurrentPages && state.targetPages.length - state.activeSites > 0){
+            const targetPage = state.targetPages.pop();
+            state.activeSites++;
+            searchPage(targetPage ?? '').finally(()=>{
+                if(state.timerObject) state.timerObject.progress++
+                state.activeSites--;
+            });
+        } else {
+            await new Promise(resolve => {
+                setTimeout(resolve, 100);
+            });
+        }
+    }
+
+    console.log('wrapping up...');
+    stopTrackingProgress(state.timerObject);
+    console.log('Writing data to file...')
+    await logDebugState(state.debugInfo);
+    await fs.writeFile(CONFIG.outputFile, JSON.stringify(state.scrapedData,null,2), 'utf8');
+    if(state.browser) await state.browser.close();
+}
+
+async function logDebugState(debugInfo: any){
+    try{
+        await fs.mkdir('./data');
+    } catch(err) {}
+    await fs.writeFile('./data/debugInfo.json', JSON.stringify(debugInfo,null,2), 'utf8');
+}
