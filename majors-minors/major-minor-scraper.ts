@@ -119,7 +119,7 @@ setConfig(CONFIG.majorMinorFile).then((r)=> {
     CONFIG.majorMinorFile = r.inputFile;
     CONFIG.outputFile = r.outputFile;
     main().then(() => {
-        console.log('Program scraper complete!');
+        console.log('Major-minor scraper complete!');
         process.exit();
     })
 });

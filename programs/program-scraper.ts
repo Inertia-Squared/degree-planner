@@ -9,7 +9,7 @@ import {
 // todo make the scraper generic and only implement search interface with the page context already open (i.e. hide the repetitive connection code)
 const CONFIG = {
     programsFile: '../links/programs.json',
-    outputFile: './data/programs-subset-unrefined.json',
+    outputFile: './data/programs-unrefined.json',
     useHardwareAcceleration: true,
     concurrentPages: 10,
 }
@@ -20,6 +20,7 @@ export interface ProgramData {
     locations: { [k: string]: string;}[]
     sequence: { [k: string]: string[][];}
     links?: ProgramLinkData
+    originalLink: string
 }
 
 export interface ProgramLinkData {
@@ -66,7 +67,8 @@ async function searchPage(link: string) {
      * Locators (Narrowed by Tab where possible)
      * **/
     const overview = page.locator('id=textcontainer')
-    let sequenceLocator = (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'sequence2024'))[0] ?? /* prioritise more recent sequence, if possible */
+    let sequenceLocator = (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'sequence2025'))[0] ?? /* prioritise more recent sequence, if possible */
+                                        (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'sequence2024'))[0] ??
                                         (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'sequence'))[0] ??
                                         page
     /**
@@ -125,7 +127,7 @@ async function searchPage(link: string) {
      * Get all data on course structure options - also unprocessed
      * todo collect and preserve table headers/names
      */
-    let sequence = await getTablesBySimilarId(sequenceLocator.locator('div', {has: sequenceLocator.locator('table')}), 'tgl');
+    let sequence = (await getTablesBySimilarId(sequenceLocator.locator('div', {has: sequenceLocator.locator('table')}), 'tgl'));
     if(sequence?.size == 0) sequence = (new Map<string, string[][]>).set('structure', await extractTableData(sequenceLocator.locator('table').and(sequenceLocator.locator('.sc_courselist').or(sequenceLocator.locator('.sc_plangrid')))));
     if (sequence?.size == 0) sequence = (new Map<string, string[][]>).set('structure', await extractTableData(sequenceLocator.locator('table'))); // fallback to generic
 
@@ -137,6 +139,7 @@ async function searchPage(link: string) {
         locations: locationTableData.map(l=> Object.fromEntries(l)),
         sequence: Object.fromEntries(sequence ?? []),
         links: links,
+        originalLink: link
     })
 
     await page.close();

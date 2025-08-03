@@ -1,11 +1,57 @@
 import playwright, {Locator, Page} from "playwright";
 import fs from "fs/promises";
+import {number} from "zod";
 
 export interface TimerObjectType {
     progress: number,
     last: number,
     targetProgress: number,
     progressTracker: NodeJS.Timeout,
+    loggingFunction: (s: string)=>void
+}
+
+// Console TextFormat
+const tf = {
+    r: '\x1b[0m', // reset
+    u: '\x1b[4m', // underline
+    i: '\x1b[7m', // inverse
+}
+
+// Indented macros are intended to be used only after the 'parent' macro has passed.
+export const regexMacros = {
+    year: /[Yy]ear \d/, // start of year code
+    session: / session$|(Se|Tri)mester \d| [Tt]erm /, // start/end of session code
+        isSpring: /Spring/,
+        isAutumn: /Autumn/,
+        isSummer: /Summer/,
+        isTrimester: /Trimester/,
+        isTerm: / [Tt]erm /,
+        isSemester: /Semester/, // don't think this exists (Aut/Spr used instead)? but will try to catch it anyway
+    creditPointsText: /Credit Points/,
+    totalCreditPoints: /Total Credit Points/, // end of sequence code
+    subjectCode: /^[A-Z]{4}\s\d{4}/,
+    hasChoice: /[Cc]hoose|Select/,
+        areSelectionsGiven: / following$/,
+    choiceEdgeCase: /(^| )subject( |$)/,
+    isReplaced: /([A-Z]{4} \d{4})(?:.*?)(?:replace)(?:.*?)([A-Z]{4} \d{4})/, // get match[1] for original, match[2] for replacement. Assumes original comes first.
+    getYearNumber: /[Yyear] (\d)/, // get match[1] for year number
+}
+
+// very scuffed, but we'll never need more than this so it can stay scuffed :D
+export function getNumberFromText(text: string){
+    if(text.match(/(^| )one( |$)/i))    return 1;
+    if(text.match(/(^| )two( |$)/i))    return 2;
+    if(text.match(/(^| )three( |$)/i))  return 3;
+    if(text.match(/(^| )four( |$)/i))   return 4;
+    if(text.match(/(^| )five( |$)/i))   return 5;
+    if(text.match(/(^| )six( |$)/i))    return 6;
+    return -1;
+}
+
+// Some parent scripts may handle IPC for one channel but not the other, so send it to both.
+export function throwAndLog(message: string){
+    console.log('ERROR: ' + message);
+    throw message;
 }
 
 export function startTrackingProgress(progress: number, targetProgress?: number){
@@ -13,12 +59,13 @@ export function startTrackingProgress(progress: number, targetProgress?: number)
         progress,
         last: progress,
         targetProgress: targetProgress ?? progress,
+        loggingFunction: console.log,
         progressTracker: setInterval(()=>{
             if (timerObject.progress !== timerObject.last){
-                console.log(`Progress: ${(timerObject.progress/timerObject.targetProgress * 100).toFixed(1)}% (${timerObject.progress}/${timerObject.targetProgress})`);
+                timerObject.loggingFunction(`Progress: ${(timerObject.progress/timerObject.targetProgress * 100).toFixed(1)}% (${timerObject.progress}/${timerObject.targetProgress})`);
                 timerObject.last = timerObject.progress;
             }
-        },50)
+        },50),
     }
     return timerObject as TimerObjectType;
 }
@@ -184,4 +231,12 @@ export async function initSearch(state: any, link: string){
         return undefined;
     }
     return page;
+}
+
+export function underline(text: string){
+    console.log(tf.u + text + tf.r);
+}
+
+export function highlight(text: string){
+    console.log(tf.i + text + tf.r);
 }
