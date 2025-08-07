@@ -17,7 +17,7 @@ async function main(){
 
     // This is a cursed abomination, but it works and I never want to touch it again
     const flattenedData = Array.from(new Set(data.map((d)=>Object.entries(d.sequences).flat(3).filter(t=>t.match(/^[A-z]{4} \d{4}$/))).flat().map(link=>{
-        return "https://hbook.westernsydney.edu.au/subject-details/" + link.replace(' ', '-').toLowerCase();
+        return "https://hbook.westernsydney.edu.au/subject-details/" + link.replace(' ', '').toLowerCase();
     })));
 
     await fs.writeFile(CONFIG.outputFile, JSON.stringify(flattenedData, null, 2), {encoding: 'utf-8'});

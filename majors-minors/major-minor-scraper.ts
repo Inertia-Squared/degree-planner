@@ -31,6 +31,7 @@ export enum SpecialisationType {
 export interface MajorMinorData {
     type: SpecialisationType
     name: string
+    originalLink: string
     locations: { [k: string]: string;}[]
     sequences: { [k: string]: string[][];}
     related: string[][]
@@ -97,6 +98,7 @@ async function searchPage(link: string) {
     state.scrapedData.push({
         type: type,
         name: programName,
+        originalLink: link,
         locations: locationTableData.map(l=> Object.fromEntries(l)),
         sequences: Object.fromEntries(sequences ?? []),
         related: relatedPrograms,

@@ -1,6 +1,5 @@
 import playwright, {Locator, Page} from "playwright";
 import fs from "fs/promises";
-import {number} from "zod";
 
 export interface TimerObjectType {
     progress: number,
@@ -30,11 +29,13 @@ export const regexMacros = {
     creditPointsText: /Credit Points/,
     totalCreditPoints: /Total Credit Points/, // end of sequence code
     subjectCode: /^[A-Z]{4}\s\d{4}/,
+        looseSubjectCode: /[A-Z]{4}\s\d{4}/,
     hasChoice: /[Cc]hoose|Select/,
-        areSelectionsGiven: / following$/,
+        areSelectionsGiven: / following/,
     choiceEdgeCase: /(^| )subject( |$)/,
     isReplaced: /([A-Z]{4} \d{4})(?:.*?)(?:replace)(?:.*?)([A-Z]{4} \d{4})/, // get match[1] for original, match[2] for replacement. Assumes original comes first.
     getYearNumber: /[Yyear] (\d)/, // get match[1] for year number
+    levelPool: /Level (\d) Pool/
 }
 
 // very scuffed, but we'll never need more than this so it can stay scuffed :D
@@ -164,13 +165,13 @@ export async function setConfig(defaultInput: string) {
         outputFile: outputFile,
     };
     try {
-        await fs.open(inputFile).then(async f=>await f.close());
+        await fs.open(inputFile).then(async f => await f.close());
         result.inputFile = inputFile;
     } catch (e) {
         console.log(`Path ${inputFile} for input file is not valid.`)
     }
-
     return result;
+
 }
 
 export async function scrape(state: any, CONFIG: any, searchPage: (a:string)=>Promise<void>){

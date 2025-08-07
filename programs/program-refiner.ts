@@ -1,10 +1,13 @@
 import {ProgramData} from "./program-scraper";
-import {getNumberFromText, regexMacros, setConfig, throwAndLog} from "../util";
+import {getNumberFromText, highlight, regexMacros, setConfig, throwAndLog} from "../util";
 import fs from "fs/promises";
+import {MajorMinorData, SpecialisationType} from "../majors-minors/major-minor-scraper";
 
 const CONFIG = {
-    inputFile: '../Automation/data/programs-subset-unrefined.json',
+    inputPath: '../Automation/data/',
     outputFile: './data/programs-refined.json',
+    verbose: false,
+    showWarnings: false,
 }
 
 const desiredLocationHeaders = ['Campus','Attendance','Mode'];
@@ -26,6 +29,7 @@ export interface SubjectSummary {
     code: string
     name: string
     creditPoints: number
+    subjectLevel?: number
 }
 
 // done
@@ -53,19 +57,14 @@ export interface Year {
 
 export interface Major {
     name: string
-    isTestamur: boolean
-    requiredSubjects: SubjectSummary[]
-    optionalSubjects: SubjectSummary[]
-    optionalCreditPoints: number
+    type: SpecialisationType
+    subjects: (SubjectSummary | SubjectChoice)[]
+    link: string
+    // requiredSubjects?: SubjectSummary[]
+    // optionalSubjects?: SubjectChoice[]
 }
 
-export interface Minor {
-    name: string
-    isTestamur: boolean
-    requiredSubjects: SubjectSummary[]
-    optionalSubjects: SubjectSummary[]
-    optionalCreditPoints: number
-}
+export interface Minor extends Major {}
 
 // done
 export interface Sequence {
@@ -75,6 +74,7 @@ export interface Sequence {
 
 export interface ProgramSummary {
     name: string // done
+    link: string // done
     sequences: Sequence[] // done
     locations: LocationInfo[] // done
     majors?: Major[]
@@ -127,13 +127,6 @@ function matchName(rows: string[][], exp: RegExp, currentIndex: {index: number} 
     return '';
 }
 
-// hacky fix for sites that include subject pool in sequence
-// todo integrate this properly instead of skipping
-// unused as I'm using an even hackier workaround :D
-function isSubjectTable(row: string[]){
-    return (row[0] === "Subject" && row[1] === "Title" && row[2] == "Credit Points");
-}
-
 function matchManyRegex(rows: string[][], exps: RegExp[], currentIndex: {index: number}){
     for(; currentIndex.index < rows.length; currentIndex.index++){
         for (const exp of exps) {
@@ -162,24 +155,24 @@ function extractYearData(rows: string[][], currentIndex: {index: number}): Year 
      * Throws if we can't get the number, we could probably just allow it,
      * but let's be strict to catch parsing/logic errors early
      */
-    //console.log('Got yearName: ' + yearName);
+    if(CONFIG.verbose) console.log('Got yearName: ' + yearName);
     let yearStr = yearName.match(regexMacros.getYearNumber);
-    //console.log('Got yearStr: ' + yearStr);
+    if(CONFIG.verbose) console.log('Got yearStr: ' + yearStr);
     if (yearStr) {
         year.year = parseInt(yearStr[1]) ?? NaN; // NaN is probs redundant here
         if (isNaN(year.year)) {
             year.year = getNumberFromText(yearName);
-            //console.log(`Value ${yearStr[1]} is NaN, returning ${year.year} instead`)
+            if(CONFIG.verbose) console.log(`Value ${yearStr[1]} is NaN, returning ${year.year} instead`)
         }
     } else {
         year.year = getNumberFromText(yearName);
-        //console.log(`No match on yearStr, returning ${year.year} instead`)
+        if(CONFIG.verbose) console.log(`No match on yearStr, returning ${year.year} instead`)
     }
     if(year.year === -1) {
         throwAndLog("Could not parse year number from: " + yearStr);
     }
 
-    //console.log('Extracting sessions in year...')
+    if(CONFIG.verbose) console.log('Extracting sessions in year...')
     /**
      *  Get sessions.
      *  Sessions will then get subjects, so we expect a returned session to be 'full'.
@@ -191,7 +184,7 @@ function extractYearData(rows: string[][], currentIndex: {index: number}): Year 
         currentIndex.index++)
     {
         if (containsMatch(rows[currentIndex.index], regexMacros.session)){
-            //console.log('Extracting for session at ' + rows[currentIndex.index]);
+            if(CONFIG.verbose) console.log('Extracting for session at ' + rows[currentIndex.index]);
             const session = extractSessionData(rows, currentIndex);
             currentIndex.index--; // ensure we don't skip year accidentally
             year.sessions.push(session);
@@ -228,11 +221,11 @@ function extractSessionData(rows: string[][], currentIndex: {index: number}): Se
     let session = {} as Session;
     session.subjects = []
 
-    //console.log('Getting session name...')
+    if(CONFIG.verbose) console.log('Getting session name...')
     const sessionName = matchName(rows, regexMacros.session, currentIndex);
-    //console.log('Got name: ' + sessionName);
+    if(CONFIG.verbose) console.log('Got name: ' + sessionName);
     session.sessionType = getSessionType(sessionName);
-    //console.log('Evaluated name to type ' + session.sessionType);
+    if(CONFIG.verbose) console.log('Evaluated name to type ' + session.sessionType);
 
     for(currentIndex.index++;
         currentIndex.index < rows.length &&
@@ -243,8 +236,13 @@ function extractSessionData(rows: string[][], currentIndex: {index: number}): Se
     {
         if (containsMatch(rows[currentIndex.index], [regexMacros.subjectCode, regexMacros.hasChoice, regexMacros.choiceEdgeCase])){
             if (containsMatch(rows[currentIndex.index], regexMacros.isReplaced)) continue; // We already checked this during extractSubjectData()
-            //console.log('Extracting for subject at ' + rows[currentIndex.index]);
+            if(CONFIG.verbose) console.log('Extracting for subject at ' + rows[currentIndex.index]);
             const subject = extractSubjectData(rows, currentIndex);
+            if (!subject) {
+                // #005
+                if(CONFIG.showWarnings) console.warn('WARN005: Subject returned undefined when value is expected');
+                break;
+            }
             // ignore duplicate subjects that have already been replaced
             if('creditPoints' in subject && (subject.creditPoints === undefined || isNaN(subject.creditPoints) || subject.creditPoints < 0)) continue;
             session.subjects.push(subject);
@@ -253,17 +251,48 @@ function extractSessionData(rows: string[][], currentIndex: {index: number}): Se
     currentIndex.index--; // ensure we don't skip session accidentally
     
     if (session.subjects.length < 1) {
-        //console.log('Failed at index ' + currentIndex.index + ' out of ' + (rows.length - 1) + ' for current program ' + currentProgram)
-        throwAndLog("Could not find any subjects in session: " + session + " at index " + currentIndex)
+        if(CONFIG.verbose) console.log('Failed at index ' + currentIndex.index + ' out of ' + (rows.length - 1) + ' for current program ' + currentProgram)
+        throwAndLog("Could not find any subjects in session: " + JSON.stringify(session) + " for data " + rows + " at index " + currentIndex.index)
     }
     return session;
 }
 
-function extractSubjectSummary(row: string[], overrideCreditPoints?: number): SubjectSummary{
-    //console.log('Extracting summary data for ' + row);
-    if(!overrideCreditPoints && isNaN(parseInt(row[2]))) {
-        console.warn('WARN001: No credit point value provided on subject');
+// this is bad, everything is getting duplicated, but it works so shush
+function extractSpecialisationData(rows: string[][], currentIndex: {index: number}): Session {
+    let session = {} as Session;
+    session.subjects = []
+    if(!rows) return session;
+    for(currentIndex.index++;
+        currentIndex.index < rows.length &&
+        !containsMatch(rows[currentIndex.index], regexMacros.totalCreditPoints);
+        currentIndex.index++)
+    {
+        if (containsMatch(rows[currentIndex.index], [regexMacros.subjectCode, regexMacros.hasChoice, regexMacros.choiceEdgeCase])){
+            if (containsMatch(rows[currentIndex.index], regexMacros.isReplaced)) continue; // We already checked this during extractSubjectData()
+            if(CONFIG.verbose) console.log('Extracting for subject at ' + rows[currentIndex.index]);
+            const subject = extractSubjectData(rows, currentIndex);
+            if (!subject) break;
+            // ignore duplicate subjects that have already been replaced
+            // todo find better way to detect if subject is a duplicate here, as it overlaps with other patterns
+            //if('creditPoints' in subject && (subject.creditPoints === undefined || isNaN(subject.creditPoints) || subject.creditPoints < 0)) continue;
+            session.subjects.push(subject);
+        }
     }
+    currentIndex.index--; // ensure we don't skip session accidentally
+
+    if (session.subjects.length < 1) {
+        if(CONFIG.verbose) console.log('Failed at index ' + currentIndex.index + ' out of ' + (rows.length - 1) + ' for current program ' + currentProgram)
+        throwAndLog("Could not find any subjects in session: " + JSON.stringify(session) + " for data " + rows + " at index " + currentIndex.index)
+    }
+    return session;
+}
+
+function extractSubjectSummary(row: string[], overrideCreditPoints?: number): SubjectSummary | undefined{
+    if(CONFIG.verbose) console.log('Extracting summary data for ' + row);
+    if(!overrideCreditPoints && isNaN(parseInt(row[2]))) {
+        if(CONFIG.showWarnings) console.warn('WARN001: No credit point value provided on subject');
+    }
+    if(!row) return undefined;
     return {
         code: row[0], // Maybe we filter out the nbsp here? It's annoying, but also, consistency may be better.
         name: row[1],
@@ -272,20 +301,21 @@ function extractSubjectSummary(row: string[], overrideCreditPoints?: number): Su
 }
 
 function getReplaced(subject: SubjectSummary, rowAfterSubject: string[]){
-    //console.log('checking if subject ' + subject.code + ' should be replaced with {' + rowAfterSubject + '}')
+    if(CONFIG.verbose) console.log('checking if subject ' + subject.code + ' should be replaced with {' + rowAfterSubject + '}')
+    if(!rowAfterSubject) return subject;
     const replace = rowAfterSubject[0].match(regexMacros.isReplaced);
     if(!replace) {
-        //console.log('Will not be replaced.')
+        if(CONFIG.verbose) console.log('Will not be replaced.')
         return subject;
     }
     if (replace[1] !== subject.code) {
-        console.warn("WARN002: Attempted to replace on row that is not related to original subject, could be signs of parsing failure.");
+        if(CONFIG.showWarnings) console.warn("WARN002: Attempted to replace on row that is not related to original subject, could be signs of parsing failure.");
         return subject;
     }
-    //console.log('Replacing subject...')
-    //console.log('Getting credit points...')
+    if(CONFIG.verbose) console.log('Replacing subject...')
+    if(CONFIG.verbose) console.log('Getting credit points...')
     const creditPoints = parseInt(rowAfterSubject[1]);
-    //console.log('Got ' + creditPoints)
+    if(CONFIG.verbose) console.log('Got ' + creditPoints)
     return {
         code: replace[2], // the new code
         name: `Replaces ${replace[1]}`, // can't get name, so we do the best we can. Can fix from subject db later // todo low priority
@@ -293,47 +323,80 @@ function getReplaced(subject: SubjectSummary, rowAfterSubject: string[]){
     } as SubjectSummary
 }
 let currentProgram = '';
-function extractSubjectData(rows: string[][], currentIndex: {index: number}): SubjectSummary | SubjectChoice {
-    //console.log('Getting subject data...');
+function extractSubjectData(rows: string[][], currentIndex: {index: number}): SubjectSummary | SubjectChoice | undefined {
+    if(CONFIG.verbose) console.log('Getting subject data...');
     let subjectInfo = matchManyRegex(rows, [regexMacros.hasChoice, regexMacros.subjectCode, regexMacros.choiceEdgeCase], currentIndex);
-    //console.log('Got subject data: ' + subjectInfo);
-    //console.log('Checking type of entry...')
+    if(CONFIG.verbose) console.log('Got subject data: ' + subjectInfo);
+    if(CONFIG.verbose) console.log('Checking type of entry...')
     if(regexMacros.hasChoice.test(subjectInfo) || regexMacros.choiceEdgeCase.test(subjectInfo)) {
         let subject = {} as SubjectChoice;
-        //console.log('Entry was a selection')
+        if(CONFIG.verbose) console.log('Entry was a selection')
         if(regexMacros.areSelectionsGiven.test(subjectInfo)){
-            //console.log('Selection has set options')
+            if(CONFIG.verbose) console.log('Selection has set options')
             // SubjectChoice w\ SubjectSummaries
             const creditPoints = parseInt(rows[currentIndex.index][1]) ?? NaN;
             subject.choices = []
-            for (;!containsMatch(rows[currentIndex.index], regexMacros.creditPointsText); currentIndex.index++){
+            currentIndex.index++;
+            if(CONFIG.verbose) console.log(`Checking if ${rows[currentIndex.index]} is valid...`)
+            let levelPool;
+            for (;rows[currentIndex.index] && !containsMatch(rows[currentIndex.index], regexMacros.creditPointsText); currentIndex.index++){
+                if(rows[currentIndex.index].length === 2){
+                    if (containsMatch(rows[currentIndex.index], regexMacros.levelPool)){
+                        const match = rows[currentIndex.index][0].match(regexMacros.levelPool); // assume level pool on index 0
+                        if(match) levelPool = match[1];
+                        continue;
+                    }
+                    if (!containsMatch(rows[currentIndex.index], regexMacros.looseSubjectCode)) break;
+
+                    return {
+                        code: 'SPECIAL',
+                        name: rows[currentIndex.index][0],
+                        creditPoints: 0
+                    } as SubjectSummary
+                }
+                if(CONFIG.verbose) console.log(`SUCCESS: ${rows[currentIndex.index]} is valid!`)
                 let summary = extractSubjectSummary(
                     rows[currentIndex.index],
                     !isNaN(creditPoints) ? creditPoints : undefined
                 );
+                if (!summary) {
+                    if(currentIndex.index >= rows.length) return undefined;
+                    else continue;
+                }
                 summary = getReplaced(summary, rows[currentIndex.index+1]);
+                if (levelPool) summary.subjectLevel = parseInt(levelPool) ?? -1;
                 subject.choices.push(summary);
+                if(CONFIG.verbose) console.log(`Checking if ${rows[currentIndex.index]} is valid...`)
             }
+            if(CONFIG.verbose) console.log(`FAIL: ${rows[currentIndex.index]} is NOT valid!`)
         } else {
             // SubjectChoice w\ string
-            //console.log('Selection is open-ended');
+            if(CONFIG.verbose) console.log('Selection is open-ended');
             subject.choices = subjectInfo;
         }
 
-        //console.log('Getting number of choices...')
+        if(CONFIG.verbose) console.log('Getting number of choices...')
         subject.numberToChoose = getNumberFromText(subjectInfo);
-        //console.log('Got ' + subject.numberToChoose + ' Choices.')
+        if(CONFIG.verbose) console.log('Got ' + subject.numberToChoose + ' Choices.')
         if(subject.numberToChoose === -1) {
             subject.numberToChoose = 1; // assume it was implied singular
-            console.warn("WARN003: Failed to parse number of subject choices. This may be a false flag, but could hint towards other issues.");
+            if(CONFIG.showWarnings) {
+                console.warn("WARN003: " +
+                    "Failed to parse number of subject choices. " +
+                    "This may be a false flag, but could hint towards other issues.");
+            }
         }
-        //console.log('Final subject value is ' + Object.entries(subject));
+        if(CONFIG.verbose) console.log('Final subject value is ' + Object.entries(subject));
         return subject;
     } else {
-        //console.log('Entry was a normal subject')
+        if(CONFIG.verbose) console.log('Entry was a normal subject')
         let subject = extractSubjectSummary(rows[currentIndex.index]);
+        if (!subject) {
+            if(CONFIG.verbose) console.log('Subject was undefined')
+            return undefined;
+        }
         subject = getReplaced(subject, rows[currentIndex.index+1]);
-        //console.log('Final subject value is ' + Object.entries(subject))
+        if(CONFIG.verbose) console.log('Final subject value is ' + Object.entries(subject))
         return subject;
     }
 }
@@ -356,19 +419,59 @@ function getLocationData(data: ProgramData){
         } as LocationInfo;
         locations.push(location);
     }
-    //console.log(locations);
+    if(CONFIG.verbose) console.log(locations);
     return locations;
 }
 
 async function main(){
-    const data = (JSON.parse(await fs.readFile(CONFIG.inputFile, {encoding: 'utf-8'}))) as ProgramData[];
-    const programs = [] as ProgramSummary[];
+    const progData = JSON.parse(
+        await fs.readFile(`${CONFIG.inputPath}programs-unrefined.json`, {encoding: 'utf-8'})) as ProgramData[];
+    const majorData = JSON.parse(
+        await fs.readFile(`${CONFIG.inputPath}programMajorData.json`, {encoding: 'utf-8'})) as MajorMinorData[];
+    const minorData = JSON.parse(
+        await fs.readFile(`${CONFIG.inputPath}programMinorData.json`, {encoding: 'utf-8'})) as MajorMinorData[];
 
-    for (const programData of data) {
+    const programs = [] as ProgramSummary[];
+    let majorList = [] as Major[];
+    let minorList = [] as Minor[];
+
+    if (CONFIG.verbose) highlight('PROCESSING MAJOR DATA')
+    for (let major of majorData){
+        const majorInfo = {} as Major;
+        const structure = Object.values(major.sequences)[0] as string[][];
+        if(structure && structure.length < 1) continue;
+        const currentIndex = {index: 0}
+
+
+        majorInfo.name = major.name;
+        majorInfo.subjects = extractSpecialisationData(structure,currentIndex).subjects;
+        majorInfo.type = major.type;
+        majorInfo.link = major.originalLink;
+
+        majorList.push(majorInfo);
+    }
+    if (CONFIG.verbose) highlight('PROCESSING MINOR DATA')
+    for (let minor of minorData){
+        const minorInfo = {} as Minor;
+        const structure = minor.sequences['structure'] as string[][];
+        if(structure && structure.length < 1) continue;
+        const currentIndex = {index: 0}
+
+        minorInfo.name = minor.name;
+        minorInfo.subjects = extractSpecialisationData(structure,currentIndex).subjects;
+        minorInfo.type = minor.type;
+        minorInfo.link = minor.originalLink;
+
+        minorList.push(minorInfo);
+    }
+
+    for (const programData of progData) {
+        if (CONFIG.verbose) highlight('PROCESSING PROGRAM')
         const program = {} as ProgramSummary;
         program.name = programData.name;
         currentProgram = (program.name.match(/[^\t\n]*/)??[])[0] ?? 'Unknown'; // need to regex out tabs, should probably have done this earlier // todo
         program.locations = getLocationData(programData) as LocationInfo[];
+        program.link = programData.originalLink;
 
         const recommendedSequence = programData.sequence["structure"];
         let sequences = [] as Sequence[]
@@ -386,7 +489,9 @@ async function main(){
                     if (year.year === -1){
                         //console.info('Discarding Year that was ejected by escape sequence')
                     } else {
-                        console.warn('WARN004: Removing Empty Year, this could be a parsing error');
+                        if(CONFIG.showWarnings) {
+                            console.warn('WARN004: Removing Empty Year, this could be a parsing error');
+                        }
                     }
                     sequence.sequence.pop();
                     skip = true;
@@ -397,16 +502,28 @@ async function main(){
             if(!skip) sequences.push(sequence);
         }
 
+        program.majors = majorList.map(m=>{
+            if(programData.links?.majors.includes(m.link)) return m;
+        }).filter(m=>m !== undefined);
+        program.minors = minorList.map(m=>{
+            if(programData.links?.minors.includes(m.link)) return m;
+        }).filter(m=>m !== undefined);
+
+
         program.sequences = sequences;
 
         programs.push(program);
     }
-    //console.log(JSON.stringify(programs, null, 2))
+
+
+    if(CONFIG.verbose) console.log(JSON.stringify(programs, null, 2))
+    console.log('Writing data to file...');
+    await fs.writeFile(CONFIG.outputFile, JSON.stringify(programs,null,2), {encoding: 'utf-8'});
 }
 
-setConfig(CONFIG.inputFile).then((r)=> {
-        CONFIG.inputFile = r.inputFile;
-        CONFIG.outputFile = r.outputFile;
+setConfig(CONFIG.inputPath).then((r)=> {
+        CONFIG.inputPath = r.inputFile ?? CONFIG.inputPath;
+        CONFIG.outputFile = r.outputFile ?? CONFIG.outputFile;
         main().then(() => {
             console.log('Programs Data Translation Complete!')
         }).catch(e=>{

@@ -6,7 +6,7 @@ import {highlight, startTrackingProgress, stopTrackingProgress, underline} from 
 let childProcess = require('child_process');
 import fs from "fs/promises";
 
-const pt = startTrackingProgress(0,13);
+const pt = startTrackingProgress(0,7);
 let elapsed = 0;
 
 async function main(){
@@ -14,49 +14,60 @@ async function main(){
         elapsed++;
     }, 1000)
 
+    console.time('dir')
     pt.loggingFunction = highlight;
     underline('Creating Necessary Directories...')
     await ensureDir('./data');
-    pt.progress++;
     await ensureDir('./links');
     pt.progress++;
+    console.timeEnd('dir')
 
+    console.time('progsc')
     underline('Extracting Program Data:')
-    await runScript('../programs/program-scraper.ts', ['../links/programs-subset.json', './data/programs-subset-unrefined.json']); // links must be provided manually, can be provided as a subset of links gathered from link collector
+    await runScript('../programs/program-scraper.ts', ['../links/programs-subset.json', './data/programs-unrefined.json']); // links must be provided manually, can be provided as a subset of links gathered from link collector
+    await runScript('../programs/related-links-extractor.ts', ['./data/programs-unrefined.json', './links/subsetProgram']);
     pt.progress++;
-    await runScript('../programs/related-links-extractor.ts', ['./data/programs-subset-unrefined.json', './links/subsetProgram']);
-    pt.progress++;
+    console.timeEnd('progsc')
 
+    console.time('specsc')
     underline('Extracting Majors/Minors:')
     await runScript('../majors-minors/major-minor-scraper.ts', ['./links/subsetProgramMajors.json', './data/programMajorData.json']);
-    pt.progress++;
     await runScript('../majors-minors/subject-links-extractor.ts', ['./data/programMajorData.json', './links/majorSubjectsLinks.json']);
     pt.progress++;
     await runScript('../majors-minors/major-minor-scraper.ts', ['./links/subsetProgramMinors.json', './data/programMinorData.json']);
-    pt.progress++;
     await runScript('../majors-minors/subject-links-extractor.ts', ['./data/programMinorData.json', './links/minorSubjectsLinks.json']);
     pt.progress++;
+    console.timeEnd('specsc')
 
-    underline('Combining Subjects Found:')
+    console.time('subcomb')
+    underline('Combining Subjects Found...')
     const programSubjects = JSON.parse(await fs.readFile('./links/subsetProgramSubjects.json', {encoding: 'utf-8'}));
-    pt.progress++;
     const majorSubjects = JSON.parse(await fs.readFile('./links/majorSubjectsLinks.json', {encoding: 'utf-8'}));
-    pt.progress++;
     const minorSubjects = JSON.parse(await fs.readFile('./links/minorSubjectsLinks.json', {encoding: 'utf-8'}));
-    pt.progress++;
 
     const combinedSubjects = Array.from(new Set([...programSubjects,...majorSubjects,...minorSubjects].flat()));
-    await fs.writeFile('./links/allSubjectsInSubset.json', JSON.stringify(combinedSubjects, null, 2));
+    await fs.writeFile('./links/allSubjects.json', JSON.stringify(combinedSubjects, null, 2));
     pt.progress++;
+    console.timeEnd('subcomb')
 
-    underline('Postprocessing Programs Dataset')
-    await runScript('../programs/program-refiner.ts', ['./data/programs-subset-unrefined.json', './data/programs-subset-refined.json']);
+    console.time('subsc')
+    underline('Scraping Subject Data:')
+    await runScript('../subjects/subject-scraper.ts',['./links/allSubjects.json', './data/allSubjectData-unrefined.json']);
     pt.progress++;
+    console.timeEnd('subsc')
+
+    console.time('progref')
+    underline('Postprocessing Programs Dataset:')
+    await runScript('../programs/program-refiner.ts', ['./data/', './data/programs-refined.json']);
+    pt.progress++;
+    console.timeEnd('progref')
 
     stopTrackingProgress(pt);
+    timer.close();
 }
 main().then(()=>{
     console.log('Automated Script Complete!\n'+elapsed + ' Seconds elapsed.');
+    process.exit(0);
 })
 
 async function ensureDir(dir: string){

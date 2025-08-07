@@ -38,6 +38,7 @@ export interface SubjectData {
     prerequisites?: string | enrollRequirements[]; // captures requirements that vary based on enrolled course, to be eligible user must have completed at least one subject of every enrollRequirements item
     originalPrerequisites?: string;
     assessments?: AssessmentData[];
+    link: string;
 }
 
 interface StateType {
@@ -166,6 +167,7 @@ async function searchPage(link: string) {
         originalPrerequisites: data.get('Pre-requisite(s)'),
         assessments: assessmentData,
         teachingPeriods: finalPeriods,
+        link: link,
     });
     await page.close();
 }

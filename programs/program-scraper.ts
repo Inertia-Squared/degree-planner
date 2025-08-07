@@ -11,7 +11,7 @@ const CONFIG = {
     programsFile: '../links/programs.json',
     outputFile: './data/programs-unrefined.json',
     useHardwareAcceleration: true,
-    concurrentPages: 10,
+    concurrentPages: 8,
 }
 
 
@@ -71,6 +71,7 @@ async function searchPage(link: string) {
                                         (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'sequence2024'))[0] ??
                                         (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'sequence'))[0] ??
                                         page
+
     /**
      * Get program name
      */
@@ -87,6 +88,13 @@ async function searchPage(link: string) {
         return 'https://hbook.westernsydney.edu.au' + (href ?? '');
     }))).filter(str=>str!=='https://hbook.westernsydney.edu.au'); // linting doesn't like boolean filter for some reason
 
+    if(links.majors.length < 1){
+        links.majors = (await Promise.all((await page.locator('.sc_screlatedcurricmjr').locator('a').all()).map(async link =>{
+            const href = await link.getAttribute('href');
+            return 'https://hbook.westernsydney.edu.au' + (href ?? '');
+        }))).filter(str=>str!=='https://hbook.westernsydney.edu.au');
+    }
+
     /**
      * Get links to minors
      */
@@ -95,6 +103,13 @@ async function searchPage(link: string) {
         return 'https://hbook.westernsydney.edu.au' + (href ?? '');
     }))).filter(str=>str!=='https://hbook.westernsydney.edu.au');
 
+    if(links.minors.length < 1){
+        links.minors = (await Promise.all((await page.locator('.sc_screlatedcurricmnr').locator('a').all()).map(async link =>{
+            const href = await link.getAttribute('href');
+            return 'https://hbook.westernsydney.edu.au' + (href ?? '');
+        }))).filter(str=>str!=='https://hbook.westernsydney.edu.au');
+    }
+
     /**
      * Get links to subjects
      */
@@ -102,7 +117,7 @@ async function searchPage(link: string) {
         try{
             const href = await link.getAttribute('href');
             if(href?.includes('search')) {
-                const subjectHref = "https://hbook.westernsydney.edu.au/subject-details/" + (await link.innerText()).replace(' ', '-').toLowerCase()
+                const subjectHref = "https://hbook.westernsydney.edu.au/subject-details/" + (await link.innerText()).replace(' ', '').toLowerCase()
                 return subjectHref ?? undefined;
             }
         } catch (e){
