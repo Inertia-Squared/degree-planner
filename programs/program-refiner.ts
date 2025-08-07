@@ -11,20 +11,17 @@ const CONFIG = {
 }
 
 const desiredLocationHeaders = ['Campus','Attendance','Mode'];
-// done
 export interface LocationInfo {
-    campus?: string // done
-    attendance?: string // done
-    mode?: string // done
+    campus?: string
+    attendance?: string
+    mode?: string
 }
 
-// done
 export interface SubjectChoice {
     choices: SubjectSummary[] | string // Use string for non-subject instructions
     numberToChoose: number
 }
 
-// done
 export interface SubjectSummary {
     code: string
     name: string
@@ -32,7 +29,6 @@ export interface SubjectSummary {
     subjectLevel?: number
 }
 
-// done
 export enum SessionType {
     AUTUMN,
     SPRING,
@@ -43,13 +39,11 @@ export enum SessionType {
     OTHER = 999 // Prevent old data compatibility issues if other types added later
 }
 
-// done
 export interface Session {
     sessionType: SessionType
     subjects: (SubjectChoice | SubjectSummary)[]
 }
 
-// done
 export interface Year {
     year: number
     sessions: Session[]
@@ -60,8 +54,6 @@ export interface Major {
     type: SpecialisationType
     subjects: (SubjectSummary | SubjectChoice)[]
     link: string
-    // requiredSubjects?: SubjectSummary[]
-    // optionalSubjects?: SubjectChoice[]
 }
 
 export interface Minor extends Major {}
@@ -73,10 +65,10 @@ export interface Sequence {
 }
 
 export interface ProgramSummary {
-    name: string // done
-    link: string // done
-    sequences: Sequence[] // done
-    locations: LocationInfo[] // done
+    name: string
+    link: string
+    sequences: Sequence[]
+    locations: LocationInfo[]
     majors?: Major[]
     minors?: Minor[]
 }
