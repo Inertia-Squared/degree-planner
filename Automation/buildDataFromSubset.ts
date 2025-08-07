@@ -14,22 +14,22 @@ async function main(){
         elapsed++;
     }, 1000)
 
-    console.time('dir')
+    console.time('create-dir')
     pt.loggingFunction = highlight;
     underline('Creating Necessary Directories...')
     await ensureDir('./data');
     await ensureDir('./links');
     pt.progress++;
-    console.timeEnd('dir')
+    console.timeEnd('create-dir')
 
-    console.time('progsc')
+    console.time('program-scraping')
     underline('Extracting Program Data:')
     await runScript('../programs/program-scraper.ts', ['../links/programs-subset.json', './data/programs-unrefined.json']); // links must be provided manually, can be provided as a subset of links gathered from link collector
     await runScript('../programs/related-links-extractor.ts', ['./data/programs-unrefined.json', './links/subsetProgram']);
     pt.progress++;
-    console.timeEnd('progsc')
+    console.timeEnd('program-scraping')
 
-    console.time('specsc')
+    console.time('specialisation-scraping')
     underline('Extracting Majors/Minors:')
     await runScript('../majors-minors/major-minor-scraper.ts', ['./links/subsetProgramMajors.json', './data/programMajorData.json']);
     await runScript('../majors-minors/subject-links-extractor.ts', ['./data/programMajorData.json', './links/majorSubjectsLinks.json']);
@@ -37,9 +37,9 @@ async function main(){
     await runScript('../majors-minors/major-minor-scraper.ts', ['./links/subsetProgramMinors.json', './data/programMinorData.json']);
     await runScript('../majors-minors/subject-links-extractor.ts', ['./data/programMinorData.json', './links/minorSubjectsLinks.json']);
     pt.progress++;
-    console.timeEnd('specsc')
+    console.timeEnd('specialisation-scraping')
 
-    console.time('subcomb')
+    console.time('subject-combining')
     underline('Combining Subjects Found...')
     const programSubjects = JSON.parse(await fs.readFile('./links/subsetProgramSubjects.json', {encoding: 'utf-8'}));
     const majorSubjects = JSON.parse(await fs.readFile('./links/majorSubjectsLinks.json', {encoding: 'utf-8'}));
@@ -48,19 +48,19 @@ async function main(){
     const combinedSubjects = Array.from(new Set([...programSubjects,...majorSubjects,...minorSubjects].flat()));
     await fs.writeFile('./links/allSubjects.json', JSON.stringify(combinedSubjects, null, 2));
     pt.progress++;
-    console.timeEnd('subcomb')
+    console.timeEnd('subject-combining')
 
-    console.time('subsc')
+    console.time('subject-scraping')
     underline('Scraping Subject Data:')
     await runScript('../subjects/subject-scraper.ts',['./links/allSubjects.json', './data/allSubjectData-unrefined.json']);
     pt.progress++;
-    console.timeEnd('subsc')
+    console.timeEnd('subject-scraping')
 
-    console.time('progref')
+    console.time('progress-refine')
     underline('Postprocessing Programs Dataset:')
     await runScript('../programs/program-refiner.ts', ['./data/', './data/programs-refined.json']);
     pt.progress++;
-    console.timeEnd('progref')
+    console.timeEnd('progress-refinement')
 
     stopTrackingProgress(pt);
     timer.close();
