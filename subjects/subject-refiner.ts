@@ -13,7 +13,7 @@ const CONFIG = {
     dataFile: './data/subjects-unrefined.json',
     modelName: 'mistralai/mistral-small-3.2',
     onlineModelName: 'gemini-2.5-pro',
-    online: false,
+    online: true,
     manualErrorMsg: "MANUAL INTERVENTION REQUIRED",
     maxTries: 20,
     systemPrompt:

@@ -6,7 +6,7 @@ import {highlight, startTrackingProgress, stopTrackingProgress, underline} from 
 let childProcess = require('child_process');
 import fs from "fs/promises";
 
-const pt = startTrackingProgress(0,7);
+const pt = startTrackingProgress(0,8);
 let elapsed = 0;
 
 async function main(){
@@ -24,7 +24,7 @@ async function main(){
 
     console.time('program-scraping')
     underline('Extracting Program Data:')
-    await runScript('../programs/program-scraper.ts', ['../links/programs-subset.json', './data/programs-unrefined.json']); // links must be provided manually, can be provided as a subset of links gathered from link collector
+    await runScript('../programs/program-scraper.ts', ['../links/programs-subset-smaller.json', './data/programs-unrefined.json']); // links must be provided manually, can be provided as a subset of links gathered from link collector
     await runScript('../programs/related-links-extractor.ts', ['./data/programs-unrefined.json', './links/subsetProgram']);
     pt.progress++;
     console.timeEnd('program-scraping')
@@ -52,7 +52,7 @@ async function main(){
 
     console.time('subject-scraping')
     underline('Scraping Subject Data:')
-    await runScript('../subjects/subject-scraper.ts',['./links/allSubjects.json', './data/allSubjectData-unrefined.json']);
+    await runScript('../subjects/subject-scraper.ts',['./links/allSubjects.json', './data/subjects-unrefined.json']);
     pt.progress++;
     console.timeEnd('subject-scraping')
 
@@ -60,7 +60,12 @@ async function main(){
     underline('Postprocessing Programs Dataset:')
     await runScript('../programs/program-refiner.ts', ['./data/', './data/programs-refined.json']);
     pt.progress++;
-    console.timeEnd('progress-refinement')
+    console.timeEnd('progress-refine')
+
+    console.time('upload-db')
+    underline('Uploading data to db...')
+    await runScript('../neo4j/upload-data-to-db.ts',['./data/'])
+    console.timeEnd('upload-db')
 
     stopTrackingProgress(pt);
     timer.close();

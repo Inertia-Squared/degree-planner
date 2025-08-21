@@ -2,6 +2,7 @@ import {ProgramData} from "./program-scraper";
 import {getNumberFromText, highlight, regexMacros, setConfig, throwAndLog} from "../util";
 import fs from "fs/promises";
 import {MajorMinorData, SpecialisationType} from "../majors-minors/major-minor-scraper";
+import {enrollRequirements} from "../subjects/subject-refiner";
 
 const CONFIG = {
     inputPath: '../Automation/data/',
@@ -27,6 +28,7 @@ export interface SubjectSummary {
     name: string
     creditPoints: number
     subjectLevel?: number
+    prerequisites?: enrollRequirements[]
 }
 
 export enum SessionType {
@@ -54,6 +56,7 @@ export interface Major {
     type: SpecialisationType
     subjects: (SubjectSummary | SubjectChoice)[]
     link: string
+    locations: string[]// simplified structure, we can worry about the other data later //todo include attendance (full/part time) and mode info
 }
 
 export interface Minor extends Major {}
@@ -286,7 +289,7 @@ function extractSubjectSummary(row: string[], overrideCreditPoints?: number): Su
     }
     if(!row) return undefined;
     return {
-        code: row[0], // Maybe we filter out the nbsp here? It's annoying, but also, consistency may be better.
+        code: row[0].replace(' ',' '),
         name: row[1],
         creditPoints: overrideCreditPoints ?? parseInt(row[2]) ?? -10, // responsibility of parent function to ensure row[2] is valid
     }
@@ -415,6 +418,29 @@ function getLocationData(data: ProgramData){
     return locations;
 }
 
+function buildSpecialisation(list: Major[] | Minor[], data: MajorMinorData[]){
+    for (let rawSpec of data){
+        const specialisation = {} as Major | Minor;
+        const structure = Object.values(rawSpec.sequences)[0] as string[][];
+        if(structure && structure.length < 1) continue;
+        const currentIndex = {index: 0}
+
+
+        specialisation.name = rawSpec.name;
+        specialisation.subjects = extractSpecialisationData(structure,currentIndex).subjects;
+        specialisation.type = rawSpec.type;
+        specialisation.link = rawSpec.originalLink;
+        specialisation.locations = []
+        for (let i = 1; i < rawSpec.locations.length; i++){
+            if(!rawSpec.locations[i]) continue;
+            const loc = Object.values(rawSpec.locations[i])[0];
+            if(loc && loc.length > 0) specialisation.locations.push(loc);
+        }
+
+        list.push(specialisation);
+    }
+}
+
 async function main(){
     const progData = JSON.parse(
         await fs.readFile(`${CONFIG.inputPath}programs-unrefined.json`, {encoding: 'utf-8'})) as ProgramData[];
@@ -427,35 +453,10 @@ async function main(){
     let majorList = [] as Major[];
     let minorList = [] as Minor[];
 
-    if (CONFIG.verbose) highlight('PROCESSING MAJOR DATA')
-    for (let major of majorData){
-        const majorInfo = {} as Major;
-        const structure = Object.values(major.sequences)[0] as string[][];
-        if(structure && structure.length < 1) continue;
-        const currentIndex = {index: 0}
-
-
-        majorInfo.name = major.name;
-        majorInfo.subjects = extractSpecialisationData(structure,currentIndex).subjects;
-        majorInfo.type = major.type;
-        majorInfo.link = major.originalLink;
-
-        majorList.push(majorInfo);
-    }
-    if (CONFIG.verbose) highlight('PROCESSING MINOR DATA')
-    for (let minor of minorData){
-        const minorInfo = {} as Minor;
-        const structure = minor.sequences['structure'] as string[][];
-        if(structure && structure.length < 1) continue;
-        const currentIndex = {index: 0}
-
-        minorInfo.name = minor.name;
-        minorInfo.subjects = extractSpecialisationData(structure,currentIndex).subjects;
-        minorInfo.type = minor.type;
-        minorInfo.link = minor.originalLink;
-
-        minorList.push(minorInfo);
-    }
+    if (CONFIG.verbose) highlight('PROCESSING MAJOR DATA');
+    buildSpecialisation(majorList, majorData);
+    if (CONFIG.verbose) highlight('PROCESSING MINOR DATA');
+    buildSpecialisation(minorList, minorData);
 
     for (const programData of progData) {
         if (CONFIG.verbose) highlight('PROCESSING PROGRAM')

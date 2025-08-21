@@ -1,6 +1,6 @@
 import {Browser} from "playwright";
 import fs from "fs/promises";
-import {initSearch, scrape, setConfig,TimerObjectType} from "../util";
+import {initSearch, regexMacros, scrape, setConfig, throwAndLog, TimerObjectType} from "../util";
 import {enrollRequirements} from "./subject-refiner";
 
 // todo program is currently heavily single-threaded, should divide targets into chunks and allocate to worker threads to take full advantage of parallelisation, currently is fast enough that network is likely to cap out first, but could already benefit on faster networks.
@@ -28,6 +28,7 @@ export interface TeachingPeriodData {
 }
 
 export interface SubjectData {
+    code: string;
     subject?: string;
     creditPoints?: number;
     coordinator?: string;
@@ -156,8 +157,23 @@ async function searchPage(link: string) {
         finalPeriods.push(periodData as TeachingPeriodData);
     }
 
+    const subject= data.get('subject');
+    if(!data.has('subject') || subject === undefined) {
+        throwAndLog('Failed to parse subject');
+        throw ''
+    }
+    const match = subject.match(regexMacros.subjectCode);
+    let code: string;
+    if(match) {
+        code = match[0];
+    } else {
+        return;
+    }
+
+
     state.scrapedData.push({
-        subject: data.get('subject'),
+        code: code,
+        subject: subject,
         creditPoints: Number(data.get('Credit Points')),
         coordinator: data.get('Coordinator'),
         description: data.get('Description'),
@@ -186,7 +202,7 @@ setConfig(CONFIG.subjectFile).then((r)=> {
     CONFIG.subjectFile = r.inputFile;
     CONFIG.outputFile = r.outputFile;
     main().then(() => {
-        console.log('Program scraper complete!');
+        console.log('Subject scraper complete!');
         process.exit();
     })
 });

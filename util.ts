@@ -28,13 +28,13 @@ export const regexMacros = {
         isSemester: /Semester/, // don't think this exists (Aut/Spr used instead)? but will try to catch it anyway
     creditPointsText: /Credit Points/,
     totalCreditPoints: /Total Credit Points/, // end of sequence code
-    subjectCode: /^[A-Z]{4}\s\d{4}/,
-        looseSubjectCode: /[A-Z]{4}\s\d{4}/,
+    subjectCode: /^[A-Z]{4}(\s| )\d{4}/,
+        looseSubjectCode: /[A-Z]{4}(\s| )\d{4}/,
     hasChoice: /[Cc]hoose|Select/,
         areSelectionsGiven: / following/,
     choiceEdgeCase: /(^| )subject( |$)/,
     isReplaced: /([A-Z]{4} \d{4})(?:.*?)(?:replace)(?:.*?)([A-Z]{4} \d{4})/, // get match[1] for original, match[2] for replacement. Assumes original comes first.
-    getYearNumber: /[Yyear] (\d)/, // get match[1] for year number
+    getYearNumber: /[Yy]ear (\d)/, // get match[1] for year number
     levelPool: /Level (\d) Pool/
 }
 
