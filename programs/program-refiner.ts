@@ -2,7 +2,7 @@ import {ProgramData} from "./program-scraper";
 import {getNumberFromText, highlight, regexMacros, setConfig, throwAndLog} from "../util";
 import fs from "fs/promises";
 import {MajorMinorData, SpecialisationType} from "../majors-minors/major-minor-scraper";
-import {enrollRequirements} from "../subjects/subject-refiner";
+import {EnrollRequirements} from "../subjects/subject-refiner";
 
 const CONFIG = {
     inputPath: '../Automation/data/',
@@ -28,7 +28,7 @@ export interface SubjectSummary {
     name: string
     creditPoints: number
     subjectLevel?: number
-    prerequisites?: enrollRequirements[]
+    prerequisites?: EnrollRequirements[]
 }
 
 export enum SessionType {

@@ -2,8 +2,9 @@ import neo4j, {Driver, ManagedTransaction} from 'neo4j-driver';
 import 'dotenv/config';
 import fs from "fs/promises";
 import {Major, Minor, ProgramSummary, SubjectChoice, SubjectSummary} from "../programs/program-refiner";
-import {setConfig, startTrackingProgress, stopTrackingProgress} from "../util";
+import {regexMacros, setConfig, startTrackingProgress, stopTrackingProgress} from "../util";
 import {SubjectData} from "../subjects/subject-scraper";
+import {EnrollRequirements} from "../subjects/subject-refiner";
 enum SpecialisationType {
     testamurMajor = 0,
     major,
@@ -15,10 +16,18 @@ enum SpecialisationType {
 /**
  * todo Add teaching period nodes and connect them to subject
  *      Add assessment data nodes and connect them to subject
+ *      Investigate root cause of some orphan subjects being unrelated to majors/minors that they should be connected to
  */
 
 const CONFIG = {
     inputPath: '../Automation/data/',
+}
+
+export interface LogicalPrerequisite {
+    course: string
+    AND: {
+        OR: string[]
+    }[]
 }
 
 const keyOf = {
@@ -105,7 +114,7 @@ interface properties {
         }
         dataProps?: {
             subjectName: string
-            prerequisites: string
+            prerequisites: string | EnrollRequirements[]
             creditPoints: string
             coordinator: string
             description: string
@@ -239,6 +248,32 @@ async function addSpecialisation(tx: ManagedTransaction, specialisation: Major |
     }
 }
 
+function normaliseSubjectCode(code: string){
+    if (code.match(regexMacros.noWhiteSpaceCode)){
+        return code.replace(code.slice(0,4), code.slice(0,4)+' ');
+    }
+}
+
+// don't care about relations, just connect subjects by prerequisites
+async function simplePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: Node<"subject">, logicalPrerequisites: LogicalPrerequisite[]){
+    const subjectCodes = logicalPrerequisites.map(p=>p.AND.map(p2=>p2.OR)).flat(2);
+    for (let code of subjectCodes){
+        if(!code.match(regexMacros.looseSubjectCode)) {
+            console.log(`Invalid code ${code}, skipping`)
+            return;
+        }
+        const prerequisiteNode: Node<'subject'> = {
+            type: 'subject',
+            props: {
+                keyProps: {
+                    code: code
+                }
+            }
+        };
+        await linkNodes(tx, prerequisiteNode, 'PREREQUISITE_OF', subjectNode);
+    }
+}
+
 async function main(){
     const URI = 'neo4j://localhost:7687';
     const USER = 'neo4j';
@@ -254,7 +289,7 @@ async function main(){
     let programSummaries = [] as ProgramSummary[];
     try{
         programSummaries = JSON.parse(await fs.readFile(CONFIG.inputPath+'programs-refined.json', {encoding: "utf-8"})) as ProgramSummary[];
-        globals.subjects = JSON.parse(await fs.readFile(CONFIG.inputPath+'subjects-unrefined.json', {encoding: 'utf-8'})) as SubjectData[]; // todo change to refined once done testing
+        globals.subjects = JSON.parse(await fs.readFile(CONFIG.inputPath+'subjects-refined.json', {encoding: 'utf-8'})) as SubjectData[];
     } catch (e) {
         console.log('File read failed!')
         process.exit(-1)
@@ -278,13 +313,24 @@ async function main(){
 
             pt = startTrackingProgress(0,globals.subjects.length);
             for (const subject of globals.subjects){
-                await addNode(tx, {
+                let logicalPrerequisites: LogicalPrerequisite[] = [];
+                if (subject.prerequisites && typeof subject.prerequisites !== 'string'){
+                    logicalPrerequisites = subject.prerequisites.map(p=>{
+                        return {
+                            course: p.course,
+                            AND: p.prerequisites?.map(a=>{
+                                return {OR: a}
+                            }) ?? []
+                        }
+                    }).filter(Boolean)
+                }
+                const subjectNode: Node<'subject'> = {
                     type: 'subject',
                     props: {
                         keyProps: { code: subject.code },
                         dataProps: {
                             subjectName: subject.subject ?? 'none',
-                            prerequisites: subject.originalPrerequisites ?? 'none',
+                            prerequisites: JSON.stringify(logicalPrerequisites,null,2) ?? subject.originalPrerequisites ?? 'none',
                             creditPoints: subject.creditPoints?.toString() ?? 'none',
                             coordinator: subject.coordinator ?? 'none',
                             description: subject.description ?? 'none',
@@ -293,7 +339,9 @@ async function main(){
                             subjectLink: subject.link
                         }
                     }
-                })
+                }
+                await addNode(tx, subjectNode);
+                //await simplePrerequisiteGenerator(tx, subjectNode, logicalPrerequisites);
                 pt.progress++;
             }
             stopTrackingProgress(pt);

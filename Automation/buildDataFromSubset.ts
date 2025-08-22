@@ -6,7 +6,7 @@ import {highlight, startTrackingProgress, stopTrackingProgress, underline} from 
 let childProcess = require('child_process');
 import fs from "fs/promises";
 
-const pt = startTrackingProgress(0,8);
+const pt = startTrackingProgress(0,9);
 let elapsed = 0;
 
 async function main(){
@@ -62,9 +62,16 @@ async function main(){
     pt.progress++;
     console.timeEnd('progress-refine')
 
+    console.time('subject-refine')
+    underline('Converting prerequisites into machine-friendly logic, this may take a while...')
+    await runScript('../subjects/subject-refiner.ts', ['./data/subjects-unrefined.json','./data/subjects-refined.json']);
+    pt.progress++;
+    console.timeEnd('subject-refine')
+
     console.time('upload-db')
     underline('Uploading data to db...')
-    await runScript('../neo4j/upload-data-to-db.ts',['./data/'])
+    await runScript('../neo4j/upload-data-to-db.ts',['./data/']);
+    pt.progress++;
     console.timeEnd('upload-db')
 
     stopTrackingProgress(pt);

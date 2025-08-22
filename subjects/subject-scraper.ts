@@ -1,7 +1,7 @@
 import {Browser} from "playwright";
 import fs from "fs/promises";
 import {initSearch, regexMacros, scrape, setConfig, throwAndLog, TimerObjectType} from "../util";
-import {enrollRequirements} from "./subject-refiner";
+import {EnrollRequirements} from "./subject-refiner";
 
 // todo program is currently heavily single-threaded, should divide targets into chunks and allocate to worker threads to take full advantage of parallelisation, currently is fast enough that network is likely to cap out first, but could already benefit on faster networks.
 
@@ -36,7 +36,7 @@ export interface SubjectData {
     school?: string;
     discipline?: string;
     teachingPeriods?: TeachingPeriodData[];
-    prerequisites?: string | enrollRequirements[]; // captures requirements that vary based on enrolled course, to be eligible user must have completed at least one subject of every enrollRequirements item
+    prerequisites?: string | EnrollRequirements[]; // captures requirements that vary based on enrolled course, to be eligible user must have completed at least one subject of every enrollRequirements item
     originalPrerequisites?: string;
     assessments?: AssessmentData[];
     link: string;

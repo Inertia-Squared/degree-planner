@@ -30,6 +30,7 @@ export const regexMacros = {
     totalCreditPoints: /Total Credit Points/, // end of sequence code
     subjectCode: /^[A-Z]{4}(\s| )\d{4}/,
         looseSubjectCode: /[A-Z]{4}(\s| )\d{4}/,
+        noWhiteSpaceCode: /[A-Z]{4}\d{4}/,
     hasChoice: /[Cc]hoose|Select/,
         areSelectionsGiven: / following/,
     choiceEdgeCase: /(^| )subject( |$)/,

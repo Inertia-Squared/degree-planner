@@ -2,7 +2,7 @@ import 'dotenv/config';
 import {LLM, LMStudioClient} from "@lmstudio/sdk";
 import fs from "fs/promises";
 import {SubjectData} from "./subject-scraper";
-import {startTrackingProgress, stopTrackingProgress, TimerObjectType} from "../util";
+import {setConfig, startTrackingProgress, stopTrackingProgress, TimerObjectType} from "../util";
 import {GoogleGenAI} from "@google/genai";
 
 
@@ -11,6 +11,7 @@ let z;
 
 const CONFIG = {
     dataFile: './data/subjects-unrefined.json',
+    outputFile: './data/subjects-refined.json',
     modelName: 'mistralai/mistral-small-3.2',
     onlineModelName: 'gemini-2.5-pro',
     online: true,
@@ -52,7 +53,7 @@ const requirementSchema = z.object({
     }, "Should match pattern /^SPECIAL$|^[A-Z]{4} \\d{4}$|^\\d{4}$/").array().array(),
 }).array();
 
-export interface enrollRequirements {
+export interface EnrollRequirements {
     course: string;
     prerequisites?: string[][];
 }
@@ -169,7 +170,7 @@ async function main(){
         console.log(`\nQuerying based on subject: ${queryData.subject}Prerequisites:\n${processQueryString(queryData.prerequisites as string)}`);
         queryData.originalPrerequisites = queryData.prerequisites as string; // compatibility for old data, remove this
         const queryResult = await queryModel(queryData);
-        queryData.prerequisites = queryResult.parsed as enrollRequirements[];
+        queryData.prerequisites = queryResult.parsed as EnrollRequirements[];
         console.log("Query Result: ",queryResult.content)
         if(queryResult.content === CONFIG.manualErrorMsg){
             state.subjectData = state.subjectData.filter((subject)=>{
@@ -185,18 +186,26 @@ async function main(){
     stopTrackingProgress(state.progressTracker);
 }
 
-main().then(async ()=>{
-    console.log('Subject refinement complete!');
-    console.log("Recombining data...");
-    recombineSubjectData();
-    console.log("Saving data...");
-    await fs.writeFile("./data/subjects-manual-required.json", JSON.stringify(state.manualSubjects,null,2), {encoding: "utf-8"});
-    await fs.writeFile("./data/subjects-refined.json", JSON.stringify(state.subjectData,null,2), {encoding: "utf-8"});
-    await exitProcedure();
+
+setConfig(CONFIG.dataFile).then((r)=> {
+    CONFIG.dataFile = r.inputFile;
+    CONFIG.outputFile = r.outputFile;
+    main().then(async ()=>{
+        console.log('Subject refinement complete!');
+        console.log("Recombining data...");
+        recombineSubjectData();
+        console.log("Saving data...");
+        await fs.writeFile("./data/subjects-manual-required.json", JSON.stringify(state.manualSubjects,null,2), {encoding: "utf-8"});
+        await fs.writeFile("./data/subjects-refined.json", JSON.stringify(state.subjectData,null,2), {encoding: "utf-8"});
+        await exitProcedure();
+    });
 });
+
 
 // We need a slightly more complex exit procedure to make sure the model doesn't stay loaded after usage.
 // This procedure should be called any time the program must stop.
+
+
 async function exitProcedure(){
     console.log("Shutting down...");
     if (state.model && !CONFIG.online) {
