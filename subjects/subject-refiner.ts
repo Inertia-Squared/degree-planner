@@ -9,14 +9,18 @@ import {GoogleGenAI} from "@google/genai";
 // @ts-ignore
 let z;
 
+// todo revisit prompt, make much simpler, and simplify data in
+//  (e.g. don't feed source subject to AI, & filter against itself to prevent circular reference)
+//  simplify data structure by making AI just add brackets and then parse? Might be more consistent
 const CONFIG = {
-    dataFile: './data/subjects-unrefined.json',
-    outputFile: './data/subjects-refined.json',
-    modelName: 'mistralai/mistral-small-3.2',
+    dataFile: '../Automation/data/subjects-unrefined.json',
+    outputFile: '../Automation/data/subjects-refined.json',
+    modelName: 'qwen/qwq-32b',
     onlineModelName: 'gemini-2.5-pro',
-    online: true,
+    online: false,
     manualErrorMsg: "MANUAL INTERVENTION REQUIRED",
     maxTries: 20,
+    verbose: true,
     systemPrompt:
         'You are a data processor who reads in and outputs prerequisite information based on some simple rules. ' +
         'Subject codes are formatted as "ABCD 1234", some examples below simplifies this to a single letter for succinctness, but the rules are applying to these expanded values. ' +
@@ -49,7 +53,7 @@ const requirementSchema = z.object({
         return /^any$|^\d{4}$|^SPECIAL$/.test(input ?? "");
     }, "Should match pattern /^any$|^\\d{4}$|^SPECIAL$/"),
     prerequisites: z.string().refine((input: string)=>{
-        return /^SPECIAL$|^[A-Z]{4} \d{4}$|^\d{4}$/.test(input ?? "");
+        return /^SPECIAL$|^[A-Z]{4} \d{4}$|^\d{4}$/.test(input ?? ""); // todo accept and automatically fix missing whitespace e.g. ABCD1234 instead of ABCD 1234
     }, "Should match pattern /^SPECIAL$|^[A-Z]{4} \\d{4}$|^\\d{4}$/").array().array(),
 }).array();
 
@@ -94,7 +98,7 @@ async function queryModel(subject: SubjectData, attempts: number = 0){
         try{ // @ts-ignore
             return await state.model.respond(query, {structured: requirementSchema, temperature: Math.max(attempts/10,1)});}
         catch(err){
-            console.log(`Received bad response\n\n${err}\n\n, retrying... (attempt number ${attempts+2}/${CONFIG.maxTries})`);
+            if(CONFIG.verbose) console.log(`Received bad response\n\n${err}\n\n, retrying... (attempt number ${attempts+2}/${CONFIG.maxTries})`);
             if(attempts >= CONFIG.maxTries + 2){
                 return {parsed: {program: CONFIG.manualErrorMsg, prerequisites: [[CONFIG.manualErrorMsg]]}, content: CONFIG.manualErrorMsg}
             }
@@ -119,15 +123,18 @@ async function queryModel(subject: SubjectData, attempts: number = 0){
             return {content: text, parsed: JSON.parse(text ?? '')}
         } catch (e) {
             // save output in case we're STUCK stuck
-            console.log('Failed to query: ', e);
+            if(CONFIG.verbose) console.log('Failed to query: ', e);
             await fs.writeFile("./data/subjects-manual-required.json", JSON.stringify(state.manualSubjects,null,2), {encoding: "utf-8"});
             await fs.writeFile("./data/subjects-refined-partial.json", JSON.stringify(state.prunedSubjectData,null,2), {encoding: "utf-8"});
-            // assume API is temporarily busy, try again every 20 seconds
+            // assume API is temporarily busy, try again every 5 seconds
             let result;
             await new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve(async()=>result = await queryModel(subject, 0));
-                }, 30000);
+                console.log('There was an API error, retrying in 5 seconds,..,')
+                setTimeout(async () => {
+                    if(CONFIG.verbose) console.log('retrying...')
+                    result = await queryModel(subject, 0);
+                    resolve(()=>{});
+                }, 5000);
             });
             return result;
         }
@@ -167,11 +174,14 @@ async function main(){
     await loadModelTask;
     state.progressTracker = startTrackingProgress(0,state.prunedSubjectData.length);
     for(let queryData of state.prunedSubjectData){
-        console.log(`\nQuerying based on subject: ${queryData.subject}Prerequisites:\n${processQueryString(queryData.prerequisites as string)}`);
+        if(CONFIG.verbose) console.log(`\nQuerying based on subject: ${queryData.subject}Prerequisites:\n${processQueryString(queryData.prerequisites as string)}`);
         queryData.originalPrerequisites = queryData.prerequisites as string; // compatibility for old data, remove this
-        const queryResult = await queryModel(queryData);
+        let queryResult = await queryModel(queryData);
+        while (!queryResult){
+            await queryModel(queryData);
+        }
         queryData.prerequisites = queryResult.parsed as EnrollRequirements[];
-        console.log("Query Result: ",queryResult.content)
+        if(CONFIG.verbose) console.log("Query Result: ",queryResult.content)
         if(queryResult.content === CONFIG.manualErrorMsg){
             state.subjectData = state.subjectData.filter((subject)=>{
                 return subject !== queryData;
@@ -189,14 +199,14 @@ async function main(){
 
 setConfig(CONFIG.dataFile).then((r)=> {
     CONFIG.dataFile = r.inputFile;
-    CONFIG.outputFile = r.outputFile;
+    if(r.outputFile) CONFIG.outputFile = r.outputFile;
     main().then(async ()=>{
         console.log('Subject refinement complete!');
         console.log("Recombining data...");
         recombineSubjectData();
         console.log("Saving data...");
         await fs.writeFile("./data/subjects-manual-required.json", JSON.stringify(state.manualSubjects,null,2), {encoding: "utf-8"});
-        await fs.writeFile("./data/subjects-refined.json", JSON.stringify(state.subjectData,null,2), {encoding: "utf-8"});
+        await fs.writeFile(CONFIG.outputFile, JSON.stringify(state.subjectData,null,2), {encoding: "utf-8"});
         await exitProcedure();
     });
 });

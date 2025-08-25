@@ -119,7 +119,7 @@ async function main(){
 
 setConfig(CONFIG.majorMinorFile).then((r)=> {
     CONFIG.majorMinorFile = r.inputFile;
-    CONFIG.outputFile = r.outputFile;
+    if(r.outputFile) CONFIG.outputFile = r.outputFile;
     main().then(() => {
         console.log('Major-minor scraper complete!');
         process.exit();

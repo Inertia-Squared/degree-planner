@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import {setConfig} from "../util";
+import {getLinkFromSubjectCode, setConfig} from "../util";
 import {MajorMinorData} from "./major-minor-scraper";
 
 const CONFIG = {
@@ -16,8 +16,10 @@ async function main(){
     if(!data) return;
 
     // This is a cursed abomination, but it works and I never want to touch it again
+    // Future me here, the most permanent things are temporary;
+    // times touched more than I wanted to: 2
     const flattenedData = Array.from(new Set(data.map((d)=>Object.entries(d.sequences).flat(3).filter(t=>t.match(/^[A-z]{4} \d{4}$/))).flat().map(link=>{
-        return "https://hbook.westernsydney.edu.au/subject-details/" + link.replace(' ', '').toLowerCase();
+        return getLinkFromSubjectCode(link);
     })));
 
     await fs.writeFile(CONFIG.outputFile, JSON.stringify(flattenedData, null, 2), {encoding: 'utf-8'});

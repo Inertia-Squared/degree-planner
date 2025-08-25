@@ -38,6 +38,10 @@ const keyOf = {
     ['choice']: 'SubjectChoice {choiceName: $choiceName, choices: $choices, parent: $parent}',
 }
 
+function insertString(value: string, addition: string){
+    return value.replace(/\$[A-z0-9_]*/g, `$&${addition}`);
+}
+
 // todo create a function that automatically converts available parameters to the structure below
 //  will allow for optional properties, and be easier to maintain
 const propsOf = {
@@ -155,14 +159,30 @@ async function addNode<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>
 }
 
 async function linkNodes<T extends PropsKey>(tx: ManagedTransaction, nodeA: Node<T>, relation: string,  nodeB: Node<T>){
-    const relateMajorToProgram = "MATCH " +
+    let flag = false;
+    if (nodeA.type === 'subject' && nodeB.type === 'subject' && 'code' in nodeB.props.keyProps && nodeB.props.keyProps.code === 'COMP 3027'){
+        flag = true;
+    }
+    const linkNodes = "MATCH " +
         `(a:${keyOf[nodeA.type]}),` +
-        `(b:${keyOf[nodeB.type]})` +
+        `(b:${nodeB.type === 'subject' ? insertString(keyOf[nodeB.type],'2') : keyOf[nodeB.type]})` +
         `MERGE (a)-[r:${relation}]->(b)`;
-    await tx.run(relateMajorToProgram, {
+    const nodePropsString = JSON.stringify(nodeB.props.keyProps)
+    const uniqueNodeBProps = (nodeB.type === 'subject') ?
+        JSON.parse(nodePropsString.replace(/"(?<main>[A-z0-9_-]*)":/g,'\"$<main>2\":'))
+        : nodeB.props.keyProps;
+    await tx.run(linkNodes, {
         ...nodeA.props.keyProps,
-        ...nodeB.props.keyProps
+        ...uniqueNodeBProps
     });
+    if (flag){
+        console.log('match: ' + linkNodes)
+        console.log('data: ' + JSON.stringify({
+            ...nodeA.props.keyProps,
+            ...uniqueNodeBProps
+        },null,2))
+
+    }
 }
 
 async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: SubjectChoice, parentNode: Node<PropsKey>){
@@ -257,10 +277,17 @@ function normaliseSubjectCode(code: string){
 // don't care about relations, just connect subjects by prerequisites
 async function simplePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: Node<"subject">, logicalPrerequisites: LogicalPrerequisite[]){
     const subjectCodes = logicalPrerequisites.map(p=>p.AND.map(p2=>p2.OR)).flat(2);
+    if (subjectNode.props.keyProps.code === 'COMP 3027'){
+        console.log(`COMP 3027 has prerequisites ${JSON.stringify(logicalPrerequisites)} which expand to ${JSON.stringify(subjectCodes)}`)
+    }
     for (let code of subjectCodes){
-        if(!code.match(regexMacros.looseSubjectCode)) {
+        const normCode = normaliseSubjectCode(code) ?? '';
+        if(normCode.match(regexMacros.subjectCode)) {
+            code = normCode;
+        }
+        if (!code.match(regexMacros.subjectCode)) {
             console.log(`Invalid code ${code}, skipping`)
-            return;
+            continue;
         }
         const prerequisiteNode: Node<'subject'> = {
             type: 'subject',
@@ -270,6 +297,7 @@ async function simplePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: 
                 }
             }
         };
+        if (subjectNode.props.keyProps.code === 'COMP 3027') console.log(`Linking ${prerequisiteNode} to ${subjectNode}`)
         await linkNodes(tx, prerequisiteNode, 'PREREQUISITE_OF', subjectNode);
     }
 }
@@ -341,8 +369,25 @@ async function main(){
                     }
                 }
                 await addNode(tx, subjectNode);
-                //await simplePrerequisiteGenerator(tx, subjectNode, logicalPrerequisites);
                 pt.progress++;
+            }
+            for (const subject of globals.subjects){
+                let logicalPrerequisites: LogicalPrerequisite[] = [];
+                if (subject.prerequisites && typeof subject.prerequisites !== 'string'){
+                    logicalPrerequisites = subject.prerequisites.map(p=>{
+                        return {
+                            course: p.course,
+                            AND: p.prerequisites?.map(a=>{
+                                return {OR: a}
+                            }) ?? []
+                        }
+                    }).filter(Boolean)
+                }
+                const subjectNode: Node<'subject'> = {
+                    type: 'subject',
+                    props: {keyProps: { code: subject.code }}
+                }
+                if(logicalPrerequisites.length > 0) await simplePrerequisiteGenerator(tx, subjectNode, logicalPrerequisites);
             }
             stopTrackingProgress(pt);
             pt = startTrackingProgress(0, programSummaries.length);

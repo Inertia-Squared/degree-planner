@@ -200,7 +200,7 @@ async function main(){
 
 setConfig(CONFIG.subjectFile).then((r)=> {
     CONFIG.subjectFile = r.inputFile;
-    CONFIG.outputFile = r.outputFile;
+    if(r.outputFile) CONFIG.outputFile = r.outputFile;
     main().then(() => {
         console.log('Subject scraper complete!');
         process.exit();

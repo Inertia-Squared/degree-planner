@@ -50,6 +50,10 @@ export function getNumberFromText(text: string){
     return -1;
 }
 
+export function getLinkFromSubjectCode(link: string){
+    return "https://hbook.westernsydney.edu.au/subject-details/" + link.replace(/ |\s/, '').toLowerCase();
+}
+
 // Some parent scripts may handle IPC for one channel but not the other, so send it to both.
 export function throwAndLog(message: string){
     console.log('ERROR: ' + message);

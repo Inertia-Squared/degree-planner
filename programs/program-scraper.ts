@@ -172,7 +172,7 @@ async function main() {
 
 setConfig(CONFIG.programsFile).then((r)=> {
     CONFIG.programsFile = r.inputFile;
-    CONFIG.outputFile = r.outputFile;
+    if(r.outputFile) CONFIG.outputFile = r.outputFile;
     main().then(() => {
         console.log('Program scraper complete!');
         process.exit();
