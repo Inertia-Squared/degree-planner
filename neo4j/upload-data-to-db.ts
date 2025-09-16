@@ -30,7 +30,7 @@ export interface LogicalPrerequisite {
     }[]
 }
 
-const keyOf = {
+export const keyOf = {
     ['program']: 'Program {programName: $programName}',
     ['major']: 'Major {majorName: $majorName}',
     ['minor']: 'Minor {minorName: $minorName}',
@@ -45,7 +45,7 @@ function insertString(value: string, addition: string){
 
 // todo create a function that automatically converts available parameters to the structure below
 //  will allow for optional properties, and be easier to maintain
-const propsOf = {
+export const propsOf = {
     ['program']: 'Program {\n' +
         'programName: $programName,\n' +
         'programLink: $programLink\n' +
@@ -88,7 +88,7 @@ const globals = {
     subjects: [] as SubjectData[]
 }
 
-interface properties {
+export interface properties {
     program: {
         keyProps: {
             programName: string
@@ -150,9 +150,9 @@ interface properties {
     }
 }
 
-type PropsKey = keyof properties;
+export type PropsKey = keyof properties;
 
-interface Node<T extends PropsKey> {
+export interface Node<T extends PropsKey> {
     type: T
     props: properties[T]
 }
