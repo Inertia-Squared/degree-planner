@@ -1,8 +1,8 @@
-import neo4j, {Driver, ManagedTransaction} from 'neo4j-driver';
+import neo4j, {Driver, ManagedTransaction, QueryResult, Record, RecordShape} from 'neo4j-driver';
 import 'dotenv/config';
 import fs from "fs/promises";
 import {Major, Minor, ProgramSummary, SubjectChoice, SubjectSummary} from "../programs/program-refiner";
-import {regexMacros, setConfig, startTrackingProgress, stopTrackingProgress} from "../util";
+import {highlight, regexMacros, setConfig, startTrackingProgress, stopTrackingProgress} from "../util";
 import {SubjectData} from "../subjects/subject-scraper";
 import {EnrollRequirements} from "../subjects/subject-refiner";
 enum SpecialisationType {
@@ -36,6 +36,7 @@ const keyOf = {
     ['minor']: 'Minor {minorName: $minorName}',
     ['subject']: 'Subject {code: $code}',
     ['choice']: 'SubjectChoice {choiceName: $choiceName, choices: $choices, parent: $parent}',
+    ['prerequisites']: 'Prerequisites {subjects: $subjects, course: $course}', // due to AI sometimes being silly, don't trust that we can always get a unique value based on properties, and force it to be accounted for in implementation
 }
 
 function insertString(value: string, addition: string){
@@ -77,6 +78,10 @@ const propsOf = {
         'choices: $choices, \n' +
         'parent: $parent\n' +
         '}',
+    ['prerequisites']: 'Prerequisites {\n' +
+        'course: $course,\n' +
+        'subjects: $subjects\n' +
+        '}'
 }
 
 const globals = {
@@ -136,6 +141,13 @@ interface properties {
         }
         dataProps?: {} // need to keep a placeholder here to ensure this field is available for generic access
     }
+    prerequisites: {
+        keyProps: {
+            subjects: string // JSON
+            course: string
+        }
+        dataProps?: {}
+    }
 }
 
 type PropsKey = keyof properties;
@@ -143,6 +155,38 @@ type PropsKey = keyof properties;
 interface Node<T extends PropsKey> {
     type: T
     props: properties[T]
+}
+
+function uniqueNodeKeyPair(nodeA: Node<PropsKey>, nodeB: Node<PropsKey>){
+    return {...nodeA.props.keyProps, ...uniqueKeyArgumentsOf(nodeB, nodeA)}
+}
+
+function uniqueNodeDataPair(nodeA: Node<PropsKey>, nodeB: Node<PropsKey>){
+    return {...nodeA.props.dataProps, ...uniqueDataArgumentsOf(nodeB,nodeA)}
+}
+
+function uniqueKeyOf(subjectNode: Node<PropsKey>, comparatorNode: Node<PropsKey>){
+                                                                        // electric boogaloo
+    return subjectNode.type === comparatorNode.type ? insertString(keyOf[subjectNode.type],'2') : keyOf[subjectNode.type];
+}
+
+function uniqueKeyArgumentsOf(subjectNode: Node<PropsKey>, comparatorNode: Node<PropsKey>){
+    const nodePropsString = JSON.stringify(subjectNode.props.keyProps);
+    return (subjectNode.type === comparatorNode.type) ?
+        JSON.parse(nodePropsString.replace(/"(?<main>[A-z0-9_-]*)":/g,'\"$<main>2\":')) /* Black-magic fuckery */
+        : subjectNode.props.keyProps;
+}
+
+function uniqueDataOf(subjectNode: Node<PropsKey>, comparatorNode: Node<PropsKey>){
+    // electric boogaloo
+    return subjectNode.type === comparatorNode.type ? insertString(propsOf[subjectNode.type],'2') : propsOf[subjectNode.type];
+}
+
+function uniqueDataArgumentsOf(subjectNode: Node<PropsKey>, comparatorNode: Node<PropsKey>){
+    const nodePropsString = JSON.stringify(subjectNode.props.dataProps);
+    return (subjectNode.type === comparatorNode.type) ?
+        JSON.parse(nodePropsString.replace(/"(?<main>[A-z0-9_-]*)":/g,'\"$<main>2\":')) /* Black-magic fuckery */
+        : subjectNode.props.dataProps;
 }
 
 function getSubjectFromSummary(subject: SubjectSummary): SubjectData {
@@ -155,35 +199,97 @@ async function addNode<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>
         ...node.props.keyProps,
         ...node.props.dataProps
     });
-
 }
 
 async function linkNodes<T extends PropsKey>(tx: ManagedTransaction, nodeA: Node<T>, relation: string,  nodeB: Node<T>){
-    let flag = false;
-    if (nodeA.type === 'subject' && nodeB.type === 'subject' && 'code' in nodeB.props.keyProps && nodeB.props.keyProps.code === 'COMP 3027'){
-        flag = true;
-    }
     const linkNodes = "MATCH " +
         `(a:${keyOf[nodeA.type]}),` +
-        `(b:${nodeB.type === 'subject' ? insertString(keyOf[nodeB.type],'2') : keyOf[nodeB.type]})` +
+        `(b:${uniqueKeyOf(nodeB, nodeA)})` +
         `MERGE (a)-[r:${relation}]->(b)`;
-    const nodePropsString = JSON.stringify(nodeB.props.keyProps)
-    const uniqueNodeBProps = (nodeB.type === 'subject') ?
-        JSON.parse(nodePropsString.replace(/"(?<main>[A-z0-9_-]*)":/g,'\"$<main>2\":'))
-        : nodeB.props.keyProps;
     await tx.run(linkNodes, {
         ...nodeA.props.keyProps,
-        ...uniqueNodeBProps
+        ...uniqueKeyArgumentsOf(nodeB, nodeA)
     });
-    if (flag){
-        console.log('match: ' + linkNodes)
-        console.log('data: ' + JSON.stringify({
-            ...nodeA.props.keyProps,
-            ...uniqueNodeBProps
-        },null,2))
-
-    }
 }
+
+async function prependNode<T extends PropsKey>(tx: ManagedTransaction, startNode: Node<T>, relation: string, endNode: Node<T>){
+    const prependQuery = `MATCH (b)-[${relation}]->(c:${keyOf[endNode.type]})
+                          MERGE (a:${keyOf[startNode.type]})
+                          MERGE (a)-[:${relation}]->(b)`;
+    await tx.run(prependQuery,{
+        ...startNode.props.keyProps,
+        ...endNode.props.keyProps
+    })
+}
+
+async function connectionExists(tx: ManagedTransaction, startNode: Node<PropsKey>, endNode: Node<PropsKey>) {
+    const matchQuery = `MATCH (a:${keyOf[startNode.type]})-[r]-(b:${uniqueKeyOf(endNode, startNode)}) RETURN r`;
+    const queryResult = await tx.run(
+        matchQuery,
+        uniqueNodeKeyPair(startNode,endNode)
+    );
+    return queryResult.records.length > 0;
+}
+
+async function relationExists(tx: ManagedTransaction, startNode: Node<PropsKey>, relation: string, endNode?: Node<PropsKey>) {
+    const matchQuery = `MATCH (a:${keyOf[startNode.type]})-[r:${relation}]-(b${endNode ? ':' + uniqueKeyOf(endNode, startNode) : ''}) RETURN r`;
+    const queryResult = await tx.run(
+        matchQuery,
+        endNode ? uniqueNodeKeyPair(startNode, endNode) : {...startNode.props.keyProps}
+    );
+    return queryResult.records.length > 0;
+}
+
+async function removeConnection(tx: ManagedTransaction, startNode: Node<PropsKey>, endNode: Node<PropsKey>){
+    const removeQuery = `MATCH (a:${keyOf[startNode.type]})-[r]-(b:${uniqueKeyOf(endNode, startNode)}) DELETE r`;
+    await tx.run(
+        removeQuery,
+        uniqueKeyArgumentsOf(endNode, startNode)
+    );
+}
+
+// type Direction = '<--' | '--' | '-->'
+//
+// async function getConnectedNodes(tx: ManagedTransaction, node: Node<PropsKey>, direction: Direction = '--'){
+//     const connectedQuery = `MATCH (a:${keyOf[node.type]})${direction}(b) RETURN b`
+//     const queryResult = await tx.run(connectedQuery, {...node.props.keyProps});
+//     for (let record of queryResult.records) {
+//         await convertRecordToNode(record);
+//     }
+// }
+//
+// async function convertRecordToNode<R extends RecordShape>(record: Record<R>){
+//     highlight('getting record...')
+//     console.log(record.get('b'))
+//     highlight('got record!')
+//     // todo finish when required
+// }
+//
+// async function injectNode(tx: ManagedTransaction, startNode: Node<PropsKey>, relation1: string, injectedNode: Node<PropsKey>, relation2: string, endNode: Node<PropsKey>){
+//     const nodesConnected = await connectionExists(tx, startNode, endNode);
+//     if (nodesConnected) {
+//         await removeConnection(tx, startNode, endNode);
+//         await linkNodes(tx, startNode, relation1, injectedNode);
+//         await linkNodes(tx, injectedNode, relation2, endNode);
+//     } else {
+//         console.log('WARN: Attempted to inject non-existing connection. THIS SHOULD NOT HAPPEN!!!')
+//     }
+// }
+//
+// async function injectNodes(tx: ManagedTransaction, startNode: Node<PropsKey>, relation1: string, injectedNodes: Node<PropsKey>[], relation2: string, endNode: Node<PropsKey>){
+//     const nodesConnected = await connectionExists(tx, startNode, endNode);
+//     if (nodesConnected) {
+//         await removeConnection(tx, startNode, endNode);
+//         for (const injectedNode of injectedNodes) {
+//             await linkNodes(tx, startNode, relation1, injectedNode);
+//         }
+//         for (const injectedNode of injectedNodes) {
+//             await linkNodes(tx, injectedNode, relation2, endNode);
+//         }
+//     } else {
+//         console.log('WARN: Attempted to inject non-existing connection. THIS SHOULD NOT HAPPEN!!!')
+//     }
+// }
 
 async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: SubjectChoice, parentNode: Node<PropsKey>){
     // convert SubjectSummary array to string if necessary, it's an easy key, a stupid one, sure, but it works :)
@@ -208,8 +314,10 @@ async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: Subjec
         for (const sub of choiceData.choices){
             const subjectData = getSubjectFromSummary(sub);
             if(!subjectData) {
-                console.log('FATAL: COULD NOT FIND SUBJECT FROM MASTER LIST, SOMETHING HAS GONE HORRIBLY WRONG!');
-                throw 'FATAL: COULD NOT FIND SUBJECT FROM MASTER LIST, SOMETHING HAS GONE HORRIBLY WRONG!';
+                // todo recursively scrape subject from choice selections that are missed
+                console.log(`WARN: COULD NOT FIND SUBJECT ${sub.code} FROM MASTER LIST, SOMETHING HAS GONE HORRIBLY WRONG!`);
+                continue;
+                //throw 'FATAL: COULD NOT FIND SUBJECT FROM MASTER LIST, SOMETHING HAS GONE HORRIBLY WRONG!';
             }
             await linkNodes(tx, choiceNode, 'INCLUDES_CHOICE', {
                 type: 'subject',
@@ -253,19 +361,24 @@ async function addSpecialisation(tx: ManagedTransaction, specialisation: Major |
             }
     };
     await addNode(tx, specialisationNode);
-    await linkNodes(tx, parentProgram, `HAS_${type.toUpperCase()}`, specialisationNode);
     for (const subject of specialisation.subjects){
         if ('code' in subject){
-            await linkNodes(tx, specialisationNode, 'INCLUDES_SUBJECT', {
+            const subjectNode: Node<'subject'> = {
                 type: 'subject',
                 props: {
                     keyProps: { code: subject.code }
                 }
-            } as Node<'subject'>);
+            };
+            if(await relationExists(tx, subjectNode, 'PATHWAY_TO')){
+                await prependNode(tx, specialisationNode, 'PATHWAY_TO', subjectNode);
+            }  else {
+                await linkNodes(tx, specialisationNode, 'INCLUDES_SUBJECT', subjectNode);
+            }
         } else {
             await mergeAndLinkChoiceNode(tx, subject, specialisationNode);
         }
     }
+    await linkNodes(tx, parentProgram, `HAS_${type.toUpperCase()}`, specialisationNode);
 }
 
 function normaliseSubjectCode(code: string){
@@ -277,16 +390,13 @@ function normaliseSubjectCode(code: string){
 // don't care about relations, just connect subjects by prerequisites
 async function simplePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: Node<"subject">, logicalPrerequisites: LogicalPrerequisite[]){
     const subjectCodes = logicalPrerequisites.map(p=>p.AND.map(p2=>p2.OR)).flat(2);
-    if (subjectNode.props.keyProps.code === 'COMP 3027'){
-        console.log(`COMP 3027 has prerequisites ${JSON.stringify(logicalPrerequisites)} which expand to ${JSON.stringify(subjectCodes)}`)
-    }
     for (let code of subjectCodes){
         const normCode = normaliseSubjectCode(code) ?? '';
         if(normCode.match(regexMacros.subjectCode)) {
             code = normCode;
         }
-        if (!code.match(regexMacros.subjectCode)) {
-            console.log(`Invalid code ${code}, skipping`)
+        if (!code.match(regexMacros.subjectCode)) { // todo handle 'SPECIAL' cases here
+            console.log(`Invalid code ${code}, skipping`);
             continue;
         }
         const prerequisiteNode: Node<'subject'> = {
@@ -297,9 +407,39 @@ async function simplePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: 
                 }
             }
         };
-        if (subjectNode.props.keyProps.code === 'COMP 3027') console.log(`Linking ${prerequisiteNode} to ${subjectNode}`)
         await linkNodes(tx, prerequisiteNode, 'PREREQUISITE_OF', subjectNode);
     }
+}
+
+async function nodePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: Node<"subject">, logicalPrerequisites: LogicalPrerequisite[]){
+    let count = 0;
+    const prerequisiteNodes = []
+    for(let prerequisite of logicalPrerequisites){
+        const prerequisiteNode: Node<'prerequisites'> = {
+            type: 'prerequisites',
+            props: {
+                keyProps: {
+                    course: prerequisite.course,
+                    subjects: JSON.stringify(prerequisite.AND)
+                },
+                dataProps: {}
+            }
+        }
+        prerequisiteNodes.push(prerequisiteNode);
+        await addNode(tx, prerequisiteNode);
+        for (const subjectCode of prerequisite.AND.map(p=>p.OR).flat()) {
+            const prerequisiteSubjectNode: Node<'subject'> = {
+                type: 'subject',
+                props: { keyProps: {code: subjectCode} }
+            }
+            await linkNodes(tx, prerequisiteSubjectNode, 'PREREQUISITE_FOR', prerequisiteNode);
+        }
+        await linkNodes(tx, prerequisiteNode, 'PATHWAY_TO', subjectNode);
+    }
+    // // todo get each node connected with a relation directed towards subjectNode, and inject prerequisite nodes
+    // for (const n of prerequisiteNodes) {
+    //     await getConnectedNodes(tx, n, '<--');
+    // }
 }
 
 async function main(){
@@ -327,9 +467,6 @@ async function main(){
         await session.executeWrite(async tx => {
             console.log('cleaning db');
             let pt = startTrackingProgress(0, 2);
-            /**
-             * Clean db
-             */
             const deleteConnectedNodes = "match (a) -[r] -> () delete a, r";
             const deleteOrphans = "match (a) delete a";
             await tx.run(deleteConnectedNodes);
@@ -338,7 +475,7 @@ async function main(){
             pt.progress++;
             stopTrackingProgress(pt);
 
-
+            console.log('Adding subject nodes...')
             pt = startTrackingProgress(0,globals.subjects.length);
             for (const subject of globals.subjects){
                 let logicalPrerequisites: LogicalPrerequisite[] = [];
@@ -371,6 +508,10 @@ async function main(){
                 await addNode(tx, subjectNode);
                 pt.progress++;
             }
+            stopTrackingProgress(pt);
+
+            console.log('Adding prerequisites...')
+            pt = startTrackingProgress(0,globals.subjects.length);
             for (const subject of globals.subjects){
                 let logicalPrerequisites: LogicalPrerequisite[] = [];
                 if (subject.prerequisites && typeof subject.prerequisites !== 'string'){
@@ -387,9 +528,12 @@ async function main(){
                     type: 'subject',
                     props: {keyProps: { code: subject.code }}
                 }
-                if(logicalPrerequisites.length > 0) await simplePrerequisiteGenerator(tx, subjectNode, logicalPrerequisites);
+                if(logicalPrerequisites.length > 0) await nodePrerequisiteGenerator(tx, subjectNode, logicalPrerequisites);
+                pt.progress++;
             }
             stopTrackingProgress(pt);
+
+            console.log('Adding programs, majors, and minors...')
             pt = startTrackingProgress(0, programSummaries.length);
             for (const program of programSummaries){
                 const programNode: Node<'program'> = {

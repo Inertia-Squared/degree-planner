@@ -17,9 +17,9 @@ const CONFIG = {
     outputFile: '../Automation/data/subjects-refined.json',
     modelName: 'qwen/qwq-32b',
     onlineModelName: 'gemini-2.5-pro',
-    online: false,
+    online: true,
     manualErrorMsg: "MANUAL INTERVENTION REQUIRED",
-    maxTries: 20,
+    maxTries: 10,
     verbose: true,
     systemPrompt:
         'You are a data processor who reads in and outputs prerequisite information based on some simple rules. ' +
@@ -34,7 +34,7 @@ const CONFIG = {
         '5. For each OR with a line break directly after, create a new entry with the same course name starting from the right/after the OR. The subject with the OR is merged into the ORIGINAL array (see example 5a)\n' +
         '5a. IMPORTANT EXAMPLE: A AND\n B AND\n C AND\n D OR\nE AND F -> [{course: any, prerequisites:[[A],[B],[C],[D]]},{course: any, prerequisites: [[E,F]]}]. Generalise this case as much as possible.\n' +
         '6. Returned subject values must follow this format.\n' +
-        '7. Courses have the format "[Some long name and info] 1234".\n' +
+        '7. Courses have the format "[Some long name and info] 1234". If you are not given a course code or a condition you cannot capture with a course code, fall back to "SPECIAL"\n' +
         '8. Returned course values must always be in the course field, and may only be "any" or in the format "1234", where 1234 is replaced with the course\'s actual code.\n' +
         '9. Do not include the subject title or description in your output.\n' +
         '10. Ignore erroneous ORs and ANDs, only count operators which (ignoring newlines) have a subject code immediately before them e.g. "WELF 7008 This and That in Magic and Mystery\nOr\nWELF 6001 Witchcraft or Wizardry in Season" is ALWAYS equal to {course: any, prerequisites: [[WELF 7008, WELF 6001]]}\n' +
@@ -115,7 +115,7 @@ async function queryModel(subject: SubjectData, attempts: number = 0){
                     // @ts-ignore
                     responseJsonSchema: z.toJSONSchema(requirementSchema),
                     thinkingConfig: {
-                        thinkingBudget: Math.min(Math.max((subject.prerequisites as string).length - 9, 5) * 40 + Math.max((subject.prerequisites as string).length - 50, 0) * 50, 5000)
+                        thinkingBudget: -1 // thinkingBudget: Math.min(Math.max((subject.prerequisites as string).length - 9, 5) * 40 + Math.max((subject.prerequisites as string).length - 50, 0) * 50, 5000)
                     }
                 }
             });

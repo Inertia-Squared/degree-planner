@@ -181,13 +181,13 @@ function extractYearData(rows: string[][], currentIndex: {index: number}): Year 
         if (containsMatch(rows[currentIndex.index], regexMacros.session)){
             if(CONFIG.verbose) console.log('Extracting for session at ' + rows[currentIndex.index]);
             const session = extractSessionData(rows, currentIndex);
-            currentIndex.index--; // ensure we don't skip year accidentally
+            if(session.subjects.length > 0) currentIndex.index--; // ensure we don't skip year accidentally
             year.sessions.push(session);
         }
     }
 
     if(year.sessions.length < 1){
-        throwAndLog("Could not find any sessions in year: " + year + " at index " + currentIndex);
+        //throwAndLog("Could not find any sessions in year: " + year + " at index " + currentIndex);
     }
 
     return year;
@@ -247,7 +247,7 @@ function extractSessionData(rows: string[][], currentIndex: {index: number}): Se
     
     if (session.subjects.length < 1) {
         if(CONFIG.verbose) console.log('Failed at index ' + currentIndex.index + ' out of ' + (rows.length - 1) + ' for current program ' + currentProgram)
-        throwAndLog("Could not find any subjects in session: " + JSON.stringify(session) + " for data " + rows + " at index " + currentIndex.index)
+        //throwAndLog("Could not find any subjects in session: " + JSON.stringify(session) + " for data " + rows + " at index " + currentIndex.index)
     }
     return session;
 }
@@ -277,7 +277,7 @@ function extractSpecialisationData(rows: string[][], currentIndex: {index: numbe
 
     if (session.subjects.length < 1) {
         if(CONFIG.verbose) console.log('Failed at index ' + currentIndex.index + ' out of ' + (rows.length - 1) + ' for current program ' + currentProgram)
-        throwAndLog("Could not find any subjects in session: " + JSON.stringify(session) + " for data " + rows + " at index " + currentIndex.index)
+        //throwAndLog("Could not find any subjects in session: " + JSON.stringify(session) + " for data " + rows + " at index " + currentIndex.index)
     }
     return session;
 }
@@ -425,7 +425,7 @@ function buildSpecialisation(list: Major[] | Minor[], data: MajorMinorData[]){
         if(structure && structure.length < 1) continue;
         const currentIndex = {index: 0}
 
-
+        //console.log('Spec ' + rawSpec.name);
         specialisation.name = rawSpec.name;
         specialisation.subjects = extractSpecialisationData(structure,currentIndex).subjects;
         specialisation.type = rawSpec.type;
@@ -449,6 +449,7 @@ async function main(){
     const minorData = JSON.parse(
         await fs.readFile(`${CONFIG.inputPath}programMinorData.json`, {encoding: 'utf-8'})) as MajorMinorData[];
 
+    //console.log(progData.length)
     const programs = [] as ProgramSummary[];
     let majorList = [] as Major[];
     let minorList = [] as Minor[];
@@ -460,6 +461,9 @@ async function main(){
 
     for (const programData of progData) {
         if (CONFIG.verbose) highlight('PROCESSING PROGRAM')
+        //console.log('Program ' + programData.name);
+        if (!programData.links || programData.links.subjects.length < 1) continue;
+        if (Object.values(programData.sequence).length < 1) continue;
         const program = {} as ProgramSummary;
         program.name = programData.name;
         currentProgram = (program.name.match(/[^\t\n]*/)??[])[0] ?? 'Unknown'; // need to regex out tabs, should probably have done this earlier // todo
@@ -470,6 +474,7 @@ async function main(){
         let sequences = [] as Sequence[]
 
         let currentIndex = {index: 0}
+        if (!recommendedSequence) continue;
         for (let i = 0; currentIndex.index < recommendedSequence.length - 1; i++) {
             let skip = false;
             let sequence = {} as Sequence;

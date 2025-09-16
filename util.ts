@@ -29,6 +29,7 @@ export const regexMacros = {
     creditPointsText: /Credit Points/,
     totalCreditPoints: /Total Credit Points/, // end of sequence code
     subjectCode: /^[A-Z]{4}(\s| )\d{4}/,
+        aggressiveSubjectCode: /[A-Z]{4}[\s ]?\d{4}/g, // matches subject codes the most aggressively but may have false positives
         looseSubjectCode: /[A-Z]{4}(\s| )\d{4}/,
         noWhiteSpaceCode: /[A-Z]{4}\d{4}/,
     hasChoice: /[Cc]hoose|Select/,

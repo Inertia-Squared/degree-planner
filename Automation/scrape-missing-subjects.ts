@@ -1,6 +1,6 @@
 import {
     getLinkFromSubjectCode,
-    highlight,
+    highlight, regexMacros,
     setConfig,
     underline
 } from "../util";
@@ -9,12 +9,15 @@ let childProcess = require('child_process');
 import fs from "fs/promises";
 import {SubjectData} from "../subjects/subject-scraper";
 
+
 const CONFIG = {
     workingPath: './',
 }
 
 const state = {
-    allLinksFound: [] as string[]
+    allLinksFound: [] as string[],
+    newLinksFound: [] as string[],
+    allSubjectData: [] as SubjectData[]
 }
 
 
@@ -26,7 +29,7 @@ async function main(){
     }, 1000)
 
     let subjectData = JSON.parse(
-        await fs.readFile(`${CONFIG.workingPath}data/subjects-refined.json`, {encoding: 'utf-8'})
+        await fs.readFile(`${CONFIG.workingPath}data/subjects-unrefined.json`, {encoding: 'utf-8'})
     ) as SubjectData[];
     state.allLinksFound = JSON.parse(
         await fs.readFile(`${CONFIG.workingPath}links/allSubjects.json`, {encoding: 'utf-8'})
@@ -35,21 +38,22 @@ async function main(){
 
     let depth = 1;
     while (subjectData && subjectData.length > 0){
+        state.allSubjectData.push(...subjectData);
         highlight(`Recursive pass ${depth++}:`);
-        underline('Getting next set of links to scrape and refine...')
+        underline('Getting next set of links to scrape...');
 
-        let prerequisiteSubjectLinks = Array.from(new Set(subjectData.map(s=>{
-            if(s.prerequisites && typeof s.prerequisites !== 'string'){
-                return s.prerequisites.map(p=>{
-                    if (p.prerequisites) {
-                        return p.prerequisites
-                    }
-                }).filter(p=>p!==undefined);
+        let prerequisiteSubjectLinks: string[] = Array.from(new Set(subjectData.map(s=>{
+            if (typeof s.originalPrerequisites === 'string') {
+                const matches = s.originalPrerequisites.match(regexMacros.aggressiveSubjectCode);
+                if(!matches) return;
+                return matches?.map(m=>m);
             }
-        }).filter(p=>p!==undefined).flat(3).map(c=>getLinkFromSubjectCode(c))));
+        }).flat().filter(f=>f!==undefined))).map(l=>getLinkFromSubjectCode(l))
 
         let missingLinks = prerequisiteSubjectLinks.filter(l=>!state.allLinksFound.includes(l));
+        console.log(`Found ${missingLinks.length} new subjects this pass`);
         if (!missingLinks || missingLinks.length < 1) break;
+        state.newLinksFound.push(...missingLinks);
         state.allLinksFound.push(...missingLinks);
         await fs.writeFile(
             CONFIG.workingPath+'temp/missing-links.json',
@@ -65,25 +69,14 @@ async function main(){
             ]
         )
 
-        // todo don't refine the subjects, extract the codes from plaintext and search them recursively
-        //  - prevents hallucinations from polluting actual nodes
-        //  - much more consistent
-        underline('Converting prerequisites of missing subjects to machine-friendly format...')
-        await runScript(
-            '../subjects/subject-refiner.ts',
-            [
-                CONFIG.workingPath+'temp/missing-subjects-unrefined.json',
-                CONFIG.workingPath+'temp/missing-subjects-refined.json'
-            ]
-        )
-
         subjectData = JSON.parse(
-            await fs.readFile(`${CONFIG.workingPath}temp/missing-subjects-refined.json`, {encoding: 'utf-8'})
+            await fs.readFile(`${CONFIG.workingPath}temp/missing-subjects-unrefined.json`, {encoding: 'utf-8'})
         ) as SubjectData[];
-
-        underline('refining missing subjects...')
     }
-
+    console.log('Recursion complete!')
+    underline('Updating unrefined subject data...')
+    await fs.writeFile(`${CONFIG.workingPath}data/subjects-unrefined.json`,
+        JSON.stringify(state.allSubjectData,null,2), {encoding: 'utf-8'});
     timer.close();
 }
 

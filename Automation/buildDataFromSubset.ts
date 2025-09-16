@@ -24,7 +24,7 @@ async function main(){
 
     console.time('program-scraping')
     underline('Extracting Program Data:')
-    await runScript('../programs/program-scraper.ts', ['../links/programs-subset-tiny.json', './data/programs-unrefined.json']); // links must be provided manually, can be provided as a subset of links gathered from link collector
+    await runScript('../programs/program-scraper.ts', ['../links/programs-subset-smaller.json', './data/programs-unrefined.json']); // links must be provided manually, can be provided as a subset of links gathered from link collector
     await runScript('../programs/related-links-extractor.ts', ['./data/programs-unrefined.json', './links/subsetProgram']);
     pt.progress++;
     console.timeEnd('program-scraping')
@@ -56,17 +56,17 @@ async function main(){
     pt.progress++;
     console.timeEnd('subject-scraping')
 
-    console.time('subject-refine')
-    underline('Converting prerequisites into machine-friendly logic, this may take a while...')
-    await runScript('../subjects/subject-refiner.ts', ['./data/subjects-unrefined.json','./data/subjects-refined.json']);
-    pt.progress++;
-    console.timeEnd('subject-refine')
-
     console.time('subject-find')
     underline('Recursively scraping subjects from prerequisites...')
     await runScript('scrape-missing-subjects.ts', ['./'])
     pt.progress++;
     console.timeEnd('subject-find')
+
+    console.time('subject-refine')
+    underline('Converting prerequisites into machine-friendly logic, this may take a while...')
+    await runScript('../subjects/subject-refiner.ts', ['./data/subjects-unrefined.json','./data/subjects-refined.json']);
+    pt.progress++;
+    console.timeEnd('subject-refine')
 
     console.time('program-refine')
     underline('Postprocessing Programs Dataset:')
