@@ -19,7 +19,6 @@ export default function Home() {
     // const [stagedEdges, setStagedEdges] = useState<GraphEdge[]>([]);
 
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
     const searchProgram = async (searchString: string)=>{
         const response = await fetch(`/api/graph/getPrograms?programName=${searchString}`);
@@ -45,13 +44,13 @@ export default function Home() {
             throw new Error(`Failed to get connected nodes at /api/graph/getConnected using id ${id}`)
         }
         const data = await response.json() as getConnectedNodesInterface;
-        let newNodes = nodes;
+        const newNodes = nodes;
         let newEdges = edges;
-        for(let connection of data.connections){
+        for(const connection of data.connections){
             const nodeAlreadyExists = nodes.find(node=>node.id==connection.connectedNode.id);
             const edgeAlreadyExists = edges.find(edge=>edge.id==connection.relation.id);
             if (!nodeAlreadyExists){
-                let newNode = connection.connectedNode;
+                const newNode = connection.connectedNode;
                 newNode.id = connection.connectedNode.id.toString();
                 newNodes.push(newNode);
             }
@@ -79,21 +78,14 @@ export default function Home() {
 
     useEffect(() => {
         const fetchPrograms = async () => {
-            try {
-                // Fetch data from your new API endpoint
-                await searchProgram('Bachelor of Data Science (3769)');
-            } catch (err: any) {
-                setError(err.message);
-            } finally {
-                setIsLoading(false);
-            }
+            await searchProgram('Bachelor of Data Science (3769)');
+            setIsLoading(false);
         };
 
         fetchPrograms();
     }, []); // Empty dependency array ensures this runs once on mount
 
     if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
 
     return (
         <main className={`h-[100vh] flex flex-col p-4`}>
