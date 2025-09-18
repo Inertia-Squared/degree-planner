@@ -424,12 +424,12 @@ async function main(){
     const PASSWORD = process.env.NEO4J_PASSWORD ?? '';
 
     const driver: Driver = neo4j.driver(URI, neo4j.auth.basic(USER, PASSWORD));
-    await driver.getServerInfo({database: 'subset-it-programs'}).then((r)=>{
+    await driver.getServerInfo({database: 'neo4j'}).then((r)=>{
         console.log(r)
         console.log('connected!')
     })
 
-    const session = driver.session({database: 'subset-it-programs'});
+    const session = driver.session({database: 'neo4j'});
     let programSummaries = [] as ProgramSummary[];
     try{
         programSummaries = JSON.parse(await fs.readFile(CONFIG.inputPath+'programs-refined.json', {encoding: "utf-8"})) as ProgramSummary[];
