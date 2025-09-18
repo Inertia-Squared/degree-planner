@@ -38,8 +38,7 @@ export async function GET(request: Request) {
             return {
                 connectedNode: {
                     id: record.bID.low,
-                    // @ts-ignore
-                    label: record.b.properties[nodeDisplayNameMap[record.b.labels[0]]]
+                    label: record.b.properties[nodeDisplayNameMap[record.b.labels[0] as nodeDisplayNameKeys]]
                 },
                 relation: {
                     id: record.rID.high,
