@@ -45,7 +45,7 @@ export default function Home() {
         }
         const data = await response.json() as getConnectedNodesInterface;
         const newNodes = nodes;
-        let newEdges = edges;
+        const newEdges = edges;
         for(const connection of data.connections){
             const nodeAlreadyExists = nodes.find(node=>node.id==connection.connectedNode.id);
             const edgeAlreadyExists = edges.find(edge=>edge.id==connection.relation.id);
