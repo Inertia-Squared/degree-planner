@@ -9,42 +9,35 @@ export interface getConnectedNodesInterface {
         relation: {
             id: string,
             label: string
+            source: string
         }
     }[]
 }
 
 
-
-export async function GET(request: Request) {
-    const { searchParams } = new URL(request.url);
-    const parentNodeId = searchParams.get('parentNodeId');
-    const nodeFilter = searchParams.get('nodeFilter');
-    const relationFilter = searchParams.get('relationFilter');
-
-    if (!parentNodeId) {
-        return NextResponse.json({ error: 'programName is required' }, { status: 400 });
+export async function POST(request: Request) {
+    const {parentNodeIds}: {parentNodeIds: string[]} = await request.json();
+    if (!parentNodeIds) {
+        return NextResponse.json({ error: 'array of programNames required' }, { status: 400 });
     }
 
     try {
-        const result = await read(
-            `MATCH (a)-[r${relationFilter ? `:${relationFilter}` : ''}]->(b${nodeFilter ? `:${nodeFilter}` : ''}) WHERE ID(a) = ${parentNodeId} RETURN TYPE(r) as r,b, id(r) as rID, id(b) as bID`,
-        );
-        console.log(`MATCH (a)-[r${relationFilter ? `:${relationFilter}` : ''}]->(b${nodeFilter ? `:${nodeFilter}` : ''}) WHERE ID(a) = ${parentNodeId} RETURN TYPE(r) as r,b, id(r) as rID, id(b) as bID, labels(b) as bLabels`)
+        const query = `MATCH (a)-[r]->(b) WHERE ID(a) IN ${JSON.stringify(parentNodeIds.map(i=>Number(i)))} RETURN TYPE(r) as r,b, id(r) as rID, id(b) as bID, id(a) as aID`;
+        console.log(query)
+        const result = await read(query);
         const connections = result.map(record => {
-            //console.log(`props: ${JSON.stringify(record.b,null,1)}`)
-            // console.log(`For this node use ${nodeDisplayNameMap[record.b.labels[0]]}, yield ${record.b.properties[nodeDisplayNameMap[record.b.labels[0]]]}`)
-            //console.log(`Returning node with id ${JSON.stringify(record.bID)} and edge with id ${JSON.stringify(record.rID)}`)
             return {
                 connectedNode: {
                     id: record.bID.toNumber().toString(),
                     label: record.b.properties[nodeDisplayNameMap[record.b.labels[0] as nodeDisplayNameKeys]],
-                    type: record.b.labels[0],
+                    type: record.b.labels[0] as nodeDisplayNameKeys,
                     fill: nodeFillMap[record.b.labels[0] as nodeDisplayNameKeys],
                     size: nodeSizeMap[record.b.labels[0] as nodeDisplayNameKeys],
                 } as ExtendedNode,
                 relation: {
                     id: record.rID.toNumber().toString(),
                     label: record.r,
+                    source: record.aID.toNumber().toString(),
                 }
             };
         });

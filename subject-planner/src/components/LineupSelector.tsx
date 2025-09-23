@@ -22,7 +22,7 @@ const LineupSelector = ({ className, onSearchEvent }: LineupSelectorProps) => {
     return (
         <div className={className}>
             <form onSubmit={searchHandbook}>
-                <div className={`form-row`}>
+                <div className={`form-row flex flex-col md:flex-row`}>
                     <label>Desired Program</label>
                     <div className="input-sizer">
                         <input
