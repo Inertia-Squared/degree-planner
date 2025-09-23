@@ -1,8 +1,9 @@
 // components/ForceGraph.js
-import {GraphCanvas, GraphEdge, GraphNode} from 'reagraph';
+import {GraphCanvas, GraphEdge} from 'reagraph';
+import {ExtendedNode} from "@/app/page";
 
 interface ForceGraphProps {
-    nodes: GraphNode[],
+    nodes: ExtendedNode[],
     edges: GraphEdge[],
     doubleClickNodeAction: (id: string) => void
     className?: string,
@@ -12,7 +13,7 @@ const ForceGraph = ({nodes, edges, className, doubleClickNodeAction}: ForceGraph
     const classN = className ?? `w-[300px] h-full relative`;
     return (
         <div className={classN}>
-            <GraphCanvas  onNodeDoubleClick={(node) => doubleClickNodeAction(node.id)} nodes={nodes} edges={edges}/>
+            <GraphCanvas onNodeDoubleClick={(node) => doubleClickNodeAction(node.id)} nodes={nodes} edges={edges}/>
         </div>
     );
 };

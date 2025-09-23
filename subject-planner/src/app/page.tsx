@@ -11,8 +11,12 @@ const ForceGraph = dynamic(() => import('../components/ForceGraph'), {
     ssr: false,
 });
 
+export interface ExtendedNode extends GraphNode {
+    type: string
+}
+
 export default function Home() {
-    const [nodes, setNodes] = useState<GraphNode[]>([]);
+    const [nodes, setNodes] = useState<ExtendedNode[]>([]);
     const [edges, setEdges] = useState<GraphEdge[]>([])
 
     // const [stagedNodes, setStagedNodes] = useState<GraphNode[]>([]);
@@ -28,17 +32,16 @@ export default function Home() {
 
         const data = await response.json() as getProgramsInterface;
         console.log(`Found nodes with IDs ${data.programs.map(node=>node.id)}`)
-        const newPrograms = data.programs.map((program)=>{
-            const newGraphNode: GraphNode = {
-                id: program.id.toString(),
-                label: program.label
-            }
-            return newGraphNode;
-        })
-        if(data.programs !== nodes) setNodes(newPrograms);
+        if(data.programs !== nodes) setNodes(data.programs);
     }
 
+
+
     const addConnected = async (id: string) => {
+        const queriedNode = nodes.find(node=>node.id==id) as ExtendedNode;
+        if (queriedNode){
+
+        }
         const response = await fetch(`/api/graph/getConnected?parentNodeId=${id}`);
         if(!response.ok){
             throw new Error(`Failed to get connected nodes at /api/graph/getConnected using id ${id}`)
@@ -49,20 +52,24 @@ export default function Home() {
         const newEdges = edges;
         for(const connection of data.connections){
             const nodeAlreadyExists = nodes.find(node=>node.id==connection.connectedNode.id);
-            const edgeAlreadyExists = edges.find(edge=>edge.id==connection.relation.id);
+            const edgeAlreadyExists = edges.find(edge=> {
+                return edge.id == connection.relation.id + ":" + id + connection.connectedNode.id
+            });
             if (!nodeAlreadyExists){
                 const newNode = connection.connectedNode;
-                newNode.id = connection.connectedNode.id.toString();
+                newNode.id = connection.connectedNode.id;
                 newNodes.push(newNode);
             }
             if(!edgeAlreadyExists) {
                 const newEdge: GraphEdge = {
-                    id: connection.relation.id.toString(),
-                    source: id.toString(),
-                    target: connection.connectedNode.id.toString(),
-                    label: connection.relation.label.toString()
+                    id: connection.relation.id + ":" + id + connection.connectedNode.id,
+                    source: id,
+                    target: connection.connectedNode.id,
+                    label: connection.relation.label
                 };
                 newEdges.push(newEdge);
+            } else {
+                //console.log(`Connection already exists, skipping`)
             }
         }
         setNodes([...newNodes]);
