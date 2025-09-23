@@ -44,6 +44,7 @@ export default function Home() {
             throw new Error(`Failed to get connected nodes at /api/graph/getConnected using id ${id}`)
         }
         const data = await response.json() as getConnectedNodesInterface;
+        console.log(JSON.stringify(data))
         const newNodes = nodes;
         const newEdges = edges;
         for(const connection of data.connections){
