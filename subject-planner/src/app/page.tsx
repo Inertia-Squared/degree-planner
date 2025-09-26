@@ -7,14 +7,23 @@ import LineupSelector from "@/components/LineupSelector";
 import {getProgramsInterface} from "@/app/api/graph/getPrograms/route";
 import {getConnectedNodesInterface} from "@/app/api/graph/getConnected/route";
 import {nodeDisplayNameKeys} from "@/lib/siteUtil";
+import InfoPanel from "@/components/InfoPanel";
 
 const ForceGraph = dynamic(() => import('../components/ForceGraph'), {
     ssr: false,
 });
 
 export interface ExtendedNode extends GraphNode {
-    type: nodeDisplayNameKeys
+    data: {
+        type: nodeDisplayNameKeys
+        school: string,
+        coordinator: string,
+        discipline: string,
+        sequences: string,
+    }
 }
+
+
 
 enum expandModes {
     NeighboursOnly ,
@@ -22,11 +31,26 @@ enum expandModes {
     ExpandPrerequisiteChain
 }
 
+const badClusterOptions = [
+    'subjectSequences',
+    'programSequences',
+    'choiceSequences',
+    'description',
+    'subjectLink',
+    'programLink',
+    'majorLink',
+    'minorLink'
+]
+
 export default function Home() {
     const [nodes, setNodes] = useState<ExtendedNode[]>([]);
     const [edges, setEdges] = useState<GraphEdge[]>([])
     const [addedNodes, setAddedNodes] = useState<ExtendedNode[]>([]);
     const [expandMode, setExpandMode] = useState<expandModes>(expandModes.ExpandPrerequisites);
+    const [clusterOptions, setClusterOptions] = useState(['none', 'type', 'school', 'discipline', 'coordinator']);
+    const [clusterBy, setClusterBy] = useState<string>(clusterOptions[0]);
+    const [selectedElement, setSelectedElement] = useState<ExtendedNode | GraphEdge | undefined>(undefined);
+
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -44,6 +68,19 @@ export default function Home() {
         return nodes.find(n=>n.id===id);
     }
 
+    function selectElement(id: string, isNode: boolean = true) {
+        const element =
+            isNode ? nodes.find(n=>n.id===id) : edges.find(e=>e.id===id);
+        setSelectedElement(element);
+        if(isNode) {
+            setClusterOptions(Object.keys(element?.data).filter(key=>!badClusterOptions.find(o=>o==key)))
+        }
+    }
+
+    function resetSelectedElement(){
+        setSelectedElement(undefined);
+    }
+
 
     /**
      * Filters out all nodes of a type excluding the one selected.
@@ -57,7 +94,7 @@ export default function Home() {
 
         // Initial nodes to remove based on the filterType
         graph.oldNodes.forEach(n => {
-            if (n.type === filterType && n.id !== excludeId) {
+            if (n.data.type === filterType && n.id !== excludeId) {
                 nodesToRemove.add( n.id);
             }
         });
@@ -90,7 +127,7 @@ export default function Home() {
             let oldNodes = nodes;
             let oldEdges = edges;
             let result;
-            switch (getNodeFromId(params.id)?.type) {
+            switch (getNodeFromId(params.id)?.data.type) {
                 case 'Program':
                     result = chooseNode(params.id, 'Program', {oldNodes, oldEdges})
                     break;
@@ -159,7 +196,7 @@ export default function Home() {
         const connectionsToAdd: { newNodes: ExtendedNode[], newEdges: GraphEdge[] } = {newNodes: [], newEdges: []}
         const idsToAdd = []
         for (const node of nodesToExpand){
-            if(node.type === 'SubjectChoice' || (expandMode >= 1 && node.type === 'Prerequisites') || (expandMode >= 2 && node.type === 'Subject')){
+            if(node.data.type === 'SubjectChoice' || (expandMode >= 1 && node.data.type === 'Prerequisites') || (expandMode >= 2 && node.data.type === 'Subject')){
                 idsToAdd.push(node.id);
             }
         }
@@ -171,6 +208,7 @@ export default function Home() {
 
     useEffect(() => {
         if(addedNodes.length > 0) expandConnected(addedNodes);
+        console.log(addedNodes.map(n=>n.data.sequences))
     }, [addedNodes]);
 
     useEffect(() => {
@@ -207,13 +245,23 @@ export default function Home() {
                         <label htmlFor="expand-touching"> Only Touching Nodes (let me explore)</label><br/>
                     </div>
                     <div className={`border-r-2 mx-2`}></div>
+                    <div>
+                        <label>Cluster Nodes By: </label>
+                        <select onChange={(s)=>setClusterBy(s.currentTarget.value)}>
+                            {clusterOptions.map(c=>{
+                                return <option key={c} value={c}>{c}</option>
+                            })}
+                        </select>
+                    </div>
+                    <div className={`border-r-2 mx-2`}></div>
                     <div className={`grow`}></div>
                 </div>
             </div>
             <div>
             </div>
-            <ForceGraph doubleClickNodeAction={(id) => addConnected({id})} className={`grow w-full relative`}
+            <ForceGraph clickAction={selectElement} clickCanvas={resetSelectedElement} clusterBy={clusterBy} doubleClickNodeAction={(id) => addConnected({id})} className={`grow w-full relative`}
                         edges={edges} nodes={nodes}/>
+            <InfoPanel className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit max-h-1/2 max-w-1/5 border-2 absolute right-1 top-0 bottom-0 my-auto overflow-y-scroll`} item={selectedElement}/>
         </main>
     );
 }

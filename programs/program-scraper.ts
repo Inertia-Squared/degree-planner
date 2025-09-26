@@ -11,7 +11,7 @@ const CONFIG = {
     programsFile: '../links/programs.json',
     outputFile: './data/programs-unrefined.json',
     useHardwareAcceleration: true,
-    concurrentPages: 8,
+    concurrentPages: 50,
 }
 
 
@@ -21,6 +21,7 @@ export interface ProgramData {
     sequence: { [k: string]: string[][];}
     links?: ProgramLinkData
     originalLink: string
+    sequenceNames: string[]
 }
 
 export interface ProgramLinkData {
@@ -53,6 +54,9 @@ const state = {
     }
 } as StateType;
 
+const scrapedAlternate: string[] = [];
+const scrapedEmpty: string[] = [];
+
 async function searchPage(link: string) {
     /**
      * Connect to the page, and set a quick timeout so we don't get stuck if an expected object is missing
@@ -70,7 +74,9 @@ async function searchPage(link: string) {
     let sequenceLocator = (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'sequence2025'))[0] ?? /* prioritise more recent sequence, if possible */
                                         (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'sequence2024'))[0] ??
                                         (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'sequence'))[0] ??
+                                        (await getElementBySimilarId(page.locator('div').and(page.locator('.tab_content')),'structure'))[0] ??
                                         page
+
 
     /**
      * Get program name
@@ -79,6 +85,39 @@ async function searchPage(link: string) {
     if (!programName) throw `Could not find program name for ${link}!`
 
     let links = {} as ProgramLinkData;
+
+    let shouldLog = false;
+    let sequenceNames;
+    try{
+        sequenceNames = await sequenceLocator.locator('div.toggle-group:near(:text-matches("(Recommended|Program|Sequence|Structure|Current) (Recommended|Program|Sequence|Structure|Current)", "i"))').locator('button').allTextContents()
+        if(sequenceNames.length === 0) {
+            sequenceNames = await sequenceLocator.locator(':is(h2):near(table.sc_plangrid)')
+                .or(sequenceLocator.locator(':is(h2):near(table.sc_courselist)'))
+                .allTextContents()
+           // sequenceNames = (await Promise.all(sequenceNames.map(async s=>await s.first().allTextContents()))).flat()
+            shouldLog = true;
+        }
+    } catch (e) {
+        console.log('Timed out, skipped!')
+        shouldLog = true;
+    }
+    let shouldTerm = false;
+    sequenceNames = sequenceNames?.map(s=>{
+        // s = s as string
+        if (s.match(/(\s{1,3}|^)(major|minor)/i) || shouldTerm) {
+            shouldTerm = true;
+            return;
+        }
+        return s.trim().trim();
+    }).filter((f)=>f!==undefined) // trim extra since some sequences have had two spaces in them
+    if(shouldLog) console.log(`${programName.trim()}: ${sequenceNames}`)
+    if (shouldLog) {
+        if (sequenceNames && sequenceNames.length > 0){
+            scrapedAlternate.push(link)
+        } else {
+            scrapedEmpty.push(link)
+        }
+    }
 
     /**
      * Get links to majors
@@ -145,7 +184,6 @@ async function searchPage(link: string) {
     let sequence = (await getTablesBySimilarId(sequenceLocator.locator('div', {has: sequenceLocator.locator('table')}), 'tgl'));
     if(sequence?.size == 0) sequence = (new Map<string, string[][]>).set('structure', await extractTableData(sequenceLocator.locator('table').and(sequenceLocator.locator('.sc_courselist').or(sequenceLocator.locator('.sc_plangrid')))));
     if (sequence?.size == 0) sequence = (new Map<string, string[][]>).set('structure', await extractTableData(sequenceLocator.locator('table'))); // fallback to generic
-
     /**
      * Ship it!
      */
@@ -154,20 +192,26 @@ async function searchPage(link: string) {
         locations: locationTableData.map(l=> Object.fromEntries(l)),
         sequence: Object.fromEntries(sequence ?? []),
         links: links,
-        originalLink: link
+        originalLink: link,
+        sequenceNames: sequenceNames ?? []
     })
 
     await page.close();
 }
 
 async function main() {
+    let totalPages = 0;
     try {
         state.targetPages = JSON.parse(await fs.readFile(CONFIG.programsFile, {encoding: "utf-8"}));
+        totalPages = state.targetPages.length
     } catch (e) {
         console.error(e, '\nCould not locate file specified. Please check input.');
         process.exit();
     }
     await scrape(state, CONFIG, searchPage);
+    console.log(`Scraped with alternate method: ${JSON.stringify(scrapedAlternate,null,2)}`)
+    console.log(`Scraped and empty: ${JSON.stringify(scrapedEmpty,null,2)}`)
+    console.log(`Scraped Alternate: ${scrapedAlternate.length*100/totalPages}%, Scraped Empty: ${scrapedEmpty.length*100/totalPages}%`)
 }
 
 setConfig(CONFIG.programsFile).then((r)=> {

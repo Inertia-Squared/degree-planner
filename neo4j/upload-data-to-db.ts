@@ -48,7 +48,8 @@ function insertString(value: string, addition: string){
 export const propsOf = {
     ['program']: 'Program {\n' +
         'programName: $programName,\n' +
-        'programLink: $programLink\n' +
+        'programLink: $programLink,\n' +
+        'programSequences: $programSequences' +
         '}',
     ['major']: 'Major {\n' +
         'majorName: $majorName,\n' +
@@ -71,12 +72,14 @@ export const propsOf = {
         'description: $description, \n' +
         'school: $school, \n' +
         'discipline: $discipline, \n' +
-        'subjectLink: $subjectLink\n' +
+        'subjectLink: $subjectLink,\n' +
+        'subjectSequences: $subjectSequences' +
         '}',
     ['choice']: 'SubjectChoice {\n' +
         'choiceName: $choiceName, \n' +
         'choices: $choices, \n' +
-        'parent: $parent\n' +
+        'parent: $parent,\n' +
+        'choiceSequences: $choiceSequences' +
         '}',
     ['prerequisites']: 'Prerequisites {\n' +
         'course: $course,\n' +
@@ -88,13 +91,14 @@ const globals = {
     subjects: [] as SubjectData[]
 }
 
-export interface properties {
+export interface nodeProperties {
     program: {
         keyProps: {
             programName: string
         }
         dataProps?: {
             programLink: string
+            programSequences: string[]
         }
     }
     major: {
@@ -130,6 +134,7 @@ export interface properties {
             school: string
             discipline: string
             subjectLink: string
+            subjectSequences: string[]
         }
     }
     choice: {
@@ -139,7 +144,9 @@ export interface properties {
             choices: number
             parent?: string // fk also acts as secondary key
         }
-        dataProps?: {} // need to keep a placeholder here to ensure this field is available for generic access
+        dataProps?: {
+            choiceSequences: string[]
+        }
     }
     prerequisites: {
         keyProps: {
@@ -150,11 +157,11 @@ export interface properties {
     }
 }
 
-export type PropsKey = keyof properties;
+export type PropsKey = keyof nodeProperties;
 
 export interface Node<T extends PropsKey> {
     type: T
-    props: properties[T]
+    props: nodeProperties[T]
 }
 
 function uniqueNodeKeyPair(nodeA: Node<PropsKey>, nodeB: Node<PropsKey>){
@@ -199,6 +206,13 @@ async function addNode<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>
         ...node.props.keyProps,
         ...node.props.dataProps
     });
+}
+
+async function addProperty<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>, property: {name: string, value: string}, append: boolean = true){
+    const addProp = `MATCH (n:${keyOf[node.type]}) SET n.${property.name} =${append ? ` n.${property.name} +` : ''} '${property.value}'`;
+    await tx.run(addProp, {
+        ...node.props.keyProps
+    })
 }
 
 async function linkNodes<T extends PropsKey>(tx: ManagedTransaction, nodeA: Node<T>, relation: string,  nodeB: Node<T>){
@@ -294,6 +308,9 @@ async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: Subjec
                 choiceName: choiceDescription,
                 choices: choiceData.numberToChoose,
                 parent: parentKey ?? 'none'
+            },
+            dataProps: {
+                choiceSequences: []
             }
         }
     }
@@ -322,7 +339,8 @@ async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: Subjec
                         description: subjectData.description ?? 'none',
                         school: subjectData.school ?? 'none',
                         discipline: subjectData.discipline ?? 'none',
-                        subjectLink: subjectData.link
+                        subjectLink: subjectData.link,
+                        subjectSequences: []
                     }
                 }
             }
@@ -477,7 +495,8 @@ async function main(){
                             description: subject.description ?? 'none',
                             school: subject.school ?? 'none',
                             discipline: subject.discipline ?? 'none',
-                            subjectLink: subject.link
+                            subjectLink: subject.link,
+                            subjectSequences: []
                         }
                     }
                 }
@@ -516,7 +535,10 @@ async function main(){
                     type: 'program',
                     props: {
                         keyProps: { programName: program.name },
-                        dataProps: { programLink: program.link }
+                        dataProps: {
+                            programLink: program.link,
+                            programSequences: program.sequences.map(s=>s.name).flat()
+                        }
                     }
                 };
                 await addNode(tx, programNode);
@@ -532,14 +554,41 @@ async function main(){
                     }
                 }
 
-                const unwrappedSubjects = program.sequences.map(
+                const subjectSequencePairs = program.sequences.map(
                     sequence=>sequence.sequence.map(
                         year=>year.sessions.map(
-                            session=>session.subjects
+                            session=> {
+                                return {subjects: session.subjects, sequence: sequence.name}
+                            }
                         )
                     )
-                ).flat(3) // flatten subjects to 1d array, I didn't want to nest anymore it hurt my soul
-                for (let subject of unwrappedSubjects) await linkProgramToSubject(tx, programNode, subject);
+                ).flat(2)
+                for (const subjectSequencePair of subjectSequencePairs) {
+                    for (const subject of subjectSequencePair.subjects){
+                        if('code' in subject){
+                            const subjectNode = {
+                                type: 'subject',
+                                props: {
+                                    keyProps: { code: subject.code }
+                                }
+                            } as Node<'subject'>
+                            await addProperty(tx, subjectNode, {name: 'subjectSequences', value: `${program.name}:${subjectSequencePair.sequence}`})
+                        } else {
+                            const choiceNode = {
+                                type: 'choice',
+                                props: {
+                                    keyProps: {
+                                        choiceName: subject.choices,
+                                        choices: subject.numberToChoose,
+                                        parent: program.name
+                                    }
+                                }
+                            } as Node<'choice'>
+                            await addProperty(tx, choiceNode, {name: 'choiceSequences', value: `${program.name}:${subjectSequencePair.sequence}`})
+                        }
+                        await linkProgramToSubject(tx, programNode, subject);
+                    }
+                }
 
                 pt.progress++;
             }

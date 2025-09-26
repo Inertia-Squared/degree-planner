@@ -24,7 +24,10 @@ export async function GET(request: Request) {
             return {
                 id: record.ID.toNumber().toString(),
                 label: program.properties.programName,
-                type: 'Program',
+                data: {
+                    type: 'Program',
+                    ...program.properties
+                },
                 fill: nodeFillMap['Program'],
                 size: nodeSizeMap['Program']
             } as ExtendedNode;

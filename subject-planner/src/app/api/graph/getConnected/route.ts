@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { read } from "@/lib/neo4j";
 import {nodeDisplayNameKeys, nodeDisplayNameMap, nodeFillMap, nodeSizeMap} from "@/lib/siteUtil";
 import {ExtendedNode} from "@/app/page";
+import {keyOf, PropsKey} from "../../../../../../neo4j/upload-data-to-db";
 
 export interface getConnectedNodesInterface {
     connections: {
@@ -30,7 +31,10 @@ export async function POST(request: Request) {
                 connectedNode: {
                     id: record.bID.toNumber().toString(),
                     label: record.b.properties[nodeDisplayNameMap[record.b.labels[0] as nodeDisplayNameKeys]],
-                    type: record.b.labels[0] as nodeDisplayNameKeys,
+                    data: {
+                        type: record.b.labels[0] as nodeDisplayNameKeys,
+                        ...record.b.properties
+                    },
                     fill: nodeFillMap[record.b.labels[0] as nodeDisplayNameKeys],
                     size: nodeSizeMap[record.b.labels[0] as nodeDisplayNameKeys],
                 } as ExtendedNode,
