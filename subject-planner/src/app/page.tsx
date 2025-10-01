@@ -23,8 +23,6 @@ export interface ExtendedNode extends GraphNode {
     }
 }
 
-
-
 enum expandModes {
     NeighboursOnly ,
     ExpandPrerequisites ,
@@ -79,6 +77,8 @@ export default function Home() {
 
     function resetSelectedElement(){
         setSelectedElement(undefined);
+        setClusterOptions([]);
+        setClusterBy('not clustering')
     }
 
 
@@ -95,7 +95,7 @@ export default function Home() {
         // Initial nodes to remove based on the filterType
         graph.oldNodes.forEach(n => {
             if (n.data.type === filterType && n.id !== excludeId) {
-                nodesToRemove.add( n.id);
+                nodesToRemove.add(n.id);
             }
         });
 
