@@ -10,7 +10,7 @@ const CONFIG = {
     outputFile: './data/subjects-unrefined.json',
     useHardwareAcceleration: true,
     desiredTerms: ['Credit Points','Coordinator','Description','School','Discipline','Pre-requisite(s)'],
-    concurrentPages: 10,
+    concurrentPages: 15,
 }
 
 export interface AssessmentData {

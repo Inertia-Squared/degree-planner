@@ -479,7 +479,7 @@ async function main(){
             let skip = false;
             let sequence = {} as Sequence;
             sequence.sequence = [];
-            sequence.name = `Sequence ${i+1}`; // Currently scraper does not get title for sequence which may have important info // todo high prio
+            sequence.name = (i < programData.sequenceNames.length) ? programData.sequenceNames[i] : `Sequence ${i+1}`;
             for(; !containsMatch(recommendedSequence[currentIndex.index], regexMacros.totalCreditPoints); ) {
                 const year = extractYearData(recommendedSequence, currentIndex);
                 sequence.sequence.push(year);

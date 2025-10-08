@@ -28,45 +28,45 @@ async function main(){
     await runScript('../programs/related-links-extractor.ts', ['./data/programs-unrefined.json', './links/subsetProgram']);
     pt.progress++;
     console.timeEnd('program-scraping')
+    //
+    // console.time('specialisation-scraping')
+    // underline('Extracting Majors/Minors:')
+    // await runScript('../majors-minors/major-minor-scraper.ts', ['./links/subsetProgramMajors.json', './data/programMajorData.json']);
+    // await runScript('../majors-minors/subject-links-extractor.ts', ['./data/programMajorData.json', './links/majorSubjectsLinks.json']);
+    // pt.progress++;
+    // await runScript('../majors-minors/major-minor-scraper.ts', ['./links/subsetProgramMinors.json', './data/programMinorData.json']);
+    // await runScript('../majors-minors/subject-links-extractor.ts', ['./data/programMinorData.json', './links/minorSubjectsLinks.json']);
+    // pt.progress++;
+    // console.timeEnd('specialisation-scraping')
+    //
+    // console.time('subject-combining')
+    // underline('Combining Subjects Found...')
+    // const programSubjects = JSON.parse(await fs.readFile('./links/subsetProgramSubjects.json', {encoding: 'utf-8'}));
+    // const majorSubjects = JSON.parse(await fs.readFile('./links/majorSubjectsLinks.json', {encoding: 'utf-8'}));
+    // const minorSubjects = JSON.parse(await fs.readFile('./links/minorSubjectsLinks.json', {encoding: 'utf-8'}));
+    //
+    // const combinedSubjects = Array.from(new Set([...programSubjects,...majorSubjects,...minorSubjects].flat()));
+    // await fs.writeFile('./links/allSubjects.json', JSON.stringify(combinedSubjects, null, 2));
+    // pt.progress++;
+    // console.timeEnd('subject-combining')
 
-    console.time('specialisation-scraping')
-    underline('Extracting Majors/Minors:')
-    await runScript('../majors-minors/major-minor-scraper.ts', ['./links/subsetProgramMajors.json', './data/programMajorData.json']);
-    await runScript('../majors-minors/subject-links-extractor.ts', ['./data/programMajorData.json', './links/majorSubjectsLinks.json']);
-    pt.progress++;
-    await runScript('../majors-minors/major-minor-scraper.ts', ['./links/subsetProgramMinors.json', './data/programMinorData.json']);
-    await runScript('../majors-minors/subject-links-extractor.ts', ['./data/programMinorData.json', './links/minorSubjectsLinks.json']);
-    pt.progress++;
-    console.timeEnd('specialisation-scraping')
-
-    console.time('subject-combining')
-    underline('Combining Subjects Found...')
-    const programSubjects = JSON.parse(await fs.readFile('./links/subsetProgramSubjects.json', {encoding: 'utf-8'}));
-    const majorSubjects = JSON.parse(await fs.readFile('./links/majorSubjectsLinks.json', {encoding: 'utf-8'}));
-    const minorSubjects = JSON.parse(await fs.readFile('./links/minorSubjectsLinks.json', {encoding: 'utf-8'}));
-
-    const combinedSubjects = Array.from(new Set([...programSubjects,...majorSubjects,...minorSubjects].flat()));
-    await fs.writeFile('./links/allSubjects.json', JSON.stringify(combinedSubjects, null, 2));
-    pt.progress++;
-    console.timeEnd('subject-combining')
-
-    console.time('subject-scraping')
-    underline('Scraping Subject Data:')
-    await runScript('../subjects/subject-scraper.ts',['./links/allSubjects.json', './data/subjects-unrefined.json']);
-    pt.progress++;
-    console.timeEnd('subject-scraping')
-
-    console.time('subject-find')
-    underline('Recursively scraping subjects from prerequisites...')
-    await runScript('scrape-missing-subjects.ts', ['./'])
-    pt.progress++;
-    console.timeEnd('subject-find')
-
-    console.time('subject-refine')
-    underline('Converting prerequisites into machine-friendly logic, this may take a while...')
-    await runScript('../subjects/subject-refiner.ts', ['./data/subjects-unrefined.json','./data/subjects-refined.json']);
-    pt.progress++;
-    console.timeEnd('subject-refine')
+    // console.time('subject-scraping')
+    // underline('Scraping Subject Data:')
+    // await runScript('../subjects/subject-scraper.ts',['./links/allSubjects.json', './data/subjects-unrefined.json']);
+    // pt.progress++;
+    // console.timeEnd('subject-scraping')
+    //
+    // console.time('subject-find')
+    // underline('Recursively scraping subjects from prerequisites...')
+    // await runScript('scrape-missing-subjects.ts', ['./'])
+    // pt.progress++;
+    // console.timeEnd('subject-find')
+    //
+    // console.time('subject-refine')
+    // underline('Converting prerequisites into machine-friendly logic, this may take a while...')
+    // await runScript('../subjects/subject-refiner.ts', ['./data/subjects-unrefined.json','./data/subjects-refined.json']);
+    // pt.progress++;
+    // console.timeEnd('subject-refine')
 
     console.time('program-refine')
     underline('Postprocessing Programs Dataset:')

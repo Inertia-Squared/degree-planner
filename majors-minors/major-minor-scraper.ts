@@ -17,7 +17,7 @@ const CONFIG = {
     useHardwareAcceleration: true,
     outputFile: './data/majors-minors-unrefined.json',
     // desiredTerms: ['Credit Points','Coordinator','Description','School','Discipline','Pre-requisite(s)'],
-    concurrentPages: 10,
+    concurrentPages: 15,
 }
 
 export enum SpecialisationType {

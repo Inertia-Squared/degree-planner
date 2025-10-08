@@ -30,7 +30,7 @@ export interface LogicalPrerequisite {
     }[]
 }
 
-const keyOf = {
+export const keyOf = {
     ['program']: 'Program {programName: $programName}',
     ['major']: 'Major {majorName: $majorName}',
     ['minor']: 'Minor {minorName: $minorName}',
@@ -45,10 +45,11 @@ function insertString(value: string, addition: string){
 
 // todo create a function that automatically converts available parameters to the structure below
 //  will allow for optional properties, and be easier to maintain
-const propsOf = {
+export const propsOf = {
     ['program']: 'Program {\n' +
         'programName: $programName,\n' +
-        'programLink: $programLink\n' +
+        'programLink: $programLink,\n' +
+        'programSequences: $programSequences' +
         '}',
     ['major']: 'Major {\n' +
         'majorName: $majorName,\n' +
@@ -71,12 +72,14 @@ const propsOf = {
         'description: $description, \n' +
         'school: $school, \n' +
         'discipline: $discipline, \n' +
-        'subjectLink: $subjectLink\n' +
+        'subjectLink: $subjectLink,\n' +
+        'subjectSequences: $subjectSequences' +
         '}',
     ['choice']: 'SubjectChoice {\n' +
         'choiceName: $choiceName, \n' +
         'choices: $choices, \n' +
-        'parent: $parent\n' +
+        'parent: $parent,\n' +
+        'choiceSequences: $choiceSequences' +
         '}',
     ['prerequisites']: 'Prerequisites {\n' +
         'course: $course,\n' +
@@ -88,13 +91,14 @@ const globals = {
     subjects: [] as SubjectData[]
 }
 
-interface properties {
+export interface nodeProperties {
     program: {
         keyProps: {
             programName: string
         }
         dataProps?: {
             programLink: string
+            programSequences: string[]
         }
     }
     major: {
@@ -130,6 +134,7 @@ interface properties {
             school: string
             discipline: string
             subjectLink: string
+            subjectSequences: string[]
         }
     }
     choice: {
@@ -139,7 +144,9 @@ interface properties {
             choices: number
             parent?: string // fk also acts as secondary key
         }
-        dataProps?: {} // need to keep a placeholder here to ensure this field is available for generic access
+        dataProps?: {
+            choiceSequences: string[]
+        }
     }
     prerequisites: {
         keyProps: {
@@ -150,11 +157,11 @@ interface properties {
     }
 }
 
-type PropsKey = keyof properties;
+export type PropsKey = keyof nodeProperties;
 
-interface Node<T extends PropsKey> {
+export interface Node<T extends PropsKey> {
     type: T
-    props: properties[T]
+    props: nodeProperties[T]
 }
 
 function uniqueNodeKeyPair(nodeA: Node<PropsKey>, nodeB: Node<PropsKey>){
@@ -201,6 +208,13 @@ async function addNode<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>
     });
 }
 
+async function addProperty<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>, property: {name: string, value: string}, append: boolean = true){
+    const addProp = `MATCH (n:${keyOf[node.type]}) SET n.${property.name} =${append ? ` n.${property.name} +` : ''} '${property.value}'`;
+    await tx.run(addProp, {
+        ...node.props.keyProps
+    })
+}
+
 async function linkNodes<T extends PropsKey>(tx: ManagedTransaction, nodeA: Node<T>, relation: string,  nodeB: Node<T>){
     const linkNodes = "MATCH " +
         `(a:${keyOf[nodeA.type]}),` +
@@ -210,6 +224,40 @@ async function linkNodes<T extends PropsKey>(tx: ManagedTransaction, nodeA: Node
         ...nodeA.props.keyProps,
         ...uniqueKeyArgumentsOf(nodeB, nodeA)
     });
+}
+
+async function linkNodeToId<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>, relation: string, id: string){
+    const linkNodes = "MATCH " +
+        `(a:${keyOf[node.type]}),` +
+        `(b) WHERE ID(b) = ${id} ` +
+        `MERGE (a)-[r:${relation}]->(b)`;
+    await tx.run(linkNodes, {
+        ...node.props.keyProps
+    });
+}
+
+async function prerequisiteAwareLinkNodes<T extends PropsKey>(tx: ManagedTransaction, subject: SubjectSummary, subjectNode: Node<'subject'>, relationship: string, otherNode: Node<T>){
+    let shouldLinkDirectlyToProgram = true;
+    let prerequisiteNodeIds = []
+    const subjectData = getSubjectFromSummary(subject);
+    if(subjectData){
+        prerequisiteNodeIds = await getSubjectPrerequisiteNodeIds(tx, subjectNode);
+        shouldLinkDirectlyToProgram = prerequisiteNodeIds.length === 0;
+    } else {
+        console.log(`Got undefined for ${subject.code}. Indicates bad scrape or subject discontinued.`);
+        // todo should detect and prune these earlier? Or maybe leave them in as dummy nodes for students to decide
+        //  what to do with, but they don't have any data attached so not sure how helpful it'll be :/
+    }
+                                                    // Assert that subjectNode is in fact extending PropsKey,
+                                                    // because linter thinks Node<'subject'> only overlaps, not extend?
+    if(shouldLinkDirectlyToProgram) {               // fixme if something breaks this is probably part of the problem
+        await linkNodes(tx, otherNode, relationship, <Node<T>>subjectNode);
+    } else {
+        // if not to directly linked to program, we need to put prerequisites in the middle
+        for (let nodeId of prerequisiteNodeIds) {
+            await linkNodeToId(tx, otherNode, relationship, nodeId);
+        }
+    }
 }
 
 async function prependNode<T extends PropsKey>(tx: ManagedTransaction, startNode: Node<T>, relation: string, endNode: Node<T>){
@@ -248,49 +296,6 @@ async function removeConnection(tx: ManagedTransaction, startNode: Node<PropsKey
     );
 }
 
-// type Direction = '<--' | '--' | '-->'
-//
-// async function getConnectedNodes(tx: ManagedTransaction, node: Node<PropsKey>, direction: Direction = '--'){
-//     const connectedQuery = `MATCH (a:${keyOf[node.type]})${direction}(b) RETURN b`
-//     const queryResult = await tx.run(connectedQuery, {...node.props.keyProps});
-//     for (let record of queryResult.records) {
-//         await convertRecordToNode(record);
-//     }
-// }
-//
-// async function convertRecordToNode<R extends RecordShape>(record: Record<R>){
-//     highlight('getting record...')
-//     console.log(record.get('b'))
-//     highlight('got record!')
-//     // todo finish when required
-// }
-//
-// async function injectNode(tx: ManagedTransaction, startNode: Node<PropsKey>, relation1: string, injectedNode: Node<PropsKey>, relation2: string, endNode: Node<PropsKey>){
-//     const nodesConnected = await connectionExists(tx, startNode, endNode);
-//     if (nodesConnected) {
-//         await removeConnection(tx, startNode, endNode);
-//         await linkNodes(tx, startNode, relation1, injectedNode);
-//         await linkNodes(tx, injectedNode, relation2, endNode);
-//     } else {
-//         console.log('WARN: Attempted to inject non-existing connection. THIS SHOULD NOT HAPPEN!!!')
-//     }
-// }
-//
-// async function injectNodes(tx: ManagedTransaction, startNode: Node<PropsKey>, relation1: string, injectedNodes: Node<PropsKey>[], relation2: string, endNode: Node<PropsKey>){
-//     const nodesConnected = await connectionExists(tx, startNode, endNode);
-//     if (nodesConnected) {
-//         await removeConnection(tx, startNode, endNode);
-//         for (const injectedNode of injectedNodes) {
-//             await linkNodes(tx, startNode, relation1, injectedNode);
-//         }
-//         for (const injectedNode of injectedNodes) {
-//             await linkNodes(tx, injectedNode, relation2, endNode);
-//         }
-//     } else {
-//         console.log('WARN: Attempted to inject non-existing connection. THIS SHOULD NOT HAPPEN!!!')
-//     }
-// }
-
 async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: SubjectChoice, parentNode: Node<PropsKey>){
     // convert SubjectSummary array to string if necessary, it's an easy key, a stupid one, sure, but it works :)
     const choiceDescription = JSON.stringify(choiceData.choices,null,2);
@@ -303,6 +308,9 @@ async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: Subjec
                 choiceName: choiceDescription,
                 choices: choiceData.numberToChoose,
                 parent: parentKey ?? 'none'
+            },
+            dataProps: {
+                choiceSequences: []
             }
         }
     }
@@ -319,7 +327,7 @@ async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: Subjec
                 continue;
                 //throw 'FATAL: COULD NOT FIND SUBJECT FROM MASTER LIST, SOMETHING HAS GONE HORRIBLY WRONG!';
             }
-            await linkNodes(tx, choiceNode, 'INCLUDES_CHOICE', {
+            const subjectNode: Node<'subject'> = {
                 type: 'subject',
                 props: {
                     keyProps: { code: subjectData.code },
@@ -331,10 +339,12 @@ async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: Subjec
                         description: subjectData.description ?? 'none',
                         school: subjectData.school ?? 'none',
                         discipline: subjectData.discipline ?? 'none',
-                        subjectLink: subjectData.link
+                        subjectLink: subjectData.link,
+                        subjectSequences: []
                     }
                 }
-            })
+            }
+            await prerequisiteAwareLinkNodes(tx, sub, subjectNode, 'INCLUDES_CHOICE', choiceNode);
         }
     }
 }
@@ -381,38 +391,7 @@ async function addSpecialisation(tx: ManagedTransaction, specialisation: Major |
     await linkNodes(tx, parentProgram, `HAS_${type.toUpperCase()}`, specialisationNode);
 }
 
-function normaliseSubjectCode(code: string){
-    if (code.match(regexMacros.noWhiteSpaceCode)){
-        return code.replace(code.slice(0,4), code.slice(0,4)+' ');
-    }
-}
-
-// don't care about relations, just connect subjects by prerequisites
-async function simplePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: Node<"subject">, logicalPrerequisites: LogicalPrerequisite[]){
-    const subjectCodes = logicalPrerequisites.map(p=>p.AND.map(p2=>p2.OR)).flat(2);
-    for (let code of subjectCodes){
-        const normCode = normaliseSubjectCode(code) ?? '';
-        if(normCode.match(regexMacros.subjectCode)) {
-            code = normCode;
-        }
-        if (!code.match(regexMacros.subjectCode)) { // todo handle 'SPECIAL' cases here
-            console.log(`Invalid code ${code}, skipping`);
-            continue;
-        }
-        const prerequisiteNode: Node<'subject'> = {
-            type: 'subject',
-            props: {
-                keyProps: {
-                    code: code
-                }
-            }
-        };
-        await linkNodes(tx, prerequisiteNode, 'PREREQUISITE_OF', subjectNode);
-    }
-}
-
 async function nodePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: Node<"subject">, logicalPrerequisites: LogicalPrerequisite[]){
-    let count = 0;
     const prerequisiteNodes = []
     for(let prerequisite of logicalPrerequisites){
         const prerequisiteNode: Node<'prerequisites'> = {
@@ -436,10 +415,25 @@ async function nodePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: No
         }
         await linkNodes(tx, prerequisiteNode, 'PATHWAY_TO', subjectNode);
     }
-    // // todo get each node connected with a relation directed towards subjectNode, and inject prerequisite nodes
-    // for (const n of prerequisiteNodes) {
-    //     await getConnectedNodes(tx, n, '<--');
-    // }
+}
+
+async function getSubjectPrerequisiteNodeIds(tx: ManagedTransaction, subjectNode: Node<'subject'>){
+    const prerequisiteNodeQuery = `MATCH (a:${keyOf[subjectNode.type]})<--(b:Prerequisites) RETURN id(b) as ID`;
+    return (await tx.run(prerequisiteNodeQuery, {...subjectNode.props.keyProps})).records.map(record=>record.get('ID').low);
+}
+
+async function linkProgramToSubject(tx: ManagedTransaction, programNode: Node<"program">, subject: SubjectChoice | SubjectSummary) {
+    if('code' in subject){
+        const subjectNode = {
+            type: 'subject',
+            props: {
+                keyProps: { code: subject.code }
+            }
+        } as Node<'subject'>
+        await prerequisiteAwareLinkNodes(tx, subject, subjectNode, 'INCLUDES_SUBJECT', programNode)
+    } else {
+        await mergeAndLinkChoiceNode(tx, subject, programNode);
+    }
 }
 
 async function main(){
@@ -448,12 +442,12 @@ async function main(){
     const PASSWORD = process.env.NEO4J_PASSWORD ?? '';
 
     const driver: Driver = neo4j.driver(URI, neo4j.auth.basic(USER, PASSWORD));
-    await driver.getServerInfo({database: 'subset-it-programs'}).then((r)=>{
+    await driver.getServerInfo({database: 'neo4j'}).then((r)=>{
         console.log(r)
         console.log('connected!')
     })
 
-    const session = driver.session({database: 'subset-it-programs'});
+    const session = driver.session({database: 'neo4j'});
     let programSummaries = [] as ProgramSummary[];
     try{
         programSummaries = JSON.parse(await fs.readFile(CONFIG.inputPath+'programs-refined.json', {encoding: "utf-8"})) as ProgramSummary[];
@@ -501,7 +495,8 @@ async function main(){
                             description: subject.description ?? 'none',
                             school: subject.school ?? 'none',
                             discipline: subject.discipline ?? 'none',
-                            subjectLink: subject.link
+                            subjectLink: subject.link,
+                            subjectSequences: []
                         }
                     }
                 }
@@ -540,10 +535,14 @@ async function main(){
                     type: 'program',
                     props: {
                         keyProps: { programName: program.name },
-                        dataProps: { programLink: program.link }
+                        dataProps: {
+                            programLink: program.link,
+                            programSequences: program.sequences.map(s=>s.name).flat()
+                        }
                     }
                 };
                 await addNode(tx, programNode);
+
                 if(program.majors){
                     for (const major of program.majors){
                         await addSpecialisation(tx, major, 'major', programNode);
@@ -555,25 +554,42 @@ async function main(){
                     }
                 }
 
-                for (let sequence of program.sequences){
-                    for (let year of sequence.sequence){
-                        for (let session of year.sessions){
-                            for (let subject of session.subjects){
-                                if('code' in subject){
-                                    const subjectNode = {
-                                        type: 'subject',
-                                        props: {
-                                            keyProps: { code: subject.code }
-                                        }
-                                    } as Node<'subject'>
-                                    await linkNodes(tx, programNode, 'INCLUDES_SUBJECT', subjectNode);
-                                } else {
-                                    await mergeAndLinkChoiceNode(tx, subject, programNode);
-                                }
+                const subjectSequencePairs = program.sequences.map(
+                    sequence=>sequence.sequence.map(
+                        year=>year.sessions.map(
+                            session=> {
+                                return {subjects: session.subjects, sequence: sequence.name}
                             }
+                        )
+                    )
+                ).flat(2)
+                for (const subjectSequencePair of subjectSequencePairs) {
+                    for (const subject of subjectSequencePair.subjects){
+                        if('code' in subject){
+                            const subjectNode = {
+                                type: 'subject',
+                                props: {
+                                    keyProps: { code: subject.code }
+                                }
+                            } as Node<'subject'>
+                            await addProperty(tx, subjectNode, {name: 'subjectSequences', value: `${program.name}:${subjectSequencePair.sequence}`})
+                        } else {
+                            const choiceNode = {
+                                type: 'choice',
+                                props: {
+                                    keyProps: {
+                                        choiceName: subject.choices,
+                                        choices: subject.numberToChoose,
+                                        parent: program.name
+                                    }
+                                }
+                            } as Node<'choice'>
+                            await addProperty(tx, choiceNode, {name: 'choiceSequences', value: `${program.name}:${subjectSequencePair.sequence}`})
                         }
+                        await linkProgramToSubject(tx, programNode, subject);
                     }
                 }
+
                 pt.progress++;
             }
             stopTrackingProgress(pt);
