@@ -1,0 +1,5364 @@
+[
+  {
+    "name": "Bachelor of Information Systems Advanced (3688)\n\t\t\t\t",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequence": {
+      "structure": [
+        [
+          "Year 1"
+        ],
+        [
+          "Autumn session",
+          "Credit Points"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "BUSM 1042",
+          "Introduction to Business Analytics",
+          "10"
+        ],
+        [
+          "ACCT 1005",
+          "Accounting in Context",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2005",
+          "Computer Networking (Advanced)",
+          "10"
+        ],
+        [
+          "INFS 2002",
+          "Database Design and Development (Advanced)",
+          "10"
+        ],
+        [
+          "INFS 1016",
+          "Digital Transformation",
+          "10"
+        ],
+        [
+          "Select one elective or Major/Minor subject",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFS 2012",
+          "Digital Technologies and Security",
+          "10"
+        ],
+        [
+          "INFO 3004",
+          "Human-Computer Interaction (Advanced)",
+          "10"
+        ],
+        [
+          "INFS 2014",
+          "Systems Analysis and Design (Advanced)",
+          "10"
+        ],
+        [
+          "Select one elective or Major/Minor subject",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "INFS 3024",
+          "Enterprise Architecture and Design Thinking",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFS 3023",
+          "Advanced Systems Development Methodologies ",
+          "10"
+        ],
+        [
+          "INFS 3007",
+          "Emerging Trends in Information Systems (Advanced)",
+          "10"
+        ],
+        [
+          "Select two electives or Major subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3019",
+          "Professional Experience (Advanced)",
+          "10"
+        ],
+        [
+          "INFS 3027",
+          "Social Computing and Systems Thinking",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1"
+        ],
+        [
+          "Spring session",
+          "Credit Points"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "ACCT 1005",
+          "Accounting in Context",
+          "10"
+        ],
+        [
+          "INFS 2002",
+          "Database Design and Development (Advanced)",
+          "10"
+        ],
+        [
+          "INFS 1016",
+          "Digital Transformation",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "BUSM 1042",
+          "Introduction to Business Analytics",
+          "10"
+        ],
+        [
+          "INFS 2012",
+          "Digital Technologies and Security",
+          "10"
+        ],
+        [
+          "INFS 2014",
+          "Systems Analysis and Design (Advanced)",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2005",
+          "Computer Networking (Advanced)",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFS 3023",
+          "Advanced Systems Development Methodologies",
+          "10"
+        ],
+        [
+          "INFO 3004",
+          "Human-Computer Interaction (Advanced)",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "INFS 3027",
+          "Social Computing and Systems Thinking",
+          "10"
+        ],
+        [
+          "INFS 3024",
+          "Enterprise Architecture and Design Thinking",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFS 3007",
+          "Emerging Trends in Information Systems (Advanced)",
+          "10"
+        ],
+        [
+          "COMP 3019",
+          "Professional Experience (Advanced)",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ]
+      ]
+    },
+    "links": {
+      "majors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/business-analytics-ug-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/cybersecurity-management-testamur-major-/",
+        "https://hbook.westernsydney.edu.au/majors-minors/health-informatics-pg-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/infonomics-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/network-management-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/user-experience-testamur-major/"
+      ],
+      "minors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/cloud-computing-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/entertainment-computing-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/health-informatics-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/mobile-computing-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/networking-minor/"
+      ],
+      "subjects": [
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/busm1042",
+        "https://hbook.westernsydney.edu.au/subject-details/acct1005",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2005",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2002",
+        "https://hbook.westernsydney.edu.au/subject-details/infs1016",
+        "https://hbook.westernsydney.edu.au/subject-details/info3004",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2014",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3007",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3019",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/acct1005",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2002",
+        "https://hbook.westernsydney.edu.au/subject-details/infs1016",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/busm1042",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2014",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2005",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/info3004",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3027",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3007",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3019"
+      ]
+    },
+    "originalLink": "https://hbook.westernsydney.edu.au/programs/bachelor-information-systems-advanced/",
+    "sequenceNames": [
+      "Full-time start-year intake",
+      "Full-time mid-year intake"
+    ]
+  },
+  {
+    "name": "Bachelor of Information Systems (3687)\n\t\t\t\t",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Sydney City Campus*",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequence": {
+      "structure": [
+        [
+          "Year 1"
+        ],
+        [
+          "Autumn session",
+          "Credit Points"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "BUSM 1042",
+          "Introduction to Business Analytics",
+          "10"
+        ],
+        [
+          "ACCT 1005",
+          "Accounting in Context",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "INFS 1016",
+          "Digital Transformation",
+          "10"
+        ],
+        [
+          "Select one elective or Major/Minor subject",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFS 2012",
+          "Digital Technologies and Security",
+          "10"
+        ],
+        [
+          "INFO 3003",
+          "Human-Computer Interaction",
+          "10"
+        ],
+        [
+          "INFS 2013",
+          "Systems Analysis and Design",
+          "10"
+        ],
+        [
+          "Select one elective or Major/Minor subject",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "INFS 3024",
+          "Enterprise Architecture and Design Thinking      ",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFS 3023",
+          "Advanced Systems Development Methodologies ",
+          "10"
+        ],
+        [
+          "INFS 3006",
+          "Emerging Trends in Information Systems",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "INFS 3027",
+          "Social Computing and Systems Thinking",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1"
+        ],
+        [
+          "Spring session",
+          "Credit Points"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "ACCT 1005",
+          "Accounting in Context",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "INFS 1016",
+          "Digital Transformation",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "BUSM 1042",
+          "Introduction to Business Analytics",
+          "10"
+        ],
+        [
+          "INFS 2012",
+          "Digital Technologies and Security",
+          "10"
+        ],
+        [
+          "INFS 2013",
+          "Systems Analysis and Design",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFS 3023",
+          "Advanced Systems Development Methodologies ",
+          "10"
+        ],
+        [
+          "INFO 3003",
+          "Human-Computer Interaction",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "INFS 3027",
+          "Social Computing and Systems Thinking",
+          "10"
+        ],
+        [
+          "INFS 3024",
+          "Enterprise Architecture and Design Thinking",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "INFS 3006",
+          "Emerging Trends in Information Systems",
+          "10"
+        ],
+        [
+          "Select two electives or Major/Minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ]
+      ]
+    },
+    "links": {
+      "majors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/business-analytics-ug-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/cybersecurity-management-testamur-major-/",
+        "https://hbook.westernsydney.edu.au/majors-minors/health-informatics-pg-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/infonomics-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/network-management-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/user-experience-testamur-major/"
+      ],
+      "minors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/cloud-computing-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/entertainment-computing-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/health-informatics-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/mobile-computing-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/networking-minor/"
+      ],
+      "subjects": [
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/busm1042",
+        "https://hbook.westernsydney.edu.au/subject-details/acct1005",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/infs1016",
+        "https://hbook.westernsydney.edu.au/subject-details/info3003",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2013",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/acct1005",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/infs1016",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/busm1042",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2013",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/info3003",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3006"
+      ]
+    },
+    "originalLink": "https://hbook.westernsydney.edu.au/programs/bachelor-information-systems/",
+    "sequenceNames": [
+      "Full-time start-year intake - Parramatta Campus",
+      "Full-time mid-year intake - Parramatta Campus"
+    ]
+  },
+  {
+    "name": "Bachelor of Information and Communications Technology (Advanced) (3684)\n\t\t\t\t",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequence": {
+      "structure": [
+        [
+          "Year 1"
+        ],
+        [
+          "Autumn session",
+          "Credit Points"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "HUMN 1013",
+          "Contextualising Indigenous Australia (Day Mode)",
+          "10"
+        ],
+        [
+          "Select one of the following",
+          "10"
+        ],
+        [
+          "MATH 1038",
+          "Mathematics for Computing",
+          " "
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          " "
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2021",
+          "Software Engineering Fundamentals",
+          "10"
+        ],
+        [
+          "COMP 2016",
+          "Programming Techniques (Advanced)",
+          "10"
+        ],
+        [
+          "COMP 2005",
+          "Computer Networking (Advanced)",
+          "10"
+        ],
+        [
+          "INFS 2002",
+          "Database Design and Development (Advanced)",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3028",
+          "Software Construction",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          "Select two electives",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3019",
+          "Professional Experience (Advanced)",
+          "10"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1"
+        ],
+        [
+          "Spring session",
+          "Credit Points"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "COMP 2005",
+          "Computer Networking (Advanced)",
+          "10"
+        ],
+        [
+          "INFS 2002",
+          "Database Design and Development (Advanced)",
+          "10"
+        ],
+        [
+          "Select one elective",
+          " "
+        ],
+        [
+          " ",
+          "Credit Points",
+          "30"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "HUMN 1013",
+          "Contextualising Indigenous Australia (Day Mode)",
+          "10"
+        ],
+        [
+          "COMP 2021",
+          "Software Engineering Fundamentals",
+          "10"
+        ],
+        [
+          "Select one of the following",
+          "10"
+        ],
+        [
+          "MATH 1038",
+          "Mathematics for Computing",
+          " "
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          " "
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3028",
+          "Software Construction",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "COMP 2016",
+          "Programming Techniques (Advanced)",
+          "10"
+        ],
+        [
+          "Select one major subjects",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3019",
+          "Professional Experience (Advanced)",
+          "10"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          "Select one elective ",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "Select three major subjects",
+          "30"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "230"
+        ]
+      ]
+    },
+    "links": {
+      "majors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/cyber-security-ethical-hacking-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/enterprise-systems-architectures-ug-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/health-informatics-pg-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/multimedia-computing-testamur-major-t147/",
+        "https://hbook.westernsydney.edu.au/majors-minors/networking-cloud-computing-testamur-major-t146/",
+        "https://hbook.westernsydney.edu.au/majors-minors/software-development-testamur-major-t148/"
+      ],
+      "minors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/cloud-computing-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/cyber-security-ethical-hacking-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/data-science-machine-learning-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/games-development/",
+        "https://hbook.westernsydney.edu.au/majors-minors/graphics-visual-simulation-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/health-informatics-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/multimedia-computing-minor-0328/",
+        "https://hbook.westernsydney.edu.au/majors-minors/networking-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/software-development-minor-0329/",
+        "https://hbook.westernsydney.edu.au/majors-minors/ubiquitous-computing/"
+      ],
+      "subjects": [
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/humn1013",
+        "https://hbook.westernsydney.edu.au/subject-details/math1038",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2021",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2016",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2005",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2002",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3028",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2005",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2002",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/humn1013",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2021",
+        "https://hbook.westernsydney.edu.au/subject-details/math1038",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3028",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2016",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3019"
+      ]
+    },
+    "originalLink": "https://hbook.westernsydney.edu.au/programs/bachelor-information-communications-technology-advanced/",
+    "sequenceNames": [
+      "Full-time start-year intake",
+      "Full-time mid-year intake"
+    ]
+  },
+  {
+    "name": "Bachelor of Information and Communications Technology (3639)\n\t\t\t\t",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Sydney City Campus*",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Surabaya Campus Indonesia",
+        ".column1": "Full time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequence": {
+      "structure": [
+        [
+          "Year 1"
+        ],
+        [
+          "Autumn session",
+          "Credit Points"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "HUMN 1013",
+          "Contextualising Indigenous Australia (Day Mode)",
+          "10"
+        ],
+        [
+          "Select one of the following",
+          "10"
+        ],
+        [
+          "MATH 1038",
+          "Mathematics for Computing",
+          " "
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          " "
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "COMP 2021",
+          "Software Engineering Fundamentals",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "COMP 2015",
+          "Programming Techniques",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3028",
+          "Software Construction",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          "Select two electives",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1"
+        ],
+        [
+          "Spring session",
+          "Credit Points"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "HUMN 1013",
+          "Contextualising Indigenous Australia (Day Mode)",
+          "10"
+        ],
+        [
+          "COMP 2021",
+          "Software Engineering Fundamentals",
+          "10"
+        ],
+        [
+          "Select one of the following",
+          "10"
+        ],
+        [
+          "MATH 1038",
+          "Mathematics for Computing",
+          " "
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          " "
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3028",
+          "Software Construction",
+          "10"
+        ],
+        [
+          "COMP 2015",
+          "Programming Techniques",
+          "10"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          "Select one elective ",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "Select two major subjects",
+          "20"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1",
+          "Credit Points"
+        ],
+        [
+          "Semester 1",
+          " "
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "MATH 1038",
+          "Mathematics for Computing",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "CULT 1030",
+          "Pancasila",
+          "5"
+        ],
+        [
+          "Semester 2",
+          " "
+        ],
+        [
+          "COMP 2021",
+          "Software Engineering Fundamentals",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          "CULT 1031",
+          "Civic Education",
+          "5"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Semester 3",
+          " "
+        ],
+        [
+          "COMP 3028",
+          "Software Construction",
+          "10"
+        ],
+        [
+          "COMP 2015",
+          "Programming Techniques",
+          "10"
+        ],
+        [
+          "COMP 2008",
+          "Computer Organisation",
+          "10"
+        ],
+        [
+          "INFO 3015",
+          "Internet of Things and Smart Environments",
+          "10"
+        ],
+        [
+          "LANG 1036",
+          "Indonesian Language",
+          "5"
+        ],
+        [
+          "Semester 4",
+          " "
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          "10"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "INFO 3003",
+          "Human-Computer Interaction",
+          "10"
+        ],
+        [
+          "PHIL 1008",
+          "Religion",
+          "5"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "90"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Semester 5",
+          " "
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "COMP 3013",
+          "Mobile Applications Development",
+          "10"
+        ],
+        [
+          "COMP 3036",
+          "Full Stack Development",
+          "10"
+        ],
+        [
+          "INFO 3018",
+          "Computing Practicum",
+          "10"
+        ],
+        [
+          "Semester 6",
+          " "
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "COMP 3015",
+          "Operating Systems Programming",
+          "10"
+        ],
+        [
+          "COMP 2023",
+          "Mathematical Programming",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "70"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1",
+          "Credit Points"
+        ],
+        [
+          "Semester 1",
+          " "
+        ],
+        [
+          "MATH 1038",
+          "Mathematics for Computing",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "LANG 1036",
+          "Indonesian Language",
+          "5"
+        ],
+        [
+          "CULT 1030",
+          "Pancasila",
+          "5"
+        ],
+        [
+          "Semester 2",
+          " "
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "PHIL 1008",
+          "Religion",
+          "5"
+        ],
+        [
+          "CULT 1031",
+          "Civic Education",
+          "5"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Semester 3",
+          " "
+        ],
+        [
+          "COMP 2021",
+          "Software Engineering Fundamentals",
+          "10"
+        ],
+        [
+          "COMP 2015",
+          "Programming Techniques",
+          "10"
+        ],
+        [
+          "INFO 3015",
+          "Internet of Things and Smart Environments",
+          "10"
+        ],
+        [
+          "COMP 2008",
+          "Computer Organisation",
+          "10"
+        ],
+        [
+          "Semester 4",
+          " "
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          "10"
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "COMP 3028",
+          "Software Construction",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Semester 5",
+          " "
+        ],
+        [
+          "INFO 3018",
+          "Computing Practicum",
+          "10"
+        ],
+        [
+          "INFO 3003",
+          "Human-Computer Interaction",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "COMP 3013",
+          "Mobile Applications Development",
+          "10"
+        ],
+        [
+          "Semester 6",
+          " "
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "COMP 3023",
+          "Systems and Network Management",
+          "10"
+        ],
+        [
+          "COMP 3015",
+          "Operating Systems Programming",
+          "10"
+        ],
+        [
+          "COMP 3036",
+          "Full Stack Development",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ]
+      ]
+    },
+    "links": {
+      "majors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/cyber-security-ethical-hacking-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/enterprise-systems-architectures-ug-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/health-informatics-pg-testamur-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/multimedia-computing-testamur-major-t147/",
+        "https://hbook.westernsydney.edu.au/majors-minors/networking-cloud-computing-testamur-major-t146/",
+        "https://hbook.westernsydney.edu.au/majors-minors/software-development-testamur-major-t148/"
+      ],
+      "minors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/cloud-computing-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/cyber-security-ethical-hacking-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/data-science-machine-learning-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/games-development/",
+        "https://hbook.westernsydney.edu.au/majors-minors/graphics-visual-simulation-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/health-informatics-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/multimedia-computing-minor-0328/",
+        "https://hbook.westernsydney.edu.au/majors-minors/networking-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/software-development-minor-0329/",
+        "https://hbook.westernsydney.edu.au/majors-minors/ubiquitous-computing/"
+      ],
+      "subjects": [
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/humn1013",
+        "https://hbook.westernsydney.edu.au/subject-details/math1038",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2021",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2015",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3028",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/humn1013",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2021",
+        "https://hbook.westernsydney.edu.au/subject-details/math1038",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3028",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2015",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2027",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/math1038",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1030",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2021",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1031",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3028",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2015",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2008",
+        "https://hbook.westernsydney.edu.au/subject-details/info3015",
+        "https://hbook.westernsydney.edu.au/subject-details/lang1036",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2009",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3012",
+        "https://hbook.westernsydney.edu.au/subject-details/info3003",
+        "https://hbook.westernsydney.edu.au/subject-details/phil1008",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3013",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3036",
+        "https://hbook.westernsydney.edu.au/subject-details/info3018",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3015",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2023",
+        "https://hbook.westernsydney.edu.au/subject-details/math1038",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/lang1036",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1030",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/phil1008",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1031",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2021",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2015",
+        "https://hbook.westernsydney.edu.au/subject-details/info3015",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3012",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2009",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3028",
+        "https://hbook.westernsydney.edu.au/subject-details/info3018",
+        "https://hbook.westernsydney.edu.au/subject-details/info3003",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3013",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3023",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3015",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3036"
+      ]
+    },
+    "originalLink": "https://hbook.westernsydney.edu.au/programs/bachelor-information-communications-technology/",
+    "sequenceNames": [
+      "Full-time start-year intake",
+      "Full-time mid-year intake",
+      "Surabaya Campus Indonesia",
+      "Surabaya Campus Indonesia"
+    ]
+  },
+  {
+    "name": "Bachelor of Cyber Security and Behaviour (1837)\n\t\t\t\t",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Part Time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequence": {
+      "structure": [
+        [
+          "Year 1"
+        ],
+        [
+          "Autumn session",
+          "Credit Points"
+        ],
+        [
+          "BEHV 1026",
+          "Cyber Behaviour",
+          "10"
+        ],
+        [
+          "HUMN 1064",
+          "Digital Identities",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "INFO 2004",
+          "Cyber Crime and Social Engineering",
+          "10"
+        ],
+        [
+          "INFS 1016",
+          "Digital Transformation",
+          "10"
+        ],
+        [
+          "BEHV 1025",
+          "Usable Design",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          "10"
+        ],
+        [
+          "MATH 2006",
+          "Experimental Design and Analysis",
+          "10"
+        ],
+        [
+          "COMP 2020",
+          "Technologies for Web Applications",
+          "10"
+        ],
+        [
+          "INFO 2006",
+          "Usable Security",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "INFO 2008",
+          "Cyber Incident Response and Risk Management (Subject INFO2008 is not offered online. Students enrolled in Western Online must take an additional elective unit instead.)",
+          "10"
+        ],
+        [
+          "BEHV 3018",
+          "Psychology and the Online World",
+          "10"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFO 3016",
+          "Cyber Security and Behaviour Community Placement (1H)",
+          "20"
+        ],
+        [
+          "INFO 3014",
+          "Digital Investigations and Forensics",
+          "10"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "INFO 3017",
+          "Cyber Security and Behaviour Industry Placement (2H)",
+          "20"
+        ],
+        [
+          "Select two electives",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1"
+        ],
+        [
+          "Spring session",
+          "Credit Points"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "BEHV 1025",
+          "Usable Design",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFS 1016",
+          "Digital Transformation",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "BEHV 1026",
+          "Cyber Behaviour",
+          "10"
+        ],
+        [
+          "HUMN 1064",
+          "Digital Identities",
+          "10"
+        ],
+        [
+          "Select two electives",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "INFO 2008",
+          "Cyber Incident Response and Risk Management (Subject INFO2008 is not offered online. Students enrolled in Western Online must take an additional elective subject instead)",
+          "10"
+        ],
+        [
+          "INFO 2004",
+          "Cyber Crime and Social Engineering",
+          "10"
+        ],
+        [
+          "BEHV 3018",
+          "Psychology and the Online World",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          "10"
+        ],
+        [
+          "MATH 2006",
+          "Experimental Design and Analysis",
+          "10"
+        ],
+        [
+          "COMP 2020",
+          "Technologies for Web Applications",
+          "10"
+        ],
+        [
+          "INFO 2006",
+          "Usable Security",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "INFO 3016",
+          "Cyber Security and Behaviour Community Placement (2H)",
+          "20"
+        ],
+        [
+          "Select two electives",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFO 3017",
+          "Cyber Security and Behaviour Industry Placement (1H)",
+          "20"
+        ],
+        [
+          "INFO 3014",
+          "Digital Investigations and Forensics",
+          "10"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1"
+        ],
+        [
+          "Trimester 1",
+          "Credit Points"
+        ],
+        [
+          "BEHV 1026",
+          "Cyber Behaviour",
+          "10"
+        ],
+        [
+          "HUMN 1064",
+          "Digital Identities",
+          "10"
+        ],
+        [
+          "INFS 1002",
+          "Information Systems in Context",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "30"
+        ],
+        [
+          "Trimester 2"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "BEHV 1025",
+          "Usable Design",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "30"
+        ],
+        [
+          "Trimester 3"
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          "10"
+        ],
+        [
+          "INFO 2004",
+          "Cyber Crime and Social Engineering",
+          "10"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "30"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Trimester 4"
+        ],
+        [
+          "MATH 2006",
+          "Experimental Design and Analysis",
+          "10"
+        ],
+        [
+          "COMP 2020",
+          "Technologies for Web Applications",
+          "10"
+        ],
+        [
+          "INFO 2006",
+          "Usable Security",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "30"
+        ],
+        [
+          "Trimester 5"
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "BEHV 3018",
+          "Psychology and the Online World",
+          "10"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "30"
+        ],
+        [
+          "Trimester 6"
+        ],
+        [
+          "INFO 3016",
+          "Cyber Security and Behaviour Community Placement",
+          "20"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "30"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Trimester 7"
+        ],
+        [
+          "INFO 3017",
+          "Cyber Security and Behaviour Industry Placement",
+          "20"
+        ],
+        [
+          "INFO 3014",
+          "Digital Investigations and Forensics",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "30"
+        ],
+        [
+          "Trimester 8"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          "10"
+        ],
+        [
+          "Select two electives",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "30"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1"
+        ],
+        [
+          "Trimester 1",
+          "Credit Points"
+        ],
+        [
+          "BEHV 1026",
+          "Cyber Behaviour",
+          "10"
+        ],
+        [
+          "HUMN 1064",
+          "Digital Identities",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          "Trimester 2"
+        ],
+        [
+          "INFS 1002",
+          "Information Systems in Context",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          "Trimester 3"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "BEHV 1025",
+          "Usable Design",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Trimester 4"
+        ],
+        [
+          "INFO 2004",
+          "Cyber Crime and Social Engineering",
+          "10"
+        ],
+        [
+          "Select one elective",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          "Trimester 5"
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          "10"
+        ],
+        [
+          "MATH 2006",
+          "Experimental Design and Analysis",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          "Trimester 6"
+        ],
+        [
+          "COMP 2020",
+          "Technologies for Web Applications",
+          "10"
+        ],
+        [
+          "INFO 2006",
+          "Usable Security",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Trimester 7"
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "BEHV 3018",
+          "Psychology and the Online World",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          "Trimester 8"
+        ],
+        [
+          "Select two electives",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          "Trimester 9"
+        ],
+        [
+          "INFO 3016",
+          "Cyber Security and Behaviour Community Placement",
+          "20"
+        ],
+        [
+          "INFO 3014",
+          "Digital Investigations and Forensics",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "30"
+        ],
+        [
+          "Year 4"
+        ],
+        [
+          "Trimester 10"
+        ],
+        [
+          "INFO 3017",
+          "Cyber Security and Behaviour Industry Placement",
+          "20"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "30"
+        ],
+        [
+          "Trimester 11"
+        ],
+        [
+          "Select two electives",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ]
+      ]
+    },
+    "links": {
+      "majors": [],
+      "minors": [],
+      "subjects": [
+        "https://hbook.westernsydney.edu.au/subject-details/behv1026",
+        "https://hbook.westernsydney.edu.au/subject-details/humn1064",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/info2004",
+        "https://hbook.westernsydney.edu.au/subject-details/infs1016",
+        "https://hbook.westernsydney.edu.au/subject-details/behv1025",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1013",
+        "https://hbook.westernsydney.edu.au/subject-details/math2006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2020",
+        "https://hbook.westernsydney.edu.au/subject-details/info2006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2027",
+        "https://hbook.westernsydney.edu.au/subject-details/info2008",
+        "https://hbook.westernsydney.edu.au/subject-details/behv3018",
+        "https://hbook.westernsydney.edu.au/subject-details/info3016",
+        "https://hbook.westernsydney.edu.au/subject-details/info3014",
+        "https://hbook.westernsydney.edu.au/subject-details/info3002",
+        "https://hbook.westernsydney.edu.au/subject-details/info3017",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/behv1025",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/infs1016",
+        "https://hbook.westernsydney.edu.au/subject-details/behv1026",
+        "https://hbook.westernsydney.edu.au/subject-details/humn1064",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2027",
+        "https://hbook.westernsydney.edu.au/subject-details/info2008",
+        "https://hbook.westernsydney.edu.au/subject-details/info2004",
+        "https://hbook.westernsydney.edu.au/subject-details/behv3018",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1013",
+        "https://hbook.westernsydney.edu.au/subject-details/math2006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2020",
+        "https://hbook.westernsydney.edu.au/subject-details/info2006",
+        "https://hbook.westernsydney.edu.au/subject-details/info3016",
+        "https://hbook.westernsydney.edu.au/subject-details/info3017",
+        "https://hbook.westernsydney.edu.au/subject-details/info3014",
+        "https://hbook.westernsydney.edu.au/subject-details/info3002",
+        "https://hbook.westernsydney.edu.au/subject-details/behv1026",
+        "https://hbook.westernsydney.edu.au/subject-details/humn1064",
+        "https://hbook.westernsydney.edu.au/subject-details/infs1002",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/behv1025",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1013",
+        "https://hbook.westernsydney.edu.au/subject-details/info2004",
+        "https://hbook.westernsydney.edu.au/subject-details/math2006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2020",
+        "https://hbook.westernsydney.edu.au/subject-details/info2006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2027",
+        "https://hbook.westernsydney.edu.au/subject-details/behv3018",
+        "https://hbook.westernsydney.edu.au/subject-details/info3016",
+        "https://hbook.westernsydney.edu.au/subject-details/info3017",
+        "https://hbook.westernsydney.edu.au/subject-details/info3014",
+        "https://hbook.westernsydney.edu.au/subject-details/info3002",
+        "https://hbook.westernsydney.edu.au/subject-details/behv1026",
+        "https://hbook.westernsydney.edu.au/subject-details/humn1064",
+        "https://hbook.westernsydney.edu.au/subject-details/infs1002",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/behv1025",
+        "https://hbook.westernsydney.edu.au/subject-details/info2004",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1013",
+        "https://hbook.westernsydney.edu.au/subject-details/math2006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2020",
+        "https://hbook.westernsydney.edu.au/subject-details/info2006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2027",
+        "https://hbook.westernsydney.edu.au/subject-details/behv3018",
+        "https://hbook.westernsydney.edu.au/subject-details/info3016",
+        "https://hbook.westernsydney.edu.au/subject-details/info3014",
+        "https://hbook.westernsydney.edu.au/subject-details/info3017",
+        "https://hbook.westernsydney.edu.au/subject-details/info3002",
+        "https://hbook.westernsydney.edu.au/subject-details/behv1024",
+        "https://hbook.westernsydney.edu.au/subject-details/behv1026",
+        "https://hbook.westernsydney.edu.au/subject-details/behv1009",
+        "https://hbook.westernsydney.edu.au/subject-details/humn1064",
+        "https://hbook.westernsydney.edu.au/subject-details/info3012",
+        "https://hbook.westernsydney.edu.au/subject-details/info3016",
+        "https://hbook.westernsydney.edu.au/subject-details/info3013",
+        "https://hbook.westernsydney.edu.au/subject-details/info3017"
+      ]
+    },
+    "originalLink": "https://hbook.westernsydney.edu.au/programs/bachelor-cyber-security-behaviour/",
+    "sequenceNames": [
+      "Full-time start-year intake",
+      "Full-time mid-year intake",
+      "Full-time intake",
+      "Part-time intake"
+    ]
+  },
+  {
+    "name": "Bachelor of Data Science (3769)\n\t\t\t\t",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Part Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Surabaya Campus Indonesia",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequence": {
+      "structure": [
+        [
+          "Year 1"
+        ],
+        [
+          "Autumn session",
+          "Credit Points"
+        ],
+        [
+          "NATS 1019",
+          "Scientific Literacy",
+          "10"
+        ],
+        [
+          "COMP 1014",
+          "Thinking About Data",
+          "10"
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "MATH 1014",
+          "Mathematics 1A",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "Select two major, minor or elective subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          "Select two major, minor or elective subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          "10"
+        ],
+        [
+          "COMP 2023",
+          "Mathematical Programming",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 3002",
+          "Applications of Big Data",
+          "10"
+        ],
+        [
+          "MATH 3011",
+          "Probabilistic Models and Inference",
+          "10"
+        ],
+        [
+          "INFO 3008",
+          "Professional Development",
+          " "
+        ],
+        [
+          "From Spring 2024 INFO 3008 replaced by INFO 3019",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          " "
+        ],
+        [
+          "Select one major, minor or elective subjects",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3035",
+          "Discovery Project",
+          "10"
+        ],
+        [
+          "Select three major, minor or elective subjects",
+          "30"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1"
+        ],
+        [
+          "Spring session",
+          "Credit Points"
+        ],
+        [
+          "MATH 1014",
+          "Mathematics 1A",
+          "10"
+        ],
+        [
+          "NATS 1019",
+          "Scientific Literacy",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "COMP 1014",
+          "Thinking About Data",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          "Select one major, minor or elective subject",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "COMP 2023",
+          "Mathematical Programming",
+          "10"
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 3002",
+          "Applications of Big Data",
+          "10"
+        ],
+        [
+          "MATH 3011",
+          "Probabilistic Models and Inference",
+          "10"
+        ],
+        [
+          "Select two major, minor or elective subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          "10"
+        ],
+        [
+          "Select three major, minor or elective subjects",
+          "30"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFO 3008",
+          "Professional Development",
+          " "
+        ],
+        [
+          "From Spring 2024 INFO 3008 replaced by INFO 3019",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          " "
+        ],
+        [
+          "COMP 3035",
+          "Discovery Project",
+          "10"
+        ],
+        [
+          "Select two major, minor or elective subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1",
+          "Credit Points"
+        ],
+        [
+          "Semester 1",
+          " "
+        ],
+        [
+          "MATH 1014",
+          "Mathematics 1A",
+          "10"
+        ],
+        [
+          "NATS 1019",
+          "Scientific Literacy",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "COMP 1014",
+          "Thinking About Data",
+          "10"
+        ],
+        [
+          "CULT 1030",
+          "Pancasila",
+          "5"
+        ],
+        [
+          "Semester 2",
+          " "
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "CULT 1031",
+          "Civic Education",
+          "5"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "90"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Semester 3",
+          " "
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "COMP 2023",
+          "Mathematical Programming",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "LANG 1036",
+          "Indonesian Language",
+          "5"
+        ],
+        [
+          "Semester 4",
+          " "
+        ],
+        [
+          "COMP 2020",
+          "Technologies for Web Applications",
+          "10"
+        ],
+        [
+          "COMP 3002",
+          "Applications of Big Data",
+          "10"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "PHIL 1008",
+          "Religion",
+          "5"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Semester 5",
+          " "
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          "10"
+        ],
+        [
+          "INFO 3007",
+          "Network Security",
+          "10"
+        ],
+        [
+          "Semester 6",
+          " "
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          "10"
+        ],
+        [
+          "MATH 3011",
+          "Probabilistic Models and Inference",
+          "10"
+        ],
+        [
+          "COMP 3035",
+          "Discovery Project",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "70"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1",
+          "Credit Points"
+        ],
+        [
+          "Semester 1",
+          " "
+        ],
+        [
+          "MATH 1014",
+          "Mathematics 1A",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "COMP 1014",
+          "Thinking About Data",
+          "10"
+        ],
+        [
+          "LANG 1036",
+          "Indonesian Language",
+          "5"
+        ],
+        [
+          "CULT 1030",
+          "Pancasila",
+          "5"
+        ],
+        [
+          "Semester 2",
+          " "
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "PHIL 1008",
+          "Religion",
+          "5"
+        ],
+        [
+          "CULT 1031",
+          "Civic Education",
+          "5"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Semester 3",
+          " "
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "COMP 2023",
+          "Mathematical Programming",
+          "10"
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          "10"
+        ],
+        [
+          "NATS 1019",
+          "Scientific Literacy",
+          "10"
+        ],
+        [
+          "Semester 4",
+          " "
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "COMP 3002",
+          "Applications of Big Data",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Semester 5",
+          " "
+        ],
+        [
+          "INFO 3007",
+          "Network Security",
+          "10"
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "COMP 2020",
+          "Technologies for Web Applications",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "Semester 6",
+          " "
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          "10"
+        ],
+        [
+          "MATH 3011",
+          "Probabilistic Models and Inference",
+          "10"
+        ],
+        [
+          "COMP 3035",
+          "Discovery Project",
+          "10"
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ]
+      ]
+    },
+    "links": {
+      "majors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/health-informatics-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/technology-entrepreneurship-major/"
+      ],
+      "minors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/artificial-intelligence-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/astroinformatics-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/creative-leadership-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/critical-systems-thinking-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/cybersecurity-networking-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/cybersecurity-systems-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/digital-cultures-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/exercise-science-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/global-sustainability-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/international-business-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/macroeconomics-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/management-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/marketing-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/mathematics-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/property-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/robotics-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/statistics-minor/",
+        "https://hbook.westernsydney.edu.au/majors-minors/video-games-minor/"
+      ],
+      "subjects": [
+        "https://hbook.westernsydney.edu.au/subject-details/nats1019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1014",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/math1014",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2025",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1013",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2026",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3032",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3020",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2023",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3002",
+        "https://hbook.westernsydney.edu.au/subject-details/math3011",
+        "https://hbook.westernsydney.edu.au/subject-details/info3008",
+        "https://hbook.westernsydney.edu.au/subject-details/info3008",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3035",
+        "https://hbook.westernsydney.edu.au/subject-details/math1014",
+        "https://hbook.westernsydney.edu.au/subject-details/nats1019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1014",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1013",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2026",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2023",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3032",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2025",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3002",
+        "https://hbook.westernsydney.edu.au/subject-details/math3011",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3020",
+        "https://hbook.westernsydney.edu.au/subject-details/info3008",
+        "https://hbook.westernsydney.edu.au/subject-details/info3008",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3035",
+        "https://hbook.westernsydney.edu.au/subject-details/math1014",
+        "https://hbook.westernsydney.edu.au/subject-details/nats1019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1014",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1030",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1013",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2026",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1031",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2023",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2025",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/lang1036",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2020",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3002",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3012",
+        "https://hbook.westernsydney.edu.au/subject-details/phil1008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3032",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3020",
+        "https://hbook.westernsydney.edu.au/subject-details/info3007",
+        "https://hbook.westernsydney.edu.au/subject-details/info3002",
+        "https://hbook.westernsydney.edu.au/subject-details/math3011",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3035",
+        "https://hbook.westernsydney.edu.au/subject-details/math1014",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1014",
+        "https://hbook.westernsydney.edu.au/subject-details/lang1036",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1030",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/phil1008",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1031",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2023",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1013",
+        "https://hbook.westernsydney.edu.au/subject-details/nats1019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3012",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3002",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2025",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2026",
+        "https://hbook.westernsydney.edu.au/subject-details/info3007",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3032",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2020",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/info3002",
+        "https://hbook.westernsydney.edu.au/subject-details/math3011",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3035",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3020"
+      ]
+    },
+    "originalLink": "https://hbook.westernsydney.edu.au/programs/bachelor-data-science/",
+    "sequenceNames": [
+      "Full-time start-year intake",
+      "Full-time mid-year intake",
+      "Surabaya Campus Indonesia - 2024 students",
+      "Surabaya Campus Indonesia - 2025 students"
+    ]
+  },
+  {
+    "name": "Bachelor of Computer Science (Advanced) (3634)\n\t\t\t\t",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequence": {
+      "structure": [
+        [
+          "Year 1"
+        ],
+        [
+          "Autumn session",
+          "Credit Points"
+        ],
+        [
+          "MATH 1028",
+          "Statistical Decision Making",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2008",
+          "Computer Organisation",
+          "10"
+        ],
+        [
+          "COMP 2014",
+          "Object Oriented Programming",
+          "10"
+        ],
+        [
+          "INFS 2002",
+          "Database Design and Development (Advanced)",
+          "10"
+        ],
+        [
+          "COMP 2005",
+          "Computer Networking (Advanced)",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 2019",
+          "Systems Programming 1",
+          "10"
+        ],
+        [
+          "COMP 2030",
+          "Data Structures and Algorithms (Advanced)",
+          "10"
+        ],
+        [
+          "Select two electives or major or minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "INFS 3020",
+          "Artificial Intelligence (Advanced)",
+          "10"
+        ],
+        [
+          "INFO 3021",
+          "Information Security (Advanced)",
+          "10"
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          "10"
+        ],
+        [
+          "Select one elective or major or minor subject",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "Select three electives or major or minor subjects",
+          "30"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "INFS 3021",
+          "Formal Software Engineering (Advanced)",
+          "10"
+        ],
+        [
+          "Select two electives or major or minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3003",
+          "Cloud Computing Architecture",
+          "10"
+        ],
+        [
+          "COMP 3006",
+          "Computer Graphics",
+          "10"
+        ],
+        [
+          "COMP 3007",
+          "Computer Networks and Internets",
+          "10"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          "10"
+        ],
+        [
+          "INFO 3015",
+          "Internet of Things and Smart Environments",
+          "10"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "COMP 3013",
+          "Mobile Applications Development",
+          "10"
+        ],
+        [
+          "INFO 3007",
+          "Network Security",
+          "10"
+        ],
+        [
+          "COMP 3014",
+          "Networked Systems Design",
+          "10"
+        ],
+        [
+          "COMP 3015",
+          "Operating Systems Programming",
+          "10"
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "COMP 3033",
+          "Quantum Computing and Communication",
+          "10"
+        ],
+        [
+          "COMP 3027",
+          "Robotic Programming",
+          "10"
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          "COMP 3025",
+          "Wireless and Mobile Networks",
+          "10"
+        ]
+      ]
+    },
+    "links": {
+      "majors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/artificial-intelligence-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/cyber-security-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/networked-systems-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/systems-programming-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/technology-entrepreneurship-major/"
+      ],
+      "minors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/cloud-computing-minor/"
+      ],
+      "subjects": [
+        "https://hbook.westernsydney.edu.au/subject-details/math1028",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2014",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2002",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2005",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2030",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3020",
+        "https://hbook.westernsydney.edu.au/subject-details/info3021",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3009",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3021",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3003",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3007",
+        "https://hbook.westernsydney.edu.au/subject-details/info3002",
+        "https://hbook.westernsydney.edu.au/subject-details/info3015",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3012",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2025",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3013",
+        "https://hbook.westernsydney.edu.au/subject-details/info3007",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3014",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3015",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3032",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3033",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3020",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2026",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3025"
+      ]
+    },
+    "originalLink": "https://hbook.westernsydney.edu.au/programs/bachelor-computer-science-advanced/",
+    "sequenceNames": [
+      "Program Structure Current"
+    ]
+  },
+  {
+    "name": "Bachelor of Computer Science (3506)\n\t\t\t\t",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Surabaya Campus Indonesia",
+        ".column1": "Full Time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequence": {
+      "structure": [
+        [
+          "Year 1"
+        ],
+        [
+          "Autumn session",
+          "Credit Points"
+        ],
+        [
+          "MATH 1028",
+          "Statistical Decision Making",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2008",
+          "Computer Organisation",
+          "10"
+        ],
+        [
+          "COMP 2014",
+          "Object Oriented Programming",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 2019",
+          "Systems Programming 1",
+          "10"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          "10"
+        ],
+        [
+          "Select two electives or major or minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "INFS 3003",
+          "Artificial Intelligence",
+          "10"
+        ],
+        [
+          "INFO 3006",
+          "Information Security",
+          "10"
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "Select four electives or major or minor subjects",
+          "40"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "INFS 3008",
+          "Formal Software Engineering",
+          "10"
+        ],
+        [
+          "Select two electives or major or minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1"
+        ],
+        [
+          "Spring session",
+          "Credit Points"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "Select one elective or major or minor subject",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "MATH 1028",
+          "Statistical Decision Making",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          "Select one elective or major or minor subject",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2008",
+          "Computer Organisation",
+          "10"
+        ],
+        [
+          "COMP 2014",
+          "Object Oriented Programming",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "Select one elective or major or minor subject",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 2019",
+          "Systems Programming 1",
+          "10"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          "10"
+        ],
+        [
+          "Select two electives or major or minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "INFO 3006",
+          "Information Security",
+          "10"
+        ],
+        [
+          "INFS 3008",
+          "Formal Software Engineering",
+          "10"
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          "10"
+        ],
+        [
+          "INFS 3003",
+          "Artificial Intelligence",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "Select three electives or major or minor subjects",
+          "30"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1"
+        ],
+        [
+          "Autumn session",
+          "Credit Points"
+        ],
+        [
+          "MATH 1028",
+          "Statistical Decision Making",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "COMP 2008",
+          "Computer Organisation",
+          "10"
+        ],
+        [
+          "COMP 2014",
+          "Object Oriented Programming",
+          "10"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Summer session"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "Select one elective or major or minor",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          "10"
+        ],
+        [
+          "COMP 2019",
+          "Systems Programming 1",
+          "10"
+        ],
+        [
+          "Select two electives or major or minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Spring session"
+        ],
+        [
+          "INFS 3008",
+          "Formal Software Engineering",
+          "10"
+        ],
+        [
+          "INFO 3006",
+          "Information Security",
+          "10"
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          "10"
+        ],
+        [
+          "INFS 3003",
+          "Artificial Intelligence",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          "Summer session"
+        ],
+        [
+          "Select two electives or major or minor subjects",
+          "20"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Autumn session"
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "Select three electives or major or minor subjects",
+          "30"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "40"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3003",
+          "Cloud Computing Architecture",
+          "10"
+        ],
+        [
+          "COMP 3006",
+          "Computer Graphics",
+          "10"
+        ],
+        [
+          "COMP 3007",
+          "Computer Networks and Internets",
+          "10"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          "10"
+        ],
+        [
+          "INFO 3015",
+          "Internet of Things and Smart Environments",
+          "10"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "COMP 3013",
+          "Mobile Applications Development",
+          "10"
+        ],
+        [
+          "INFO 3007",
+          "Network Security",
+          "10"
+        ],
+        [
+          "COMP 3014",
+          "Networked Systems Design",
+          "10"
+        ],
+        [
+          "COMP 3015",
+          "Operating Systems Programming",
+          "10"
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "COMP 3033",
+          "Quantum Computing and Communication",
+          "10"
+        ],
+        [
+          "COMP 3027",
+          "Robotic Programming",
+          "10"
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          "COMP 3025",
+          "Wireless and Mobile Networks",
+          "10"
+        ],
+        [
+          "Year 1",
+          "Credit Points"
+        ],
+        [
+          "Semester 1",
+          " "
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "CULT 1030",
+          "Pancasila",
+          "5"
+        ],
+        [
+          "Semester 2",
+          " "
+        ],
+        [
+          "MATH 1028",
+          "Statistical Decision Making",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "CULT 1031",
+          "Civic Education",
+          "5"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Semester 3",
+          " "
+        ],
+        [
+          "COMP 2008",
+          "Computer Organisation",
+          "10"
+        ],
+        [
+          "COMP 2014",
+          "Object Oriented Programming",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "LANG 1036",
+          "Indonesian Language",
+          "5"
+        ],
+        [
+          "Semester 4",
+          " "
+        ],
+        [
+          "COMP 2019",
+          "Systems Programming 1",
+          "10"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          "10"
+        ],
+        [
+          "COMP 3006",
+          "Computer Graphics",
+          "10"
+        ],
+        [
+          "PHIL 1008",
+          "Religion",
+          "5"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Semester 5",
+          " "
+        ],
+        [
+          "INFO 3006",
+          "Information Security",
+          "10"
+        ],
+        [
+          "INFS 3008",
+          "Formal Software Engineering",
+          "10"
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          "10"
+        ],
+        [
+          "INFS 3003",
+          "Artificial Intelligence",
+          "10"
+        ],
+        [
+          "Semester 6",
+          " "
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          "COMP 3027",
+          "Robotic Programming",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1",
+          "Credit Points"
+        ],
+        [
+          "Semester 1",
+          " "
+        ],
+        [
+          "MATH 1028",
+          "Statistical Decision Making",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "LANG 1036",
+          "Indonesian Language",
+          "5"
+        ],
+        [
+          "CULT 1030",
+          "Pancasila",
+          "5"
+        ],
+        [
+          "Semester 2",
+          " "
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "PHIL 1008",
+          "Religion",
+          "5"
+        ],
+        [
+          "CULT 1031",
+          "Civic Education",
+          "5"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Semester 3",
+          " "
+        ],
+        [
+          "COMP 2008",
+          "Computer Organisation",
+          "10"
+        ],
+        [
+          "COMP 2014",
+          "Object Oriented Programming",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "INFO 3007",
+          "Network Security",
+          "10"
+        ],
+        [
+          "Semester 4",
+          " "
+        ],
+        [
+          "COMP 2019",
+          "Systems Programming 1",
+          "10"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          "10"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          "10"
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Semester 5",
+          " "
+        ],
+        [
+          "INFO 3006",
+          "Information Security",
+          "10"
+        ],
+        [
+          "INFS 3008",
+          "Formal Software Engineering",
+          "10"
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          "10"
+        ],
+        [
+          "INFS 3003",
+          "Artificial Intelligence",
+          "10"
+        ],
+        [
+          "Semester 6",
+          " "
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "COMP 3007",
+          "Computer Networks and Internets",
+          "10"
+        ],
+        [
+          "COMP 3027",
+          "Robotic Programming",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ],
+        [
+          "Year 1",
+          "Credit Points"
+        ],
+        [
+          "Semester 1",
+          " "
+        ],
+        [
+          "MATH 1028",
+          "Statistical Decision Making",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "LANG 1036",
+          "Indonesian Language",
+          "5"
+        ],
+        [
+          "CULT 1030",
+          "Pancasila",
+          "5"
+        ],
+        [
+          "Semester 2",
+          " "
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          "INFO 1003",
+          "Professional Practice, Communication and Ethics",
+          "10"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "PHIL 1008",
+          "Religion",
+          "5"
+        ],
+        [
+          "CULT 1031",
+          "Civic Education",
+          "5"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          "Year 2"
+        ],
+        [
+          "Semester 3",
+          " "
+        ],
+        [
+          "COMP 2008",
+          "Computer Organisation",
+          "10"
+        ],
+        [
+          "COMP 2014",
+          "Object Oriented Programming",
+          "10"
+        ],
+        [
+          "INFO 3019",
+          "Project Management",
+          "10"
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "Semester 4",
+          " "
+        ],
+        [
+          "COMP 2019",
+          "Systems Programming 1",
+          "10"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          "10"
+        ],
+        [
+          "COMP 3006",
+          "Computer Graphics",
+          "10"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          "Year 3"
+        ],
+        [
+          "Semester 5",
+          " "
+        ],
+        [
+          "INFO 3006",
+          "Information Security",
+          "10"
+        ],
+        [
+          "INFS 3008",
+          "Formal Software Engineering",
+          "10"
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          "10"
+        ],
+        [
+          "INFS 3003",
+          "Artificial Intelligence",
+          "10"
+        ],
+        [
+          "Semester 6",
+          " "
+        ],
+        [
+          "COMP 3018",
+          "Professional Experience",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          "COMP 3027",
+          "Robotic Programming",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "80"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "240"
+        ]
+      ]
+    },
+    "links": {
+      "majors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/artificial-intelligence-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/cyber-security-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/networked-systems-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/systems-programming-major/",
+        "https://hbook.westernsydney.edu.au/majors-minors/technology-entrepreneurship-major/"
+      ],
+      "minors": [
+        "https://hbook.westernsydney.edu.au/majors-minors/cloud-computing-minor/"
+      ],
+      "subjects": [
+        "https://hbook.westernsydney.edu.au/subject-details/math1028",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2014",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2009",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3003",
+        "https://hbook.westernsydney.edu.au/subject-details/info3006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3009",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/math1028",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2014",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2009",
+        "https://hbook.westernsydney.edu.au/subject-details/info3006",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3009",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3003",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/math1028",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2014",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2009",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2019",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3008",
+        "https://hbook.westernsydney.edu.au/subject-details/info3006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3009",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3003",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3003",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3007",
+        "https://hbook.westernsydney.edu.au/subject-details/info3002",
+        "https://hbook.westernsydney.edu.au/subject-details/info3015",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3012",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2025",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3013",
+        "https://hbook.westernsydney.edu.au/subject-details/info3007",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3014",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3015",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3032",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3033",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3020",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2026",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3025",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1030",
+        "https://hbook.westernsydney.edu.au/subject-details/math1028",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3012",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1031",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2014",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3032",
+        "https://hbook.westernsydney.edu.au/subject-details/lang1036",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2009",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3006",
+        "https://hbook.westernsydney.edu.au/subject-details/phil1008",
+        "https://hbook.westernsydney.edu.au/subject-details/info3006",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3009",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3003",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2026",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2025",
+        "https://hbook.westernsydney.edu.au/subject-details/math1028",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/lang1036",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1030",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/phil1008",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1031",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2014",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/info3007",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2009",
+        "https://hbook.westernsydney.edu.au/subject-details/info3002",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2027",
+        "https://hbook.westernsydney.edu.au/subject-details/info3006",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3009",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3003",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3007",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2025",
+        "https://hbook.westernsydney.edu.au/subject-details/math1028",
+        "https://hbook.westernsydney.edu.au/subject-details/comp1005",
+        "https://hbook.westernsydney.edu.au/subject-details/infs2001",
+        "https://hbook.westernsydney.edu.au/subject-details/lang1036",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1030",
+        "https://hbook.westernsydney.edu.au/subject-details/math1006",
+        "https://hbook.westernsydney.edu.au/subject-details/info1003",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2004",
+        "https://hbook.westernsydney.edu.au/subject-details/phil1008",
+        "https://hbook.westernsydney.edu.au/subject-details/cult1031",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2014",
+        "https://hbook.westernsydney.edu.au/subject-details/info3019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3032",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2019",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2009",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3006",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3012",
+        "https://hbook.westernsydney.edu.au/subject-details/info3006",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3008",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3009",
+        "https://hbook.westernsydney.edu.au/subject-details/infs3003",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3018",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2026",
+        "https://hbook.westernsydney.edu.au/subject-details/comp3027",
+        "https://hbook.westernsydney.edu.au/subject-details/comp2025"
+      ]
+    },
+    "originalLink": "https://hbook.westernsydney.edu.au/programs/bachelor-computer-science/",
+    "sequenceNames": [
+      "Full-time start-year intake",
+      "Full-time mid-year intake",
+      "Accelerated Pathway - Summer Sessions",
+      "Suggested Elective Subjects",
+      "Surabaya Campus Indonesia September 2024 Intake"
+    ]
+  }
+]

@@ -1,0 +1,2515 @@
+[
+  {
+    "type": 1,
+    "name": "Networked Systems, Major (0065)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/networked-systems-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Internal",
+        ".column2": "A/Prof Yun Bai"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Internal",
+        ".column2": " A/Prof Yun Bai"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3007",
+          "Computer Networks and Internets",
+          "10"
+        ],
+        [
+          "COMP 3014",
+          "Networked Systems Design",
+          "10"
+        ],
+        [
+          "INFO 3007",
+          "Network Security",
+          "10"
+        ],
+        [
+          "INFO 3015",
+          "Internet of Things and Smart Environments",
+          "10"
+        ],
+        [
+          "Select three of the following:",
+          "30"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          ""
+        ],
+        [
+          "COMP 3025",
+          "Wireless and Mobile Networks",
+          ""
+        ],
+        [
+          "COMP 3015",
+          "Operating Systems Programming",
+          ""
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          ""
+        ],
+        [
+          "COMP 3033",
+          "Quantum Computing and Communication",
+          ""
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          ""
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "INFO 3006",
+          "Information Security",
+          ""
+        ],
+        [
+          "INFO 3021",
+          "Information Security (Advanced)",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Computer Science (3506)"
+      ],
+      [
+        "Bachelor of Computer Science (Advanced) (3634)"
+      ]
+    ]
+  },
+  {
+    "type": 1,
+    "name": "Artificial Intelligence, Major (0031)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/artificial-intelligence-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Internal",
+        ".column2": "A/Prof Yun Bai"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Internal",
+        ".column2": "A/Prof Yun Bai"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3027",
+          "Robotic Programming",
+          "10"
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "Select three of the following:",
+          "30"
+        ],
+        [
+          "COMP 3013",
+          "Mobile Applications Development",
+          ""
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          ""
+        ],
+        [
+          "COMP 3006",
+          "Computer Graphics",
+          ""
+        ],
+        [
+          "COMP 3015",
+          "Operating Systems Programming",
+          ""
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          ""
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          ""
+        ],
+        [
+          "COMP 3003",
+          "Cloud Computing Architecture",
+          ""
+        ],
+        [
+          "COMP 2021",
+          "Software Engineering Fundamentals",
+          ""
+        ],
+        [
+          "COMP 3028",
+          "Software Construction",
+          ""
+        ],
+        [
+          "COMP 3033",
+          "Quantum Computing and Communication",
+          ""
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          ""
+        ],
+        [
+          "COMP 2030",
+          "Data Structures and Algorithms (Advanced)",
+          ""
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "INFS 3003",
+          "Artificial Intelligence",
+          ""
+        ],
+        [
+          "INFS 3020",
+          "Artificial Intelligence (Advanced)",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Computer Science (3506)"
+      ],
+      [
+        "Bachelor of Computer Science (Advanced) (3634)"
+      ]
+    ]
+  },
+  {
+    "type": 1,
+    "name": "Cyber Security, Major (0066)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/cyber-security-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 2008",
+          "Computer Organisation",
+          "10"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          "10"
+        ],
+        [
+          "INFO 3007",
+          "Network Security",
+          "10"
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "COMP 3015",
+          "Operating Systems Programming",
+          ""
+        ],
+        [
+          "COMP 2019",
+          "Systems Programming 1",
+          ""
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          ""
+        ],
+        [
+          "COMP 2030",
+          "Data Structures and Algorithms (Advanced)",
+          ""
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "INFO 3006",
+          "Information Security",
+          ""
+        ],
+        [
+          "INFO 3021",
+          "Information Security (Advanced)",
+          ""
+        ],
+        [
+          "Select two from the following:",
+          "20"
+        ],
+        [
+          "COMP 3007",
+          "Computer Networks and Internets",
+          ""
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          ""
+        ],
+        [
+          "INFO 3015",
+          "Internet of Things and Smart Environments",
+          ""
+        ],
+        [
+          "COMP 3033",
+          "Quantum Computing and Communication",
+          ""
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Computer Science (3506)"
+      ],
+      [
+        "Bachelor of Computer Science (Advanced) (3634)"
+      ]
+    ]
+  },
+  {
+    "type": 1,
+    "name": "Systems Programming, Major (0064)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/systems-programming-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Internal",
+        ".column2": "A/Prof Yun Bai"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Internal",
+        ".column2": "A/Prof Yun Bai"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3013",
+          "Mobile Applications Development",
+          "10"
+        ],
+        [
+          "COMP 3015",
+          "Operating Systems Programming",
+          "10"
+        ],
+        [
+          "COMP 3027",
+          "Robotic Programming",
+          "10"
+        ],
+        [
+          "COMP 2019",
+          "Systems Programming 1",
+          "10"
+        ],
+        [
+          "Select three of the following:",
+          "30"
+        ],
+        [
+          "COMP 3006",
+          "Computer Graphics",
+          ""
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          ""
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          ""
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          ""
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          ""
+        ],
+        [
+          "COMP 2021",
+          "Software Engineering Fundamentals",
+          ""
+        ],
+        [
+          "COMP 3028",
+          "Software Construction",
+          ""
+        ],
+        [
+          "COMP 3033",
+          "Quantum Computing and Communication",
+          ""
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          ""
+        ],
+        [
+          "COMP 2030",
+          "Data Structures and Algorithms (Advanced)",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Computer Science (3506)"
+      ],
+      [
+        "Bachelor of Computer Science (Advanced) (3634)"
+      ]
+    ]
+  },
+  {
+    "type": 1,
+    "name": "Health Informatics, Major (0037)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/health-informatics-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Penrith",
+        ".column1": "Internal",
+        ".column2": "Internal "
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "PUBH 2004",
+          "Clinical Classification and Coding",
+          "10"
+        ],
+        [
+          "INFS 3002",
+          "Advanced Clinical Classification",
+          "10"
+        ],
+        [
+          "HLTH 2007",
+          "Fundamentals of Medical Concepts and Terminology",
+          "10"
+        ],
+        [
+          "INFS 3010",
+          "Healthcare Data Environments",
+          "10"
+        ],
+        [
+          "INFS 3011",
+          "Healthcare Software and Systems",
+          "10"
+        ],
+        [
+          "INFS 2004",
+          "Introduction to Health Informatics",
+          "10"
+        ],
+        [
+          "INFS 3001",
+          "Activity Based Funding/Casemix and Data Quality",
+          "10"
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          ""
+        ],
+        [
+          "MATH 2011",
+          "Making Sense of Data",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "PUBH 2004",
+          "Clinical Classification and Coding",
+          "10"
+        ],
+        [
+          "INFS 3002",
+          "Advanced Clinical Classification",
+          "10"
+        ],
+        [
+          "HLTH 2007",
+          "Fundamentals of Medical Concepts and Terminology",
+          "10"
+        ],
+        [
+          "INFS 3010",
+          "Healthcare Data Environments",
+          "10"
+        ],
+        [
+          "INFS 3011",
+          "Healthcare Software and Systems",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "INFS 2004",
+          "Introduction to Health Informatics",
+          "10"
+        ],
+        [
+          "INFS 3001",
+          "Activity Based Funding/Casemix and Data Quality",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "PUBH 2004",
+          "Clinical Classification and Coding",
+          "10"
+        ],
+        [
+          "INFS 3002",
+          "Advanced Clinical Classification",
+          "10"
+        ],
+        [
+          "HLTH 2007",
+          "Fundamentals of Medical Concepts and Terminology",
+          "10"
+        ],
+        [
+          "INFS 3010",
+          "Healthcare Data Environments",
+          "10"
+        ],
+        [
+          "INFS 3011",
+          "Healthcare Software and Systems",
+          "10"
+        ],
+        [
+          "MATH 2011",
+          "Making Sense of Data",
+          "10"
+        ],
+        [
+          "INFS 2004",
+          "Introduction to Health Informatics",
+          "10"
+        ],
+        [
+          "INFS 3001",
+          "Activity Based Funding/Casemix and Data Quality",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "PUBH 2004",
+          "Clinical Classification and Coding",
+          "10"
+        ],
+        [
+          "INFS 3002",
+          "Advanced Clinical Classification",
+          "10"
+        ],
+        [
+          "HLTH 2007",
+          "Fundamentals of Medical Concepts and Terminology",
+          "10"
+        ],
+        [
+          "INFS 3010",
+          "Healthcare Data Environments",
+          "10"
+        ],
+        [
+          "INFS 3011",
+          "Healthcare Software and Systems",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "INFS 2004",
+          "Introduction to Health Informatics",
+          "10"
+        ],
+        [
+          "INFS 3001",
+          "Activity Based Funding/Casemix and Data Quality",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "B Computing"
+      ],
+      [
+        "Bachelor of Data Science (3769)"
+      ],
+      [
+        "Bachelor of Health Science (4656)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Dip ICT/B ICT"
+      ],
+      [
+        "Diploma in Information and Communications Technology / Bachelor of Information Systems (6040)"
+      ],
+      [
+        "Diploma in Information and Communications Technology (7163)"
+      ]
+    ]
+  },
+  {
+    "type": 1,
+    "name": "Networking and Cloud Computing, Testamur Major (T146)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/networking-cloud-computing-testamur-major-t146/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Sydney City Campus*",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Sydney City Campus*",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "COMP 3007",
+          "Computer Networks and Internets",
+          "10"
+        ],
+        [
+          "COMP 2013",
+          "LAN Workshop",
+          "10"
+        ],
+        [
+          "COMP 3003",
+          "Cloud Computing Architecture",
+          "10"
+        ],
+        [
+          "COMP 3025",
+          "Wireless and Mobile Networks",
+          "10"
+        ],
+        [
+          "COMP 3037",
+          "Cloud Security",
+          "10"
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "COMP 3014",
+          "Networked Systems Design",
+          ""
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          ""
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          ""
+        ],
+        [
+          "INFO 3015",
+          "Internet of Things and Smart Environments",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ]
+    ]
+  },
+  {
+    "type": 1,
+    "name": "Software Development, Testamur Major (T148)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/software-development-testamur-major-t148/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Sydney City Campus*",
+        ".column1": "Full-time",
+        ".column2": "Part-time"
+      },
+      {
+        ".column0": "Sydney City Campus*",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          "10"
+        ],
+        [
+          "COMP 3013",
+          "Mobile Applications Development",
+          "10"
+        ],
+        [
+          "INFO 3003",
+          "Human-Computer Interaction",
+          "10"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "COMP 3036",
+          "Full Stack Development",
+          "10"
+        ],
+        [
+          "Select one of the following",
+          "10"
+        ],
+        [
+          "COMP 2029",
+          "DevOps",
+          ""
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          ""
+        ],
+        [
+          "COMP 3015",
+          "Operating Systems Programming",
+          ""
+        ],
+        [
+          "Select one of the following",
+          "10"
+        ],
+        [
+          "INFO 3011",
+          "Social Computing *",
+          ""
+        ],
+        [
+          "COMP 2023",
+          "Mathematical Programming",
+          ""
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          ""
+        ],
+        [
+          "** Select one of the following",
+          "10"
+        ],
+        [
+          "** Students who NOT completed MATH 1006 in the program core, MUST complete MATH 1006",
+          ""
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          ""
+        ],
+        [
+          "** Students who HAVE completed MATH 1006 in the program core, MUST complete MATH 2009 or MATH 2010 or COMP 2025",
+          ""
+        ],
+        [
+          "MATH 2009",
+          "Introduction to Data Science",
+          ""
+        ],
+        [
+          "MATH 2010",
+          "Linear Algebra",
+          ""
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ]
+    ]
+  },
+  {
+    "type": 1,
+    "name": "Multimedia Computing, Testamur Major (T147)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/multimedia-computing-testamur-major-t147/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 1001",
+          "3D Modelling Fundamentals",
+          "10"
+        ],
+        [
+          "COMP 2011",
+          "Games Technology",
+          "10"
+        ],
+        [
+          "MATH 2010",
+          "Linear Algebra",
+          "10"
+        ],
+        [
+          "COMP 3024",
+          "Video Games Development",
+          "10"
+        ],
+        [
+          "INFO 3003",
+          "Human-Computer Interaction",
+          "10"
+        ],
+        [
+          "COMP 3006",
+          "Computer Graphics",
+          "10"
+        ],
+        [
+          "COMP 3036",
+          "Full Stack Development",
+          "10"
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "COMP 2018",
+          "Simulation Fundamentals",
+          ""
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          ""
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ]
+    ]
+  },
+  {
+    "type": 1,
+    "name": "Technology Entrepreneurship, Major (0261)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/technology-entrepreneurship-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Internal",
+        ".column2": "Dr Anton Bogdanovych"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "MKTG 2002",
+          "Incubator 1: Innovation and Creativity for Entrepreneurship",
+          "10"
+        ],
+        [
+          "BUSM 2024",
+          "Incubator 2: Start-up Essentials",
+          "10"
+        ],
+        [
+          "MKTG 2003",
+          "Incubator 3: Product Development",
+          "10"
+        ],
+        [
+          "ACCT 3009",
+          "Incubator 4: Commercial and Financial Setting of Entrepreneurship",
+          ""
+        ],
+        [
+          "Note: from Autumn 2024 ACCT 3009 is replaced by ACCT 3012",
+          "10"
+        ],
+        [
+          "ACCT 3012",
+          "Incubator 4: Commercial and Financial Strategy for Entrepreneurs",
+          ""
+        ],
+        [
+          "BUSM 3025",
+          "Incubator 5: Operational Aspects of Entrepreneurship",
+          "10"
+        ],
+        [
+          "MKTG 3005",
+          "Incubator 6: Funding and Start-up",
+          ""
+        ],
+        [
+          "Note: from Autumn 2024 MKTG 3005 is replaced by MKTG 3023",
+          "10"
+        ],
+        [
+          "MKTG 3023",
+          "Incubator 6: Funding a Start-up",
+          ""
+        ],
+        [
+          "MKTG 3006",
+          "Incubator 7: Growth and Exit Strategies",
+          "10"
+        ],
+        [
+          "BUSM 1012",
+          "Foundations of Entrepreneurship",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "MKTG 2002",
+          "Incubator 1: Innovation and Creativity for Entrepreneurship",
+          "10"
+        ],
+        [
+          "BUSM 2024",
+          "Incubator 2: Start-up Essentials",
+          "10"
+        ],
+        [
+          "MKTG 2003",
+          "Incubator 3: Product Development",
+          "10"
+        ],
+        [
+          "ACCT 3009",
+          "Incubator 4: Commercial and Financial Setting of Entrepreneurship",
+          ""
+        ],
+        [
+          "Note: from Autumn 2024 ACCT 3009 is replaced by ACCT 3012",
+          "10"
+        ],
+        [
+          "ACCT 3012",
+          "Incubator 4: Commercial and Financial Strategy for Entrepreneurs",
+          ""
+        ],
+        [
+          "BUSM 3025",
+          "Incubator 5: Operational Aspects of Entrepreneurship",
+          "10"
+        ],
+        [
+          "MKTG 3005",
+          "Incubator 6: Funding and Start-up",
+          ""
+        ],
+        [
+          "Note: from Autumn 2024 MKTG 3005 is replaced by MKTG 3023",
+          "10"
+        ],
+        [
+          "MKTG 3023",
+          "Incubator 6: Funding a Start-up",
+          ""
+        ],
+        [
+          "MKTG 3006",
+          "Incubator 7: Growth and Exit Strategies",
+          "10"
+        ],
+        [
+          "Select one of the following: ",
+          "10"
+        ],
+        [
+          "BUSM 1012",
+          "Foundations of Entrepreneurship",
+          ""
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          ""
+        ],
+        [
+          "COMM 1026",
+          "Principles of Professional Communication 1",
+          ""
+        ],
+        [
+          "From Autumn 2023 COMM 1026 is replaced by INFO 1003 Professional Practice, Communication and Ethics",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Computer Science (3506)"
+      ],
+      [
+        "Bachelor of Computer Science (Advanced) (3634)"
+      ],
+      [
+        "Bachelor of Data Science (3769)"
+      ],
+      [
+        "Bachelor of Design and Technology (3729)"
+      ],
+      [
+        "Bachelor of Industrial Design (3730)"
+      ],
+      [
+        "Bachelor of Industrial Design (Honours) (3731)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ]
+    ]
+  },
+  {
+    "type": 1,
+    "name": "Enterprise Systems and Architectures, Testamur Major (T151)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/enterprise-systems-architectures-ug-testamur-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Campbelltown",
+        ".column1": "FT and PT",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta - Victoria Road",
+        ".column1": "FT and PT",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith",
+        ".column1": "FT and PT",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          "COMP 2029",
+          "DevOps",
+          "10"
+        ],
+        [
+          "COMP 3036",
+          "Full Stack Development",
+          "10"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "INFO 5001",
+          "Workflow Management for Business Solutions",
+          "10"
+        ],
+        [
+          "COMP 3038",
+          "Professional ICT Internship",
+          "30"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ]
+    ]
+  },
+  {
+    "type": 1,
+    "name": "User Experience, Testamur Major (T154)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/user-experience-testamur-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta - Victoria Road",
+        ".column1": "Full time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta - Victoria Road",
+        ".column1": "Part time",
+        ".column2": "Internatl"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "BEHV 1025",
+          "Usable Design",
+          "10"
+        ],
+        [
+          "ENGR 1041",
+          "Designing for User Experience (UX)",
+          "10"
+        ],
+        [
+          "INFO 2006",
+          "Usable Security",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          "HUMN 3033",
+          "Digital Cultures",
+          "10"
+        ],
+        [
+          "ENGR 3024",
+          "Design Research Methods (Advanced)",
+          "10"
+        ],
+        [
+          "COMP 2021",
+          "Software Engineering Fundamentals",
+          "10"
+        ],
+        [
+          "COMP 3034",
+          "Multimodal Interaction",
+          "10"
+        ]
+      ]
+    },
+    "related": []
+  },
+  {
+    "type": 1,
+    "name": "Cyber Security and Ethical Hacking, Testamur Major (T145)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/cyber-security-ethical-hacking-testamur-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Sydney City Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3007",
+          "Computer Networks and Internets",
+          "10"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "COMP 3037",
+          "Cloud Security",
+          "10"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          "10"
+        ],
+        [
+          "INFO 3014",
+          "Digital Investigations and Forensics",
+          "10"
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "INFO 3015",
+          "Internet of Things and Smart Environments",
+          ""
+        ],
+        [
+          "COMP 3036",
+          "Full Stack Development",
+          ""
+        ],
+        [
+          "COMP 2029",
+          "DevOps",
+          ""
+        ],
+        [
+          "Select one of the following",
+          "10"
+        ],
+        [
+          "INFO 2004",
+          "Cyber Crime and Social Engineering",
+          ""
+        ],
+        [
+          "COMP 2028",
+          "Cryptography, Cryptocurrencies and Blockchain",
+          ""
+        ],
+        [
+          "** Select one of the following",
+          "10"
+        ],
+        [
+          "** Students who completed MATH 1006 in the program core, MUST complete one of the following as part of their major: MATH  2010, COMP 2025 ",
+          ""
+        ],
+        [
+          "MATH 2010",
+          "Linear Algebra",
+          ""
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          ""
+        ],
+        [
+          "** Students who completed MATH 1038 in the program core,  MUST complete one of the following as part of their major: MATH 1006, MATH  2010, COMP 2025",
+          ""
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          ""
+        ],
+        [
+          "MATH 2010",
+          "Linear Algebra",
+          ""
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          ""
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ]
+    ]
+  },
+  {
+    "type": 1,
+    "name": "Network Management, Testamur Major (T159)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/network-management-testamur-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Campbelltown",
+        ".column1": "Full time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Campbelltown",
+        ".column1": "Part time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta - Victoria Road",
+        ".column1": "Full time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta - Victoria Road",
+        ".column1": "Part time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith ",
+        ".column1": "Full time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith",
+        ".column1": "Part time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Sydney City Campus",
+        ".column1": "Full time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Sydney City Campus",
+        ".column1": "Part time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "COMP 3007",
+          "Computer Networks and Internets",
+          "10"
+        ],
+        [
+          "COMP 2013",
+          "LAN Workshop",
+          "10"
+        ],
+        [
+          "INFO 3007",
+          "Network Security",
+          "10"
+        ],
+        [
+          "COMP 3014",
+          "Networked Systems Design",
+          "10"
+        ],
+        [
+          "COMP 3025",
+          "Wireless and Mobile Networks",
+          "10"
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "INFO 3015",
+          "Internet of Things and Smart Environments",
+          "10"
+        ]
+      ]
+    },
+    "related": []
+  },
+  {
+    "type": 1,
+    "name": "Infonomics, Testamur Major (T158)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/infonomics-testamur-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta - Victoria Road",
+        ".column1": "Full time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta - Victoria Road",
+        ".column1": "Part time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "ECON 1006",
+          "Introduction to Economic Methods",
+          "10"
+        ],
+        [
+          "ECON 1011",
+          "Principles of Economics",
+          "10"
+        ],
+        [
+          "BUSM 1010",
+          "Financing Enterprises",
+          "10"
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          "COMP 3002",
+          "Applications of Big Data",
+          "10"
+        ],
+        [
+          "ECON 3006",
+          "Economic and Financial Modelling",
+          "10"
+        ],
+        [
+          "BUSM 3081",
+          "Business Analytics Project",
+          "10"
+        ]
+      ]
+    },
+    "related": []
+  },
+  {
+    "type": 1,
+    "name": "Health Informatics, Testamur Major (T007)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/health-informatics-pg-testamur-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Penrith",
+        ".column1": "Full time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith",
+        ".column1": "Part time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "Students must complete the following three subjects:",
+          ""
+        ],
+        [
+          "PUBH 7001",
+          "Advanced Health Classifications and Coding",
+          "10"
+        ],
+        [
+          "INFS 7001",
+          "Advanced Healthcare Data Environments",
+          "10"
+        ],
+        [
+          "INFS 7002",
+          "Advanced Healthcare Software and Systems",
+          "10"
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "COMP 7016",
+          "Visualisation",
+          ""
+        ],
+        [
+          "MATH 7016",
+          "The Nature of Data",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "PUBH 7001",
+          "Advanced Health Classifications and Coding",
+          "10"
+        ],
+        [
+          "INFS 7001",
+          "Advanced Healthcare Data Environments",
+          "10"
+        ],
+        [
+          "INFS 7002",
+          "Advanced Healthcare Software and Systems",
+          "10"
+        ],
+        [
+          "INFS 7007",
+          "Systems Analysis and Database Management Systems",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "PUBH 7001",
+          "Advanced Health Classifications and Coding",
+          "10"
+        ],
+        [
+          "INFS 7001",
+          "Advanced Healthcare Data Environments",
+          "10"
+        ],
+        [
+          "INFS 7002",
+          "Advanced Healthcare Software and Systems",
+          "10"
+        ],
+        [
+          "COMP 7004",
+          "Cloud Computing",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "PUBH 2004",
+          "Clinical Classification and Coding",
+          "10"
+        ],
+        [
+          "INFS 3002",
+          "Advanced Clinical Classification",
+          "10"
+        ],
+        [
+          "HLTH 2007",
+          "Fundamentals of Medical Concepts and Terminology",
+          "10"
+        ],
+        [
+          "INFS 3010",
+          "Healthcare Data Environments",
+          "10"
+        ],
+        [
+          "INFS 3011",
+          "Healthcare Software and Systems",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "INFS 2004",
+          "Introduction to Health Informatics",
+          "10"
+        ],
+        [
+          "INFS 3001",
+          "Activity Based Funding/Casemix and Data Quality",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "PUBH 2004",
+          "Clinical Classification and Coding",
+          "10"
+        ],
+        [
+          "INFS 2001",
+          "Database Design and Development",
+          "10"
+        ],
+        [
+          "HLTH 2007",
+          "Fundamentals of Medical Concepts and Terminology",
+          "10"
+        ],
+        [
+          "INFS 3010",
+          "Healthcare Data Environments",
+          "10"
+        ],
+        [
+          "INFS 3011",
+          "Healthcare Software and Systems",
+          "10"
+        ],
+        [
+          "INFO 3003",
+          "Human-Computer Interaction",
+          "10"
+        ],
+        [
+          "INFS 2004",
+          "Introduction to Health Informatics",
+          "10"
+        ],
+        [
+          "INFS 1006",
+          "Systems Analysis and Design",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "PUBH 2004",
+          "Clinical Classification and Coding",
+          "10"
+        ],
+        [
+          "INFS 3002",
+          "Advanced Clinical Classification",
+          "10"
+        ],
+        [
+          "HLTH 2007",
+          "Fundamentals of Medical Concepts and Terminology",
+          "10"
+        ],
+        [
+          "INFS 3010",
+          "Healthcare Data Environments",
+          "10"
+        ],
+        [
+          "INFS 3011",
+          "Healthcare Software and Systems",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "INFS 2004",
+          "Introduction to Health Informatics",
+          "10"
+        ],
+        [
+          "INFS 3001",
+          "Activity Based Funding/Casemix and Data Quality",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "PUBH 2004",
+          "Clinical Classification and Coding",
+          "10"
+        ],
+        [
+          "INFS 3002",
+          "Advanced Clinical Classification",
+          "10"
+        ],
+        [
+          "HLTH 2007",
+          "Fundamentals of Medical Concepts and Terminology",
+          "10"
+        ],
+        [
+          "INFS 3010",
+          "Healthcare Data Environments",
+          "10"
+        ],
+        [
+          "INFS 3011",
+          "Healthcare Software and Systems",
+          "10"
+        ],
+        [
+          "MATH 2011",
+          "Making Sense of Data",
+          "10"
+        ],
+        [
+          "INFS 2004",
+          "Introduction to Health Informatics",
+          "10"
+        ],
+        [
+          "INFS 3001",
+          "Activity Based Funding/Casemix and Data Quality",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Master of Data Science (3735)"
+      ],
+      [
+        "Master of Information and Communications Technology/Master of Data Science (3780)"
+      ],
+      [
+        "Master of Information and Communications Technology (3699)"
+      ],
+      [
+        "Master of Information and Communications Technology (Advanced) (3698)"
+      ]
+    ]
+  },
+  {
+    "type": 1,
+    "name": "Cybersecurity Management, Testamur Major (T153)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/cybersecurity-management-testamur-major-/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta - Victoria Road",
+        ".column1": "Full time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta - Victoria Road",
+        ".column1": "Part time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Sydney City Campus *",
+        ".column1": "",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "INFO 2008",
+          "Cyber Incident Response and Risk Management",
+          "10"
+        ],
+        [
+          "INFO 2004",
+          "Cyber Crime and Social Engineering",
+          "10"
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "INFO 2006",
+          "Usable Security",
+          "10"
+        ],
+        [
+          "INFO 3015",
+          "Internet of Things and Smart Environments",
+          "10"
+        ],
+        [
+          "HUMN 3030",
+          "Cyber Justice (UG)",
+          "10"
+        ],
+        [
+          "CULT 3024",
+          "Crime, Media, Culture",
+          "10"
+        ],
+        [
+          "INFO 3018",
+          "Computing Practicum",
+          "10"
+        ]
+      ]
+    },
+    "related": []
+  },
+  {
+    "type": 1,
+    "name": "Business Analytics, Testamur Major (T130)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/business-analytics-ug-testamur-major/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Parramatta City Campus-Macquarie Street",
+        ".column1": "Internal",
+        ".column2": "Program Advice"
+      },
+      {
+        ".column0": "Surabaya Campus, Indonesia (commenced Sept 2025)",
+        ".column1": "Internal",
+        ".column2": "Program Advice"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "BUSM 1042",
+          "Introduction to Business Analytics",
+          "10"
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          "10"
+        ],
+        [
+          "FINC 3021",
+          "Financial Modelling and FinTech",
+          "10"
+        ],
+        [
+          "COMP 1014",
+          "Thinking About Data",
+          "10"
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "COMP 3002",
+          "Applications of Big Data",
+          "10"
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          "10"
+        ],
+        [
+          "BUSM 3081",
+          "Business Analytics Project",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "BUSM 1050",
+          "People and Organisations",
+          "10"
+        ],
+        [
+          "FINC 1005",
+          "Financial Foundations",
+          "10"
+        ],
+        [
+          "MKTG 1014",
+          "Marketing in Action",
+          "10"
+        ],
+        [
+          "ECON 1016",
+          "Evidence-Based Decision Making",
+          "10"
+        ],
+        [
+          "BUSM 2050",
+          "Digital Transformation for Business",
+          "10"
+        ],
+        [
+          "ECON 1017",
+          "The Future of Business",
+          "10"
+        ],
+        [
+          "BUSM 1048",
+          "Professional Careers and Employability",
+          "10"
+        ],
+        [
+          "BUSM 3084",
+          "Professional Business Experience",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 1014",
+          "Thinking About Data",
+          "10"
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          "COMP 3002",
+          "Applications of Big Data",
+          "10"
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          "10"
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "BUSM 3004",
+          "Contemporary Management Issues",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 1014",
+          "Thinking About Data",
+          "10"
+        ],
+        [
+          "COMP 1013",
+          "Analytics Programming",
+          "10"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          "COMP 3002",
+          "Applications of Big Data",
+          "10"
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          "10"
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "BUSM 3081",
+          "Business Analytics Project",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "80"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Arts/Bachelor of Business (1818)"
+      ],
+      [
+        "Bachelor of Business (2786)"
+      ],
+      [
+        "Bachelor of Business/Bachelor of Laws (2788)"
+      ],
+      [
+        "Bachelor of Business/Bachelor of Laws (Honours) (2840)"
+      ],
+      [
+        "Bachelor of Communication/Bachelor of Business (1819)"
+      ],
+      [
+        "Bachelor of Engineering (Honours)/Bachelor of Business (3728)"
+      ],
+      [
+        "Bachelor of Information Systems/Bachelor of Business (3744)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (3737)"
+      ],
+      [
+        "Bachelor of Information Systems (3687)"
+      ],
+      [
+        "Bachelor of Information Systems Advanced (3688)"
+      ],
+      [
+        "Bachelor of International Studies/Bachelor of Business (1820)"
+      ],
+      [
+        "Bachelor of Science/Bachelor of Business (4748)"
+      ],
+      [
+        "Diploma in Business/Bachelor of Business (6037)"
+      ]
+    ]
+  }
+]
