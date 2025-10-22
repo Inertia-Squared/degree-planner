@@ -23,10 +23,15 @@ const CONFIG = {
     inputPath: '../Automation/data/',
 }
 
+// todo implement, Program/Subject should be extracted from nodeProperties (along with others) and handled modularly with an interface the implements the keyProps and other data - maybe revamp keyprops system?
+interface Program{}
+interface Subject{}
+interface SpecialRequirement{}
+
 export interface LogicalPrerequisite {
-    course: string
+    course: string // Program | SpecialRequirement
     AND: {
-        OR: string[]
+        OR: string[] // Subject[]
     }[]
 }
 

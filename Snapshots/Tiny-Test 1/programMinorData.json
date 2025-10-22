@@ -1,0 +1,2416 @@
+[
+  {
+    "type": 2,
+    "name": "Global Sustainability, Minor (0196)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/global-sustainability-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Internal",
+        ".column2": "Neil Perry"
+      },
+      {
+        ".column0": "Parramatta City Campus-Macquarie Street",
+        ".column1": "Internal",
+        ".column2": "Neil Perry"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "BEHV 2019",
+          "Citizenship and Community Engagement",
+          "10"
+        ],
+        [
+          "Select three of the following:",
+          "30"
+        ],
+        [
+          "EART 3006",
+          "Science of the Anthropocene",
+          ""
+        ],
+        [
+          "HUMN 3043",
+          "Globalisation and Sustainability",
+          ""
+        ],
+        [
+          "TEAC 2018",
+          "Education for Sustainability",
+          ""
+        ],
+        [
+          "HUMN 3077",
+          "Sustainable Futures",
+          ""
+        ],
+        [
+          "PHIL 3012",
+          "Philosophy and Environment",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ],
+      [
+        "Bachelor of Health Science (4656)"
+      ],
+      [
+        "Bachelor of Psychology (Honours) (1865)"
+      ],
+      [
+        "Diploma in Health Science/Bachelor of Health Science (6000)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Property, Minor (0289)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/property-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta City-Macquarie St",
+        ".column1": "",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "MGMT 1001",
+          "Introduction to Property",
+          "10"
+        ],
+        [
+          "FINC 3011",
+          "Property Investment",
+          "10"
+        ],
+        [
+          "FINC 3013",
+          "Property Portfolio Management",
+          "10"
+        ],
+        [
+          "FINC 3009",
+          "Property Finance",
+          "10"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Macroeconomics, Minor (0293)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/macroeconomics-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta City-Macquarie St",
+        ".column1": "",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "ECON 1013",
+          "The Australian Macroeconomy",
+          "10"
+        ],
+        [
+          "ECON 3012",
+          "Growth, Cycles and Crises",
+          "10"
+        ],
+        [
+          "ECON 3006",
+          "Economic and Financial Modelling",
+          "10"
+        ],
+        [
+          "ECON 3017",
+          "Macroeconomic Measures and Models",
+          "10"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Management, Minor (0292)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/management-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta City-Macquarie St",
+        ".column1": "",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "BUSM 1008",
+          "Enterprise Leadership",
+          "10"
+        ],
+        [
+          "BUSM 3027",
+          "Innovation and Professional Practice",
+          "10"
+        ],
+        [
+          "BUSM 3036",
+          "Leadership and Entrepreneurship",
+          "10"
+        ],
+        [
+          "BUSM 2031",
+          "Managing in the Global Environment",
+          "10"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ],
+      [
+        "Bachelor of Medical Science (3755)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Video Games, Minor (0276)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/video-games-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta - Victoria Road campus",
+        ".column1": "Internal",
+        ".column2": "Full-time"
+      },
+      {
+        ".column0": "Parramatta - Victoria Road campus",
+        ".column1": "Internal",
+        ".column2": "Part-time "
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3006",
+          "Computer Graphics",
+          "10"
+        ],
+        [
+          "COMP 2014",
+          "Object Oriented Programming",
+          "10"
+        ],
+        [
+          "COMP 2018",
+          "Simulation Fundamentals",
+          "10"
+        ],
+        [
+          "COMP 3024",
+          "Video Games Development",
+          "10"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "International Business, Minor (0290)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/international-business-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta City-Macquarie St",
+        ".column1": "",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "BUSM 1015",
+          "Introduction to International Business",
+          "10"
+        ],
+        [
+          "BUSM 2031",
+          "Managing in the Global Environment",
+          "10"
+        ],
+        [
+          "HUMN 3043",
+          "Globalisation and Sustainability",
+          "10"
+        ],
+        [
+          "BUSM 3031",
+          "International Business Strategy",
+          "10"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Statistics, Minor (0148)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/statistics-minor/",
+    "locations": [],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "MATH 1003",
+          "Biometry",
+          ""
+        ],
+        [
+          "MATH 1028",
+          "Statistical Decision Making",
+          ""
+        ],
+        [
+          "MATH 1030",
+          "Statistics for Business",
+          ""
+        ],
+        [
+          "Select three of the following:",
+          "30"
+        ],
+        [
+          "MATH 3005",
+          "Environmental Informatics",
+          ""
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          ""
+        ],
+        [
+          "MATH 2011",
+          "Making Sense of Data",
+          ""
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": []
+  },
+  {
+    "type": 2,
+    "name": "Marketing, Minor (0291)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/marketing-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta City-Macquarie St",
+        ".column1": "",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "MKTG 1006",
+          "Marketing Principles",
+          "10"
+        ],
+        [
+          "Select three of the following",
+          "30"
+        ],
+        [
+          "MKTG 1011",
+          "Fundamentals of Marketing Analytics",
+          ""
+        ],
+        [
+          "MKTG 2010",
+          "Customer Experience Fundamentals",
+          ""
+        ],
+        [
+          "MKTG 3021",
+          "Strategic Brand Management",
+          ""
+        ],
+        [
+          "MKTG 3016",
+          "Strategic Marketing Management",
+          ""
+        ],
+        [
+          "MKTG 3019",
+          "Marketing and Digital Communications",
+          ""
+        ],
+        [
+          "MKTG 3020",
+          "Omnichannel Marketing",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ],
+      [
+        "Bachelor of Psychological Science (exit only) (1904)"
+      ],
+      [
+        "Bachelor of Psychology (Honours) (1865)"
+      ],
+      [
+        "Bachelor of Tourism and Event Management (1916)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Robotics, Minor (0275)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/robotics-minor/",
+    "locations": [],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 2014",
+          "Object Oriented Programming",
+          "10"
+        ],
+        [
+          "ENGR 1018",
+          "Fundamentals of Mechanics",
+          "10"
+        ],
+        [
+          "MECH 4003",
+          "Mobile Robotics",
+          "10"
+        ],
+        [
+          "COMP 3027",
+          "Robotic Programming",
+          "10"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Mathematics, Minor (0059)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/mathematics-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "Students must complete a total of four subjects at Levels 1, 2, and 3, taking into account any prerequisite requirements of individual subjects.",
+          "40"
+        ],
+        [
+          "level 1",
+          ""
+        ],
+        [
+          "MATH 1014",
+          "Mathematics 1A",
+          ""
+        ],
+        [
+          "MATH 1015",
+          "Mathematics 1B",
+          ""
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          ""
+        ],
+        [
+          "MATH 1028",
+          "Statistical Decision Making",
+          ""
+        ],
+        [
+          "Level 2",
+          ""
+        ],
+        [
+          "MATH 2001",
+          "Advanced Calculus",
+          ""
+        ],
+        [
+          "MATH 2003",
+          "Differential Equations",
+          ""
+        ],
+        [
+          "MATH 2010",
+          "Linear Algebra",
+          ""
+        ],
+        [
+          "COMP 2023",
+          "Mathematical Programming",
+          ""
+        ],
+        [
+          "Level 3",
+          ""
+        ],
+        [
+          "MATH 3006",
+          "Mathematical Modelling",
+          ""
+        ],
+        [
+          "MATH 3003",
+          "Analysis",
+          ""
+        ],
+        [
+          "MATH 3015",
+          "Groups and Symmetry",
+          ""
+        ],
+        [
+          "MATH 3013",
+          "Fields and Equations",
+          ""
+        ],
+        [
+          "MATH 3012",
+          "Combinatorics",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Arts (Pathway to Teaching Secondary) (1652)"
+      ],
+      [
+        "Bachelor of Arts (Pathway to Teaching Secondary) Dean's Scholars (1823)"
+      ],
+      [
+        "Bachelor of Data Science (3769)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Diploma in Arts/Bachelor of Arts (Pathway to Teaching Secondary) (6021)"
+      ],
+      [
+        "Diploma/Bachelor of Information and Communications Technology (6039)"
+      ],
+      [
+        "Diploma in Information and Communications Technology / Bachelor of Information Systems (6040)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Exercise Science, Minor (0279)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/exercise-science-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Internal",
+        ".column2": "healthsciences@westernsydney.edu.au"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Internal",
+        ".column2": "healthsciences@westernsydney.edu.au"
+      }
+    ],
+    "sequences": {
+      "tgl0": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "3769 Bachelor of Data Science are recommended to choose the following 4 subjects as long as they meet the subject pre-requisite requirements:",
+          ""
+        ],
+        [
+          "SPRT 1001",
+          "Fundamentals of Exercise Science",
+          ""
+        ],
+        [
+          "HLTH 2003",
+          "Biomechanics",
+          ""
+        ],
+        [
+          "SPRT 2002",
+          "Exercise Testing and Measurement",
+          ""
+        ],
+        [
+          "HLTH 2005",
+          "Exercise Prescription I",
+          ""
+        ]
+      ],
+      "tgl1": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "4656 Bachelor of Health Science/6000 Dip Health Science/B Health Science can choose any 4 from the 7 as long as they meet the subject pre-requisite requirements. Clinical Sciences major students who wish to progress to a graduate entry physiotherapy or exercise physiology course should enrol into BIOS 2012:",
+          ""
+        ],
+        [
+          "SPRT 1001",
+          "Fundamentals of Exercise Science",
+          ""
+        ],
+        [
+          "HLTH 2003",
+          "Biomechanics",
+          ""
+        ],
+        [
+          "BIOS 2012",
+          "Exercise Physiology",
+          ""
+        ],
+        [
+          "BEHV 3025",
+          "Sport and Exercise Psychology",
+          ""
+        ],
+        [
+          "SPRT 2002",
+          "Exercise Testing and Measurement",
+          ""
+        ],
+        [
+          "HLTH 2005",
+          "Exercise Prescription I",
+          ""
+        ],
+        [
+          "HLTH 2025",
+          "Exercise Nutrition",
+          ""
+        ]
+      ],
+      "tgl2": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "4742 Bachelor of Health Science (HPE teaching pathway), 4747 Bachelor of Health Science (HPE), 6001 Dip Health Science/B Health Science (HPE), and 4741 Bachelor of Sport Development can choose these 4 subjects as long as they meet the subject pre-requisite requirements.",
+          ""
+        ],
+        [
+          "HLTH 2003",
+          "Biomechanics",
+          ""
+        ],
+        [
+          "SPRT 2002",
+          "Exercise Testing and Measurement",
+          ""
+        ],
+        [
+          "HLTH 2005",
+          "Exercise Prescription I",
+          ""
+        ],
+        [
+          "HLTH 2025",
+          "Exercise Nutrition",
+          ""
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ],
+      [
+        "Bachelor of Health Science (4656)"
+      ],
+      [
+        "Diploma in Health Science/Bachelor of Health Science (6000)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Digital Cultures, Minor (0070)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/digital-cultures-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road ",
+        ".column1": "Internal",
+        ".column2": "EnquiriesHCA@westernsydney.edu.au"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Internal",
+        ".column2": "EnquiriesHCA@westernsydney.edu.au"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "HUMN 3033",
+          "Digital Cultures",
+          "10"
+        ],
+        [
+          "HUMN 2020",
+          "Digital Humanities and Research Methods (UG)",
+          "10"
+        ],
+        [
+          "Select two of the following:",
+          "20"
+        ],
+        [
+          "Level 1 Pool",
+          ""
+        ],
+        [
+          "COMM 1012",
+          "Data, Communication and Power",
+          ""
+        ],
+        [
+          "DESN 1011",
+          "Image Design",
+          ""
+        ],
+        [
+          "COMM 1020",
+          "Media Cultures and Industries",
+          ""
+        ],
+        [
+          "DESN 1018",
+          "Visual Storytelling",
+          ""
+        ],
+        [
+          "DESN 1021",
+          "Web and Time-based Design",
+          ""
+        ],
+        [
+          "COMM 1044",
+          "Professional Communication",
+          ""
+        ],
+        [
+          "Level 2 Pool",
+          ""
+        ],
+        [
+          "COMM 2024",
+          "Media Law and Ethics",
+          ""
+        ],
+        [
+          "DESN 2014",
+          "Researching the Visual",
+          ""
+        ],
+        [
+          "Level 3 Pool",
+          ""
+        ],
+        [
+          "DESN 3002",
+          "Data Visualisation",
+          ""
+        ],
+        [
+          "DESN 3008",
+          "Interactive Design: Apps",
+          ""
+        ],
+        [
+          "COMM 3022",
+          "Media Memory",
+          ""
+        ],
+        [
+          "HUMN 3096",
+          "What is the Human?",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "HUMN 3033",
+          "Digital Cultures",
+          "10"
+        ],
+        [
+          "HUMN 2020",
+          "Digital Humanities and Research Methods (UG)",
+          "10"
+        ],
+        [
+          "Select two of the following:",
+          "20"
+        ],
+        [
+          "DESN 3002",
+          "Data Visualisation",
+          ""
+        ],
+        [
+          "DESN 1011",
+          "Image Design",
+          ""
+        ],
+        [
+          "DESN 3008",
+          "Interactive Design: Apps",
+          ""
+        ],
+        [
+          "COMM 3022",
+          "Media Memory",
+          ""
+        ],
+        [
+          "DESN 2014",
+          "Researching the Visual",
+          ""
+        ],
+        [
+          "DESN 1021",
+          "Web and Time-based Design",
+          ""
+        ],
+        [
+          "HUMN 3096",
+          "What is the Human?",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Creative Industries (1838)"
+      ],
+      [
+        "Bachelor of Data Science (3769)"
+      ],
+      [
+        "Diploma in Communication/Bachelor of Creative Industries (6009)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Cybersecurity Systems, Minor (0277)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/cybersecurity-systems-minor/",
+    "locations": [],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "INFO 3006",
+          "Information Security",
+          "10"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          "10"
+        ],
+        [
+          "COMP 2014",
+          "Object Oriented Programming",
+          "10"
+        ],
+        [
+          "COMP 3015",
+          "Operating Systems Programming",
+          "10"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Cybersecurity Networking, Minor (0274)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/cybersecurity-networking-minor/",
+    "locations": [],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          "10"
+        ],
+        [
+          "COMP 2020",
+          "Technologies for Web Applications",
+          "10"
+        ],
+        [
+          "COMP 2004",
+          "Computer Networking",
+          "10"
+        ],
+        [
+          "INFO 3007",
+          "Network Security",
+          "10"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Critical and Systems Thinking, Minor (0287)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/critical-systems-thinking-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Year 1"
+        ],
+        [
+          "1H session",
+          "Credit Points"
+        ],
+        [
+          "HUMN 1063",
+          "Critical and Systems Thinking",
+          "10"
+        ],
+        [
+          "HUMN 2071",
+          "Knowledge Journeys",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          "2H session"
+        ],
+        [
+          "HUMN 3114",
+          "Changemakers and Entrepreneurship",
+          "10"
+        ],
+        [
+          "HUMN 2072",
+          "Logic, Argumentation and Post-Truth",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ],
+      [
+        "Bachelor of Music (Dean's Scholars) (1738)"
+      ],
+      [
+        "Bachelor of Sport Development (4741)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Creative Leadership, Minor (0286)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/creative-leadership-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Year 1"
+        ],
+        [
+          "1H session",
+          "Credit Points"
+        ],
+        [
+          "DESN 2016",
+          "Creativity, Design Thinking and Visualisation",
+          "10"
+        ],
+        [
+          "BUSM 1044",
+          "Leadership in Complexity",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          "2H session"
+        ],
+        [
+          "BEHV 2019",
+          "Citizenship and Community Engagement",
+          "10"
+        ],
+        [
+          "CULT 3011",
+          "Ethical Leadership",
+          "10"
+        ],
+        [
+          " ",
+          "Credit Points",
+          "20"
+        ],
+        [
+          " ",
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ],
+      [
+        "Bachelor of Design - Visual Communication (Dean's Scholars) (1737)"
+      ],
+      [
+        "Bachelor of Music (Dean's Scholars) (1738)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Artificial Intelligence, Minor (0031)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/artificial-intelligence-minor/",
+    "locations": [],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "INFS 3003",
+          "Artificial Intelligence",
+          "10"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          "10"
+        ],
+        [
+          "COMP 2014",
+          "Object Oriented Programming",
+          "10"
+        ],
+        [
+          "COMP 2008",
+          "Computer Organisation",
+          "10"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Astroinformatics, Minor (0096)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/astroinformatics-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "PHYS 3001",
+          "Astroinformatics",
+          "10"
+        ],
+        [
+          "MATH 1014",
+          "Mathematics 1A",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "PHYS 2004",
+          "The Cosmos in Perspective: Information and Life",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Data Science (3769)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Diploma/Bachelor of Information and Communications Technology (6039)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Ubiquitous Computing, Minor (0325)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/ubiquitous-computing/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "INFO 3015",
+          "Internet of Things and Smart Environments",
+          "10"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          "10"
+        ],
+        [
+          "COMP 2028",
+          "Cryptography, Cryptocurrencies and Blockchain",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (Accounting) (3738)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (3737)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Multimedia Computing, Minor (0328)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/multimedia-computing-minor-0328/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 1001",
+          "3D Modelling Fundamentals",
+          "10"
+        ],
+        [
+          "COMP 3024",
+          "Video Games Development",
+          "10"
+        ],
+        [
+          "INFO 3003",
+          "Human-Computer Interaction",
+          "10"
+        ],
+        [
+          "COMP 3006",
+          "Computer Graphics",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (Accounting) (3738)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (3737)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Graphics and Visual Simulation, Minor (0324)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/graphics-visual-simulation-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Vicotria Road Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 1014",
+          "Thinking About Data",
+          "10"
+        ],
+        [
+          "COMP 2026",
+          "Visual Analytics",
+          "10"
+        ],
+        [
+          "COMP 2018",
+          "Simulation Fundamentals",
+          "10"
+        ],
+        [
+          "COMP 3006",
+          "Computer Graphics",
+          "10"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (Accounting) (3738)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (3737)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Games Development, Minor (0323)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/games-development/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 1001",
+          "3D Modelling Fundamentals",
+          "10"
+        ],
+        [
+          "MATH 2010",
+          "Linear Algebra",
+          "10"
+        ],
+        [
+          "COMP 2011",
+          "Games Technology",
+          "10"
+        ],
+        [
+          "COMP 3024",
+          "Video Games Development",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (Accounting) (3738)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (3737)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Data Science and Machine Learning, Minor (0322)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/data-science-machine-learning-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 2025",
+          "Introduction to Data Science",
+          "10"
+        ],
+        [
+          "COMP 3020",
+          "Social Web Analytics",
+          "10"
+        ],
+        [
+          "COMP 3032",
+          "Machine Learning",
+          "10"
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "MATH 1028",
+          "Statistical Decision Making",
+          ""
+        ],
+        [
+          "COMP 1014",
+          "Thinking About Data",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": []
+  },
+  {
+    "type": 2,
+    "name": "Cyber Security and Ethical Hacking, Minor (0326)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/cyber-security-ethical-hacking-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3007",
+          "Computer Networks and Internets",
+          "10"
+        ],
+        [
+          "COMP 3037",
+          "Cloud Security",
+          "10"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          ""
+        ],
+        [
+          "COMP 2028",
+          "Cryptography, Cryptocurrencies and Blockchain",
+          ""
+        ],
+        [
+          "INFO 2004",
+          "Cyber Crime and Social Engineering",
+          ""
+        ],
+        [
+          "INFO 3014",
+          "Digital Investigations and Forensics",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (Accounting) (3738)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (3737)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Networking, Minor (0040)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/networking-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      },
+      {
+        ".column0": "Sydney City Campus*",
+        ".column1": "Internal",
+        ".column2": "Antoinette Cevenini"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3007",
+          "Computer Networks and Internets",
+          "10"
+        ],
+        [
+          "COMP 3014",
+          "Networked Systems Design",
+          "10"
+        ],
+        [
+          "COMP 3025",
+          "Wireless and Mobile Networks",
+          "10"
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "COMP 2013",
+          "LAN Workshop",
+          ""
+        ],
+        [
+          "INFO 3007",
+          "Network Security",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Bachelor of Information Systems (3687)"
+      ],
+      [
+        "Bachelor of Information Systems Advanced (3688)"
+      ],
+      [
+        "Diploma/Bachelor of Information and Communications Technology (6039)"
+      ],
+      [
+        "Diploma in Information and Communications Technology / Bachelor of Information Systems (6040)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Mobile Computing, Minor (0146)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/mobile-computing-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "INFO 3003",
+          "Human-Computer Interaction",
+          "10"
+        ],
+        [
+          "INFS 3012",
+          "Information Systems Deployment and Management",
+          "10"
+        ],
+        [
+          "COMP 3013",
+          "Mobile Applications Development",
+          "10"
+        ],
+        [
+          "COMP 3025",
+          "Wireless and Mobile Networks",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Bachelor of Information Systems (3687)"
+      ],
+      [
+        "Bachelor of Information Systems Advanced (3688)"
+      ],
+      [
+        "Diploma/Bachelor of Information and Communications Technology (6039)"
+      ],
+      [
+        "Diploma in Information and Communications Technology / Bachelor of Information Systems (6040)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Health Informatics, Minor (0037)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/health-informatics-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Internal ",
+        ".column2": "CDMS@westernsydney.edu.au"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "HLTH 2007",
+          "Fundamentals of Medical Concepts and Terminology",
+          "10"
+        ],
+        [
+          "INFS 3010",
+          "Healthcare Data Environments",
+          "10"
+        ],
+        [
+          "INFS 3011",
+          "Healthcare Software and Systems",
+          "10"
+        ],
+        [
+          "INFS 2004",
+          "Introduction to Health Informatics",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Health Science (4656)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Bachelor of Information Systems (3687)"
+      ],
+      [
+        "Bachelor of Information Systems Advanced (3688)"
+      ],
+      [
+        "Diploma in Health Science/Bachelor of Health Science (6000)"
+      ],
+      [
+        "Diploma/Bachelor of Information and Communications Technology (6039)"
+      ],
+      [
+        "Diploma in Information and Communications Technology / Bachelor of Information Systems (6040)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Entertainment Computing, Minor (0145)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/entertainment-computing-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3006",
+          "Computer Graphics",
+          "10"
+        ],
+        [
+          "COMP 2011",
+          "Games Technology",
+          "10"
+        ],
+        [
+          "COMP 1005",
+          "Programming Fundamentals",
+          "10"
+        ],
+        [
+          "COMP 3024",
+          "Video Games Development",
+          "10"
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Bachelor of Information Systems (3687)"
+      ],
+      [
+        "Bachelor of Information Systems Advanced (3688)"
+      ],
+      [
+        "Diploma/Bachelor of Information and Communications Technology (6039)"
+      ],
+      [
+        "Diploma in Information and Communications Technology / Bachelor of Information Systems (6040)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Software Development, Minor (0329)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/software-development-minor-0329/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Attendance",
+        ".column2": "Mode"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Campbelltown Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Parramatta Victoria Road Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Penrith Campus",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Sydney City Campus*",
+        ".column1": "Full-time",
+        ".column2": "Internal"
+      },
+      {
+        ".column0": "Sydney City Campus*",
+        ".column1": "Part-time",
+        ".column2": "Internal"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 2009",
+          "Data Structures and Algorithms",
+          "10"
+        ],
+        [
+          "INFO 3003",
+          "Human-Computer Interaction",
+          "10"
+        ],
+        [
+          "MATH 1006",
+          "Discrete Mathematics",
+          "10"
+        ],
+        [
+          "Select one of the following",
+          "10"
+        ],
+        [
+          "COMP 3013",
+          "Mobile Applications Development",
+          ""
+        ],
+        [
+          "COMP 3036",
+          "Full Stack Development",
+          ""
+        ],
+        [
+          "COMP 2029",
+          "DevOps",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (Accounting) (3738)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology/Bachelor of Business (3737)"
+      ]
+    ]
+  },
+  {
+    "type": 2,
+    "name": "Cloud Computing, Minor (0128)\n\t\t\t\t",
+    "originalLink": "https://hbook.westernsydney.edu.au/majors-minors/cloud-computing-minor/",
+    "locations": [
+      {
+        ".column0": "Campus",
+        ".column1": "Mode",
+        ".column2": "Advice"
+      },
+      {
+        ".column0": "Parramatta Campus - Victoria Road",
+        ".column1": "Internal",
+        ".column2": "CDMS@westernsydney.edu.au"
+      }
+    ],
+    "sequences": {
+      "structure": [
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3003",
+          "Cloud Computing Architecture",
+          "10"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "Select two of the following",
+          "20"
+        ],
+        [
+          "INFO 3001",
+          "Computer Security",
+          ""
+        ],
+        [
+          "From Autumn 2024 INFO 3001 is replaced by COMP 2027 ",
+          ""
+        ],
+        [
+          "COMP 2027",
+          "Cyber Security",
+          "10"
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          ""
+        ],
+        [
+          "INFO 3002",
+          "Ethical Hacking Principles and Practice",
+          ""
+        ],
+        [
+          "INFO 3007",
+          "Network Security",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "50"
+        ],
+        [
+          "Subject",
+          "Title",
+          "Credit Points"
+        ],
+        [
+          "COMP 3012",
+          "Introduction to Cloud Computing",
+          "10"
+        ],
+        [
+          "COMP 3037",
+          "Cloud Security",
+          "10"
+        ],
+        [
+          "COMP 3003",
+          "Cloud Computing Architecture",
+          "10"
+        ],
+        [
+          "Select one of the following:",
+          "10"
+        ],
+        [
+          "INFO 3007",
+          "Network Security",
+          ""
+        ],
+        [
+          "COMP 3009",
+          "Distributed Systems and Programming",
+          ""
+        ],
+        [
+          "Total Credit Points",
+          "40"
+        ]
+      ]
+    },
+    "related": [
+      [
+        "Bachelor of Computer Science (3506)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (3639)"
+      ],
+      [
+        "Bachelor of Information and Communications Technology (Advanced) (3684)"
+      ],
+      [
+        "Bachelor of Information Systems (3687)"
+      ],
+      [
+        "Bachelor of Information Systems Advanced (3688)"
+      ],
+      [
+        "Diploma/Bachelor of Information and Communications Technology (6039)"
+      ]
+    ]
+  }
+]
