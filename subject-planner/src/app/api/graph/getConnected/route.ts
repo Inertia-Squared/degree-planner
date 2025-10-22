@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { read } from "@/lib/neo4j";
-import {nodeDisplayNameKeys, nodeDisplayNameMap, nodeFillMap, nodeSizeMap} from "@/lib/siteUtil";
+import {NodeTypes, nodeDisplayNameMap, nodeFillMap, nodeSizeMap} from "@/lib/siteUtil";
 import {ExtendedNode} from "@/app/page";
 import {keyOf, PropsKey} from "../../../../../../neo4j/upload-data-to-db";
 
 export interface getConnectedNodesInterface {
     connections: {
-        connectedNode: ExtendedNode,
+        connectedNode: ExtendedNode<any>,
         relation: {
             id: string,
             label: string
@@ -30,14 +30,14 @@ export async function POST(request: Request) {
             return {
                 connectedNode: {
                     id: record.bID.toNumber().toString(),
-                    label: record.b.properties[nodeDisplayNameMap[record.b.labels[0] as nodeDisplayNameKeys]],
+                    label: record.b.properties[nodeDisplayNameMap[record.b.labels[0] as NodeTypes]],
                     data: {
-                        type: record.b.labels[0] as nodeDisplayNameKeys,
+                        type: record.b.labels[0] as NodeTypes,
                         ...record.b.properties
                     },
-                    fill: nodeFillMap[record.b.labels[0] as nodeDisplayNameKeys],
-                    size: nodeSizeMap[record.b.labels[0] as nodeDisplayNameKeys],
-                } as ExtendedNode,
+                    fill: nodeFillMap[record.b.labels[0] as NodeTypes],
+                    size: nodeSizeMap[record.b.labels[0] as NodeTypes],
+                } as ExtendedNode<any>,
                 relation: {
                     id: record.rID.toNumber().toString(),
                     label: record.r,

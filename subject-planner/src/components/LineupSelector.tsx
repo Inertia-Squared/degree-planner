@@ -7,7 +7,7 @@ interface LineupSelectorProps {
 }
 
 const LineupSelector = ({ className, onSearchEvent }: LineupSelectorProps) => {
-    const [program, setProgram] = useState('Bachelor of Data Science (3769)');
+    const [program, setProgram] = useState('Bachelor of Information Systems (3687)');
 
     const searchHandbook = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();

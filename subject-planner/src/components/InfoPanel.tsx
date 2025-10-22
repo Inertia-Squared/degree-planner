@@ -2,12 +2,12 @@ import {ExtendedNode} from "@/app/page";
 import {GraphEdge} from "reagraph";
 
 interface InfoPanelProps {
-    item: ExtendedNode | GraphEdge | undefined
+    item: ExtendedNode<any> | GraphEdge | undefined
     className?: string
 }
 
 
-const hiddenTerms = ['subjectSequences', 'code']
+const hiddenTerms = [/*'subjectSequences', */'code']
 
 const InfoPanel = ({item, className}: InfoPanelProps) => {
     const entries = Object.entries(item?.data ?? []).sort((a,b)=> {
@@ -19,7 +19,7 @@ const InfoPanel = ({item, className}: InfoPanelProps) => {
         return 10;
     });
 
-    console.log(JSON.stringify(entries))
+  //  console.log(JSON.stringify(entries))
     return(<div className={`${className}`}>
         {entries.map((e)=>{
             let shouldTerminate = false;
