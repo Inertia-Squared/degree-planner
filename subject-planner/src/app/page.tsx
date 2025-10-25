@@ -8,9 +8,18 @@ import {getProgramsInterface} from "@/app/api/graph/getPrograms/route";
 import {getConnectedNodesInterface} from "@/app/api/graph/getConnected/route";
 import {HEXGBA, nodeFillMap, NodeTypes} from "@/lib/siteUtil";
 import InfoPanel from "@/components/InfoPanel";
-import {LogicalPrerequisite} from "../../../neo4j/upload-data-to-db";
-import {util} from "zod";
-import assertIs = util.assertIs;
+
+import {
+    filterDisconnectedEdges, filterLeafPrerequisites,
+    filterPrerequisitesNotInCourse,
+    filterSubjectsNotInSequence
+} from "@/lib/graph/graphFilters";
+import {
+    isEligibleForSubject,
+    isRequiredByProgramOrSpecialisation,
+    prerequisiteIsFulfilled
+} from "@/lib/graph/graphColours";
+import {getParentsByType} from "@/lib/graph/graphUtil";
 
 // todo add type extensions for cringe node data fields
 
@@ -18,29 +27,62 @@ const ForceGraph = dynamic(() => import('../components/ForceGraph'), {
     ssr: false,
 });
 
+function containsAll(object: any, components: string[]){
+    let missingComponent = false;
+    components.forEach((component)=>{
+        if (!(component in object)) {
+            missingComponent = true;
+        }
+    })
+    return !missingComponent;
+}
+
 export interface ExtendedNode<T> extends GraphNode {
      data: T
 }
-
-interface GenericNode {
-    type: NodeTypes
-    school: string,
-    coordinator: string,
-    discipline: string,
-    sequences: string,
+export function isExtendedNode(obj: any){
+    return 'data' in obj;
 }
 
-interface SubjectExtension extends GenericNode{
+export interface GenericNode {
+    type: NodeTypes
+}
+export function isGenericNode(obj: any){
+    return isExtendedNode(obj) && containsAll(obj.data, ['type']);
+}
+
+export interface SubjectExtension extends GenericNode{
     type: 'Subject'
     code: string,
-    prerequisites: (string | LogicalPrerequisite)[]
+    prerequisites: string[]
     subjectSequences: string[]
 }
+export function isSubjectNode(obj: any){
+    return isGenericNode(obj) && containsAll(obj.data, ['code','prerequisites','subjectSequences']);
+}
 
-interface ProgramExtension extends GenericNode{
+export interface ProgramExtension extends GenericNode{
     type: 'Program'
     programName: string,
     programSequences: string[]
+}
+export function isProgramNode(obj: any){
+    return isGenericNode(obj) && containsAll(obj.data,['programName','programSequences']);
+}
+
+export interface PrerequisiteExtension extends GenericNode {
+    type: 'Prerequisites'
+    course: string
+    subjects: string[]
+}
+export function isPrerequisiteNode(obj: any){
+    return isGenericNode(obj) && containsAll(obj.data, ['course', 'subjects']);
+}
+
+export function showNodeInfo(node: ExtendedNode<any>){
+    console.log(`Info on Node | Is Generic: ${isGenericNode(node)}, 
+    Is Subject: ${isSubjectNode(node)}, Is Program: ${isProgramNode(node)}, 
+    Is Prerequisite: ${isPrerequisiteNode(node)}`)
 }
 
 enum expandModes {
@@ -62,7 +104,6 @@ const badClusterOptions = [
     'prerequisites',
     'creditPoints',
     'subjectName',
-
 ]
 
 const displayOptions = {
@@ -74,10 +115,11 @@ type displayOptionKeys = keyof typeof displayOptions;
 
 export default function Home() {
     const [nodes, setNodes] = useState<ExtendedNode<GenericNode>[]>([]);
+    const [displayedNodes, setDisplayedNodes] = useState<ExtendedNode<GenericNode>[]>([]);
     const [nodeMap, setNodeMap] = useState<Map<string, ExtendedNode<GenericNode>>>(new Map());
     const [adjacencyList, setAdjacencyList] = useState<Map<string, string[]>>(new Map())
     const [edges, setEdges] = useState<GraphEdge[]>([]);
-    const [edgeMap, setEdgeMap] = useState<Map<string, GraphEdge>>(new Map())
+    const [displayedEdges, setDisplayedEdges] = useState<GraphEdge[]>([]);
     const [addedNodes, setAddedNodes] = useState<ExtendedNode<GenericNode>[]>([]);
 
     const [expandMode, setExpandMode] = useState<expandModes>(expandModes.ExpandPrerequisiteChain);
@@ -87,13 +129,10 @@ export default function Home() {
     const [selectedElement, setSelectedElement] = useState<ExtendedNode<GenericNode> | GraphEdge | undefined>(undefined);
     const [displayMode, setDisplayMode] = useState<LayoutTypes>(Object.values(displayOptions)[0]);
 
-    const [selectedProgram, setSelectedProgram] = useState<ExtendedNode<GenericNode> | undefined>(undefined);
+    const [selectedProgram, setSelectedProgram] = useState<ExtendedNode<ProgramExtension> | undefined>(undefined);
     const [selectedProgramSequence, setSelectedProgramSequence] = useState<string | undefined>(undefined);
 
-    const [collapsedByProgramSequence, setCollapsedByProgramSequence] = useState<ExtendedNode<GenericNode>[]>([]);
-    const [collapsedByNotRelevant, setCollapsedByNotRelevant] = useState<ExtendedNode<GenericNode>[]>([]);
-    const [collapsedNodes, setCollapsedNodes] = useState<string[]>([]);
-
+    const [completedSubjects, setCompletedSubjects] = useState<ExtendedNode<SubjectExtension>[]>();
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -131,7 +170,6 @@ export default function Home() {
         setClusterOptions(['select a node to see cluster options']);
         setClusterBy('not clustering')
     }
-
 
     /**
      * Filters out all nodes of a type excluding the one selected.
@@ -206,16 +244,11 @@ export default function Home() {
             throw new Error('Unreachable code reached!?!? PANIC!!!!')
         }
 
-        setNodes(newNodes);
-        setEdges(newEdges)
-
         const nmap = new Map(newNodes.map(n=>[n.id,n]));
         setNodeMap(nmap);
 
         const adjacency = new Map<string, string[]>();
-        const emap = new Map();
         newEdges.forEach(e=>{
-            emap.set(e.id,e);
             if (!adjacency.has(e.source)) {
                 adjacency.set(e.source, []);
             }
@@ -223,68 +256,9 @@ export default function Home() {
         })
         setAdjacencyList(adjacency);
 
-        newEdges.forEach(e=>e.fill='#DDDDDD')
-
-        const irrelevantNodes: ExtendedNode<GenericNode>[] = [];
-        newNodes.forEach((n: ExtendedNode<GenericNode>)=>{
-            const shouldHighlight = shouldBeHighlighted(n, adjacency, nmap);
-            n.fill = shouldHighlight ? nodeFillMap[n.data.type] : '#DDDDDD';
-            if(shouldHighlight) {
-                newEdges.forEach(e=>{
-                    if (e.target === n.id && shouldBeHighlighted(nmap.get(e.source) as ExtendedNode<GenericNode>, adjacency, nmap)) e.fill = '#555555';
-                })
-            }
-            let isVisible = false;
-            if(!shouldHighlight) {
-                isVisible = shouldBeVisible(n, adjacency, nmap);
-                n.fill = isVisible ? new HEXGBA(nodeFillMap[n.data.type]).multiply(0.72).toHex().slice(0,7) : '#DDDDDD';
-            }
-
-
-            n.labelVisible = shouldHighlight || isVisible;
-            if(!(shouldHighlight || isVisible)) irrelevantNodes.push(n);
-        })
-
-        setCollapsedByNotRelevant(irrelevantNodes);
+        setNodes(newNodes);
+        setEdges(newEdges);
     }
-
-    function hasChildOfType(queryNode: ExtendedNode<GenericNode>, type: NodeTypes, adjacencyList: Map<string, string[]>, nodeMap: Map<string, ExtendedNode<GenericNode>>){
-        const children = adjacencyList.get(queryNode.id) || [];
-        for (const child of children){
-            if (nodeMap.get(child)?.data.type === type) return true;
-        }
-        return false;
-    }
-
-    function hasParentOfType(queryNode: ExtendedNode<GenericNode>, type: NodeTypes, adjacencyList: Map<string, string[]>, nodeMap: Map<string, ExtendedNode<GenericNode>>){
-        for (const parent of adjacencyList.keys()){
-            if (adjacencyList.get(parent)?.includes(queryNode.id)
-                && nodeMap.get(parent)?.data.type === type) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    // function getParentsOfType(queryNode: ExtendedNode, type: NodeTypes){
-    //     const finalParents = [];
-    //     for (const parent of adjacencyList.keys()){
-    //         if (adjacencyList.get(parent)?.includes(queryNode.id)
-    //             && nodeMap.get(parent)?.data.type === type) {
-    //             finalParents.push(nodeMap.get(parent));
-    //         }
-    //     }
-    //     return finalParents;
-    // }
-    //
-    // function getChildrenOfType(queryNode: ExtendedNode, type: NodeTypes){
-    //     const children = adjacencyList.get(queryNode.id) || [];
-    //     const finalChildren = []
-    //     for (const child of children){
-    //         if (nodeMap.get(child)?.data.type === type) finalChildren.push(nodeMap.get(child));
-    //     }
-    //     return finalChildren;
-    // }
 
     const getConnected = async (id: string | string[]) => {
         if (typeof id === 'string'){
@@ -295,7 +269,7 @@ export default function Home() {
             body: JSON.stringify({parentNodeIds: id})
         });
         if(!response.ok){
-            throw new Error(`Failed to get connected nodes at /api/graph/getConnected using id ${id}`)
+            throw new Error(`Failed to get connected nodes at /api/graph/getConnected using id ${id}`);
         }
         const data = await response.json() as getConnectedNodesInterface;
         //console.log(data)
@@ -340,75 +314,71 @@ export default function Home() {
         await addConnected({manualAdd: connectionsToAdd});
     }
 
-    function shouldBeVisible(node: ExtendedNode<GenericNode>, adjacencyList: Map<string, string[]>, nodeMap: Map<string, ExtendedNode<GenericNode>>){
-        if (node.data.type === 'Subject'){
-            const n = node as ExtendedNode<SubjectExtension>;
-            console.log(n.data['prerequisites'].length)
-            if (n.data['prerequisites'].length <= 2){
-                console.log(n.data['prerequisites'])
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    // TODO: change highlight logic to be prerequsite-based (present/satisfied/not-present) and use remnants of this logic for darker vs. lighter logic
-    function shouldBeHighlighted(node: ExtendedNode<GenericNode>, adjacencyList: Map<string, string[]>, nodeMap: Map<string, ExtendedNode<GenericNode>>){
-        if (node.data.type === 'Program') return true;
-
-        if((node.data.type === 'Prerequisites' || node.data.type === 'SubjectChoice')
-            && hasParentOfType(node, 'Program', adjacencyList, nodeMap)) return true;
-
-        if(node.data.type === 'Subject' && hasChildOfType(node, 'Prerequisites', adjacencyList, nodeMap)) {
-            // @ts-ignore
-            const code= node.data['code'];
-            const match = code.match(/^\w{4}.1.../);
-            // console.log(code, match)
-            if (match && !hasParentOfType(node, 'Prerequisites', adjacencyList, nodeMap)) return true;
-            return false;
-        }
-
-        if (hasParentOfType(node, 'Program', adjacencyList, nodeMap) || hasParentOfType(node, 'Major', adjacencyList, nodeMap) || hasParentOfType(node, 'Minor', adjacencyList, nodeMap)){
-            return true;
-        }
-
-        return false;
-    }
-
     useEffect(() => {
-        if(addedNodes.length > 0) expandConnected(addedNodes)
+        if(addedNodes.length > 0) expandConnected(addedNodes);
         // console.log(addedNodes.map(n=>n.data.sequences))
     }, [addedNodes]);
 
     useEffect(() => {
-        const toBeCollapsed = nodes.map(n=>{
-            if (n.data.type !== 'Subject') return;
-            const sequences = (n as ExtendedNode<SubjectExtension>).data['subjectSequences'];
-            //console.log(sequences)
-            let inAnySequencesForThisProgram = false;
-            let containsSelectedProgram = false;
-            for (const sequence of sequences) {
-                if (sequence.includes((selectedProgram as ExtendedNode<ProgramExtension>)?.data['programName'])) {
-                    inAnySequencesForThisProgram = true;
-                    //if(selectedProgramSequence) console.log(`The sequence ${selectedProgramSequence} when paired with ${sequence} evaluates to includes=${sequence.includes(selectedProgramSequence)}`, '\nNode data:', n)
-                    if (selectedProgramSequence && sequence.includes(selectedProgramSequence)) {
-                        containsSelectedProgram = true;
-                    }
-                }
+        let newNodes = nodes;
+        let newEdges = edges;
 
+        /**
+         * Graph Filtering Pass
+         */
+        // filter out nodes not relevant to selected program
+        if(selectedProgram) newNodes = newNodes.filter(n=> {
+            if (!isSubjectNode(n)) return true;
+            return filterSubjectsNotInSequence(n as ExtendedNode<SubjectExtension>, selectedProgram.data.programName, selectedProgramSequence ?? '');
+        });
+
+        // filter out prerequisites we know are not part of course
+        if(selectedProgram) newNodes = newNodes.filter(n=> {
+            if(!isPrerequisiteNode(n)) return true;
+            return filterPrerequisitesNotInCourse(n as ExtendedNode<PrerequisiteExtension>, selectedProgram.data.programName);
+        });
+
+        // filter out edges that are no longer visible
+        newEdges = newEdges.filter(e=>filterDisconnectedEdges(e, newNodes));
+
+        // filter out prerequisite nodes that do not lead to a visible subject
+        newNodes = newNodes.filter(n=> {
+            if(!isPrerequisiteNode(n)) return true;
+            return filterLeafPrerequisites(n as ExtendedNode<PrerequisiteExtension>, newEdges);
+        });
+
+        /**
+         * Graph Semantic Highlighting Pass
+         */
+        newNodes.forEach(n=>{
+            if (!isSubjectNode(n)) return;
+            const parentPrerequisites = getParentsByType(n as ExtendedNode<SubjectExtension>, newNodes, adjacencyList, nodeMap, 'Prerequisites');
+            if (isEligibleForSubject(parentPrerequisites as ExtendedNode<PrerequisiteExtension>[], completedSubjects)){
+                n.fill = nodeFillMap['Subject'];
+            } else {
+                n.fill = '#AAAAAA'
             }
-            if (inAnySequencesForThisProgram && !containsSelectedProgram) return n;
-        }).filter(f=>f!==undefined);
-        setCollapsedByProgramSequence(toBeCollapsed);
+        });
 
+        newNodes.forEach(n=>{
+           if (!isSubjectNode(n) || !n.fill) return;
+           if (!isRequiredByProgramOrSpecialisation(n as ExtendedNode<SubjectExtension>, newNodes, adjacencyList, nodeMap)){
+               n.fill = (new HEXGBA(n.fill).multiply(0.55).toHex());
+           }
+        });
 
-    }, [nodes, edges, selectedProgramSequence]);
+        newNodes.forEach(n=>{
+            if (!isPrerequisiteNode(n)) return;
+            if (prerequisiteIsFulfilled(n as ExtendedNode<PrerequisiteExtension>, completedSubjects)) {
+                n.fill = nodeFillMap['Prerequisites'];
+            } else {
+                n.fill = '#AAAAAA'
+            }
+        })
 
-    useEffect(() => {
-        const collapsed = Array.from(new Set([...collapsedByProgramSequence.map(n=>n.id), ...collapsedByNotRelevant.map(n=>n.id)]));
-        setCollapsedNodes([...collapsed]);
-    }, [collapsedByProgramSequence, collapsedByNotRelevant]); // any nodes to be collapsed get added here
+        setDisplayedNodes(newNodes);
+        setDisplayedEdges(newEdges);
+    }, [nodes, selectedProgramSequence, selectedProgram]);
 
     useEffect(() => {
         const fetchPrograms = async () => {
@@ -470,8 +440,8 @@ export default function Home() {
             </div>
             <div>
             </div>
-            <ForceGraph collapsedNodeIds={collapsedNodes} layoutMode={displayMode} clickAction={selectElement} clickCanvas={resetSelectedElement} clusterBy={clusterBy} doubleClickNodeAction={(id) => addConnected({id})} className={`grow w-full relative`}
-                        edges={edges} nodes={nodes}/>
+            <ForceGraph layoutMode={displayMode} clickAction={selectElement} clickCanvas={resetSelectedElement} clusterBy={clusterBy} doubleClickNodeAction={(id) => addConnected({id})} className={`grow w-full relative`}
+                        edges={displayedEdges} nodes={displayedNodes}/>
             <InfoPanel className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit max-h-1/2 max-w-1/5 border-2 absolute right-1 top-0 bottom-0 my-auto overflow-y-scroll`} item={selectedElement}/>
         </main>
     );
