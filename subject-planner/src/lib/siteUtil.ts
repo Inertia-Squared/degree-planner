@@ -93,11 +93,17 @@ export class RGBA {
         }
     }
 
-    public toHex(){
+    public toHexAlpha(){
         return '#'+this.expand(Math.round(this.rgba.red*255).toString(16)) +
             this.expand(Math.round(this.rgba.green*255).toString(16)) +
             this.expand(Math.round(this.rgba.blue*255).toString(16)) +
             this.expand((this.rgba.alpha ? Math.round(this.rgba.alpha*255).toString(16) : ''));
+    }
+
+    public toHex() {
+        return '#'+this.expand(Math.round(this.rgba.red*255).toString(16)) +
+            this.expand(Math.round(this.rgba.green*255).toString(16)) +
+            this.expand(Math.round(this.rgba.blue*255).toString(16));
     }
 
 
