@@ -78,6 +78,21 @@ const state = {
     manualSubjects: [],
 } as StateType;
 
+/**
+ * Splits an array of objects into smaller, bucketed subsections.
+ *
+ * @param arr The array to be chunked.
+ * @param chunkSize The size of each chunk.
+ * @returns A new array containing the chunked arrays.
+ */
+function chunkArray<T>(arr: T[], chunkSize: number): T[][] {
+    const chunkedArray: T[][] = [];
+    for (let i = 0; i < arr.length; i += chunkSize) {
+        const chunk = arr.slice(i, i + chunkSize);
+        chunkedArray.push(chunk);
+    }
+    return chunkedArray;
+}
 
 async function startModel(){
     if(CONFIG.online){
@@ -126,15 +141,15 @@ async function queryModel(subject: SubjectData, attempts: number = 0){
             if(CONFIG.verbose) console.log('Failed to query: ', e);
             await fs.writeFile("./data/subjects-manual-required.json", JSON.stringify(state.manualSubjects,null,2), {encoding: "utf-8"});
             await fs.writeFile("./data/subjects-refined-partial.json", JSON.stringify(state.prunedSubjectData,null,2), {encoding: "utf-8"});
-            // assume API is temporarily busy, try again every 5 seconds
+            // assume API is temporarily busy, try again every 15 seconds
             let result;
             await new Promise((resolve) => {
-                console.log('There was an API error, retrying in 5 seconds,..,')
+                console.log('There was an API error, retrying in 15 seconds,..,')
                 setTimeout(async () => {
                     if(CONFIG.verbose) console.log('retrying...')
                     result = await queryModel(subject, 0);
                     resolve(()=>{});
-                }, 5000);
+                }, 15000);
             });
             return result;
         }
@@ -173,25 +188,30 @@ async function main(){
     }) as SubjectData[] ?? [];
     await loadModelTask;
     state.progressTracker = startTrackingProgress(0,state.prunedSubjectData.length);
-    for(let queryData of state.prunedSubjectData){
-        if(CONFIG.verbose) console.log(`\nQuerying based on subject: ${queryData.subject}Prerequisites:\n${processQueryString(queryData.prerequisites as string)}`);
-        queryData.originalPrerequisites = queryData.prerequisites as string; // compatibility for old data, remove this
-        let queryResult = await queryModel(queryData);
-        while (!queryResult){
-            await queryModel(queryData);
-        }
-        queryData.prerequisites = queryResult.parsed as EnrollRequirements[];
-        if(CONFIG.verbose) console.log("Query Result: ",queryResult.content)
-        if(queryResult.content === CONFIG.manualErrorMsg){
-            state.subjectData = state.subjectData.filter((subject)=>{
-                return subject !== queryData;
-            });
-            state.prunedSubjectData = state.prunedSubjectData.filter((subject)=>{
-                return subject !== queryData;
-            });
-            state.manualSubjects.push(queryData);
-        }
-        state.progressTracker.progress++;
+    const partitionedData = chunkArray<SubjectData>(state.prunedSubjectData, 75); // we need to chunk the API hits so that we don't hit the rate limit
+
+    for (const partition of partitionedData) {
+        await Promise.all(partition.map(async queryData=>{
+            if(CONFIG.verbose) console.log(`\nQuerying based on subject: ${queryData.subject}Prerequisites:\n${processQueryString(queryData.prerequisites as string)}`);
+            queryData.originalPrerequisites = queryData.prerequisites as string; // compatibility for old data, remove this
+            let queryResult = await queryModel(queryData);
+            while (!queryResult){
+                await queryModel(queryData);
+            }
+            queryData.prerequisites = queryResult.parsed as EnrollRequirements[];
+            if(CONFIG.verbose) console.log("Query Result: ",queryResult.content)
+            if(queryResult.content === CONFIG.manualErrorMsg){
+                state.subjectData = state.subjectData.filter((subject)=>{
+                    return subject !== queryData;
+                });
+                state.prunedSubjectData = state.prunedSubjectData.filter((subject)=>{
+                    return subject !== queryData;
+                });
+                state.manualSubjects.push(queryData);
+            }
+            if(state.progressTracker) state.progressTracker.progress++;
+            return true;
+        }))
     }
     stopTrackingProgress(state.progressTracker);
 }

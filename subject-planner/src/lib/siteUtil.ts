@@ -20,7 +20,7 @@ export const nodeSizeMap: Record<NodeTypes, number> = {
     ['Program']: 50,
     ['Subject']: 20,
     ['Major']: 40,
-    ['Minor']: 30,
+    ['Minor']: 40,
     ['Prerequisites']: 10,
     ['SubjectChoice']: 10
 }
