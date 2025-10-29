@@ -10,7 +10,7 @@ interface InfoPanelProps {
 const hiddenTerms = [/*'subjectSequences', */'code']
 
 const InfoPanel = ({item, className}: InfoPanelProps) => {
-    const entries = Object.entries(item?.data ?? []).sort((a,b)=> {
+    const entries = Object.entries(item?.data ?? item ?? []).sort((a,b)=> {
         if (a[0].includes('Name')) return -10;
         if (b[0].includes('Name')) return 10;
         if (a[0].includes('type')) return -5;
@@ -19,7 +19,6 @@ const InfoPanel = ({item, className}: InfoPanelProps) => {
         return 10;
     });
 
-  //  console.log(JSON.stringify(entries))
     return(<div className={`${className}`}>
         {entries.map((e)=>{
             let shouldTerminate = false;
@@ -28,7 +27,11 @@ const InfoPanel = ({item, className}: InfoPanelProps) => {
             })
             if (shouldTerminate) return;
 
-            return <li key={e[0]} className={`overflow-x-clip`}><strong>{e[0]}</strong>: <p className={``}>{(e[1] as string).toString()}</p></li>
+            if (e[0].includes('Link')){
+                return <li key={e[0]} className={`overflow-x-clip`}><strong>{e[0]}</strong>: <a target={'_blank'} className={`underline text-blue-500`} key={e[0]} href={e[1] as string}>WSU Handbook</a></li>
+            } else {
+                return <li key={e[0]} className={`overflow-x-clip`}><strong>{e[0]}</strong>: <p className={``}>{(e[1] as string).toString()}</p></li>
+            }
         })}
     </div>)
 }

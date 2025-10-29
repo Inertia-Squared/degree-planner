@@ -10,7 +10,7 @@ import {HEXGBA, nodeFillMap, NodeTypes} from "@/lib/siteUtil";
 import InfoPanel from "@/components/InfoPanel";
 
 import {
-    filterDisconnectedEdges, filterLeafPrerequisites,
+    filterDisconnectedEdges, filterImpossiblePrerequisites, filterLeafPrerequisites,
     filterPrerequisitesNotInCourse,
     filterSubjectsNotInSequence
 } from "@/lib/graph/graphFilters";
@@ -20,6 +20,8 @@ import {
     prerequisiteIsFulfilled
 } from "@/lib/graph/graphColours";
 import {getParentsByType} from "@/lib/graph/graphUtil";
+import {CourseTimeline} from "@/components/CourseTimeline";
+import {SpecialisationType} from "../../../majors-minors/major-minor-scraper";
 
 // todo add type extensions for cringe node data fields
 
@@ -54,11 +56,12 @@ export function isGenericNode(obj: any){
 export interface SubjectExtension extends GenericNode{
     type: 'Subject'
     code: string,
-    prerequisites: string[]
+    prerequisites: string
     subjectSequences: string[]
+    teachingPeriods: string[]
 }
 export function isSubjectNode(obj: any){
-    return isGenericNode(obj) && containsAll(obj.data, ['code','prerequisites','subjectSequences']);
+    return isGenericNode(obj) && containsAll(obj.data, ['code','prerequisites','subjectSequences', 'teachingPeriods']);
 }
 
 export interface ProgramExtension extends GenericNode{
@@ -73,10 +76,35 @@ export function isProgramNode(obj: any){
 export interface PrerequisiteExtension extends GenericNode {
     type: 'Prerequisites'
     course: string
-    subjects: string[]
+    subjects: string
+    forSubject: string
 }
 export function isPrerequisiteNode(obj: any){
-    return isGenericNode(obj) && containsAll(obj.data, ['course', 'subjects']);
+    return isGenericNode(obj) && containsAll(obj.data, ['course', 'subjects', 'forSubject']);
+}
+
+export interface MajorExtension extends GenericNode {
+    type: 'Major'
+    majorName: string
+    majorType: SpecialisationType | string
+    majorLocations: string[]
+    majorLink: string
+    programConnectionId?: string
+}
+export function isMajorNode(obj: any){
+    return isGenericNode(obj) && containsAll(obj.data, ['majorName', 'majorType', 'majorLocations', 'majorLink']);
+}
+
+export interface MinorExtension extends GenericNode {
+    type: 'Minor'
+    minorName: string
+    minorType: SpecialisationType | string
+    minorLocations: string[]
+    minorLink: string
+    programConnectionId?: string
+}
+export function isMinorNode(obj: any){
+    return isGenericNode(obj) && containsAll(obj.data, ['minorName', 'minorType', 'minorLocations', 'minorLink']);
 }
 
 export function showNodeInfo(node: ExtendedNode<any>){
@@ -85,10 +113,10 @@ export function showNodeInfo(node: ExtendedNode<any>){
     Is Prerequisite: ${isPrerequisiteNode(node)}`)
 }
 
-enum expandModes {
-    NeighboursOnly,
-    ExpandPrerequisites,
-    ExpandPrerequisiteChain
+enum OfferStatus {
+    NO,
+    YES,
+    UNKNOWN
 }
 
 const badClusterOptions = [
@@ -104,14 +132,34 @@ const badClusterOptions = [
     'prerequisites',
     'creditPoints',
     'subjectName',
+    'teachingPeriods',
 ]
 
 const displayOptions = {
-    ['Overview']: 'forceatlas2',
-    ['Analyse']: 'forceDirected2d',
+    ['Disabled']: 'forceatlas2',
+    ['Enabled']: 'forceDirected2d',
 } as const;
 
-type displayOptionKeys = keyof typeof displayOptions;
+export interface StudyPeriodItem {
+    period: StudyPeriod
+    subjectsTaken: ExtendedNode<SubjectExtension>[]
+}
+
+
+export type StudyPeriod = 'autumn' | 'spring' | 'unknown';
+const studyPeriods: StudyPeriod[] = ['autumn','spring','unknown'];
+
+export function asStudyPeriod(period: string){
+    const value = studyPeriods.find(s=>period.toLowerCase().includes(s));
+    if (!value){
+        return 'unknown';
+    }
+    return value;
+}
+
+const colours = {
+    inaccessible: '#AAAAAA'
+}
 
 export default function Home() {
     const [nodes, setNodes] = useState<ExtendedNode<GenericNode>[]>([]);
@@ -122,19 +170,28 @@ export default function Home() {
     const [displayedEdges, setDisplayedEdges] = useState<GraphEdge[]>([]);
     const [addedNodes, setAddedNodes] = useState<ExtendedNode<GenericNode>[]>([]);
 
-    const [expandMode, setExpandMode] = useState<expandModes>(expandModes.ExpandPrerequisiteChain);
-
     const [clusterOptions, setClusterOptions] = useState(['select a node to see cluster options']);
     const [clusterBy, setClusterBy] = useState<string | undefined>(undefined);
     const [selectedElement, setSelectedElement] = useState<ExtendedNode<GenericNode> | GraphEdge | undefined>(undefined);
-    const [displayMode, setDisplayMode] = useState<LayoutTypes>(Object.values(displayOptions)[0]);
+    const [displayMode, setDisplayMode] = useState<LayoutTypes>(Object.values(displayOptions)[1]);
 
     const [selectedProgram, setSelectedProgram] = useState<ExtendedNode<ProgramExtension> | undefined>(undefined);
     const [selectedProgramSequence, setSelectedProgramSequence] = useState<string | undefined>(undefined);
 
-    const [completedSubjects, setCompletedSubjects] = useState<ExtendedNode<SubjectExtension>[]>();
-
     const [isLoading, setIsLoading] = useState(true);
+
+    const [showPotentialElectives, setShowPotentialElectives] = useState<boolean>(false);
+
+    const [startPeriod, setStartPeriod] = useState<StudyPeriod>('autumn');
+
+    const [completedPeriods, setCompletedPeriods] = useState<StudyPeriodItem[]>([])
+
+    const [currentPeriod, setCurrentPeriod] = useState<StudyPeriodItem>({
+        period: startPeriod,
+        subjectsTaken: []
+    });
+
+    const [updateToggle, setUpdateToggle] = useState<boolean>(false);
 
     const searchProgram = async (searchString: string)=>{
         const response = await fetch(`/api/graph/getPrograms?programName=${searchString}`);
@@ -144,10 +201,43 @@ export default function Home() {
 
         const data = await response.json() as getProgramsInterface;
         if(data.programs !== nodes) setNodes(data.programs);
+        setSelectedProgram(data.programs[0] as ExtendedNode<ProgramExtension>);
+        setSelectedProgramSequence(data.programs[0].data.programSequences[0]);
+    }
+
+    const forceAddSpecialisation = (node: ExtendedNode<MajorExtension | MinorExtension>) => {
+        if(!node.data.programConnectionId || !selectedProgram) return;
+        node.size = 40;
+        const newNodes = [...nodes.filter(n=>n.data.type !== node.data.type), node];
+        setNodes(newNodes);
+        const newEdgeId = node.data.programConnectionId + ":" + selectedProgram.id + node.id;
+        const newEdge: GraphEdge = {
+            id: newEdgeId,
+            source: selectedProgram.id,
+            target: node.id,
+            label: 'HAS_SPECIALISATION',
+        };
+        const newEdges = [...edges, newEdge];
+        setEdges(newEdges);
+    }
+
+    function isOfferedInCurrentPeriod(node: ExtendedNode<SubjectExtension>): OfferStatus {
+        let offerStatus: OfferStatus = OfferStatus.NO;
+        node.data.teachingPeriods.map(p=>{
+            if (offerStatus === OfferStatus.NO && asStudyPeriod(p) === 'unknown') offerStatus = OfferStatus.UNKNOWN;
+            if (asStudyPeriod(p) === currentPeriod.period) offerStatus = OfferStatus.YES;
+        });
+        return offerStatus;
     }
 
     function getNodeFromId(id: string){
         return nodes.find(n=>n.id===id);
+    }
+
+    async function startExploring(){
+        const newNodes = nodes.filter(n=>isProgramNode(n)||isMinorNode(n)||isMajorNode(n));
+        setNodes(newNodes);
+        expandConnected(newNodes);
     }
 
     function selectElement(id: string, isNode: boolean = true) {
@@ -159,16 +249,81 @@ export default function Home() {
                 setSelectedProgram(element as ExtendedNode<ProgramExtension>);
                 const sequences = element.data['programSequences'];
                 if (sequences.length > 0) setSelectedProgramSequence(sequences[0])
-                // console.log(element)
             }
             setClusterOptions(Object.keys(element?.data).filter(key=>!badClusterOptions.find(o=>o==key)));
+        }
+    }
+
+    function hasCompleted(node: ExtendedNode<GenericNode>){
+        if (!isSubjectNode(node)) {
+            throw('Error: Attempted to check subject info on non-subject node');
+        }
+        let hasCompleted = false;
+        completedPeriods.forEach(p=>{
+            if (p.subjectsTaken.includes(node as ExtendedNode<SubjectExtension>)) hasCompleted = true;
+        })
+        return hasCompleted;
+    }
+
+    function getCompletedSubjects(){
+        return completedPeriods.map(p=>p.subjectsTaken).flat();
+    }
+
+    function hasTaken(node: ExtendedNode<GenericNode>){
+        if (!isSubjectNode(node)) {
+            throw('Error: Attempted to check subject info on non-subject node');
+        }
+        return hasCompleted(node) || currentPeriod.subjectsTaken.includes(node as ExtendedNode<SubjectExtension>);
+    }
+
+    function onNodeClicked(id: string){
+        console.log('Checking node...')
+        const node = getNodeFromId(id);
+        if (node && isSubjectNode(node)){
+            if (hasTaken(node)) {
+                console.log('Has already been taken, skipping.')
+                return;
+            }
+            const parentPrerequisites = getParentsByType<PrerequisiteExtension>(node, nodes, adjacencyList, nodeMap, 'Prerequisites').filter(p=>p.data.forSubject===(node as ExtendedNode<SubjectExtension>).data.code);
+            if (!isEligibleForSubject(parentPrerequisites, getCompletedSubjects()) || isOfferedInCurrentPeriod(node as ExtendedNode<SubjectExtension>) !== OfferStatus.YES) {
+                console.log('Is not eligible.')
+                console.log('Prerequisites Satisfied: ' + isEligibleForSubject(parentPrerequisites, getCompletedSubjects()));
+                console.log('Is currently offered: ' + !(isOfferedInCurrentPeriod(node as ExtendedNode<SubjectExtension>) !== OfferStatus.YES) + '(' + isOfferedInCurrentPeriod(node as ExtendedNode<SubjectExtension>) + ')')
+                console.log(parentPrerequisites);
+                return;
+            }
+            const newCurrentPeriod = currentPeriod;
+            newCurrentPeriod.subjectsTaken.push(node as ExtendedNode<SubjectExtension>);
+
+            if ((currentPeriod.subjectsTaken.length) % 4 === 0) {
+                moveToNewPeriod(newCurrentPeriod);
+            } else {
+                setCurrentPeriod(newCurrentPeriod);
+            }
+            setUpdateToggle(!updateToggle);
+        }
+    }
+
+    function moveToNewPeriod(oldCurrentPeriod: StudyPeriodItem){
+        if ((completedPeriods.length+1) % 2 === 0) {
+            setCompletedPeriods([...(completedPeriods ?? []), oldCurrentPeriod]);
+            setCurrentPeriod({
+                period: startPeriod,
+                subjectsTaken: []
+            });
+        } else {
+            setCompletedPeriods([...(completedPeriods ?? []), oldCurrentPeriod]);
+            setCurrentPeriod({
+                period: startPeriod === 'autumn' ? 'spring' : 'autumn',
+                subjectsTaken: []
+            });
         }
     }
 
     function resetSelectedElement(){
         setSelectedElement(undefined);
         setClusterOptions(['select a node to see cluster options']);
-        setClusterBy('not clustering')
+        setClusterBy(undefined)
     }
 
     /**
@@ -272,7 +427,6 @@ export default function Home() {
             throw new Error(`Failed to get connected nodes at /api/graph/getConnected using id ${id}`);
         }
         const data = await response.json() as getConnectedNodesInterface;
-        //console.log(data)
         const newNodes = [];
         const newEdges = [];
         for(const connection of data.connections){
@@ -302,22 +456,22 @@ export default function Home() {
 
     const expandConnected = async (nodesToExpand: ExtendedNode<GenericNode>[])=> {
         const connectionsToAdd: { newNodes: ExtendedNode<GenericNode>[], newEdges: GraphEdge[] } = {newNodes: [], newEdges: []}
-        const idsToAdd = []
-        for (const node of nodesToExpand){
-            if(node.data.type === 'SubjectChoice' || (expandMode >= 1 && node.data.type === 'Prerequisites') || (expandMode >= 2 && node.data.type === 'Subject')){
-                idsToAdd.push(node.id);
-            }
-        }
+        const idsToAdd = nodesToExpand.map(n=>n.id)
+        // for (const node of nodesToExpand){
+        //     if(node.data.type === 'SubjectChoice' || isPrerequisiteNode(node) || isSubjectNode(node)){
+        //         idsToAdd.push(node.id);
+        //     }
+        // }
         const connections = await getConnected(idsToAdd);
         connectionsToAdd.newNodes.push(...connections.newNodes);
         connectionsToAdd.newEdges.push(...connections.newEdges);
+
         await addConnected({manualAdd: connectionsToAdd});
     }
 
-    useEffect(() => {
-        if(addedNodes.length > 0) expandConnected(addedNodes);
-        // console.log(addedNodes.map(n=>n.data.sequences))
-    }, [addedNodes]);
+    function fromNodesById(id: string, nodes: ExtendedNode<any>[]){
+        return nodes.find(n=>n.id===id);
+    }
 
     useEffect(() => {
         let newNodes = nodes;
@@ -327,10 +481,14 @@ export default function Home() {
          * Graph Filtering Pass
          */
         // filter out nodes not relevant to selected program
-        if(selectedProgram) newNodes = newNodes.filter(n=> {
-            if (!isSubjectNode(n)) return true;
-            return filterSubjectsNotInSequence(n as ExtendedNode<SubjectExtension>, selectedProgram.data.programName, selectedProgramSequence ?? '');
-        });
+
+
+        if(selectedProgram && selectedProgram.data.programSequences && selectedProgramSequence) {
+            if (selectedProgram) newNodes = newNodes.filter(n => {
+                if (!isSubjectNode(n)) return true;
+                return filterSubjectsNotInSequence(n as ExtendedNode<SubjectExtension>, selectedProgram.data.programName, selectedProgramSequence ?? '');
+            });
+        }
 
         // filter out prerequisites we know are not part of course
         if(selectedProgram) newNodes = newNodes.filter(n=> {
@@ -338,8 +496,39 @@ export default function Home() {
             return filterPrerequisitesNotInCourse(n as ExtendedNode<PrerequisiteExtension>, selectedProgram.data.programName);
         });
 
+
+        if(!showPotentialElectives) {
+            newNodes = newNodes.filter(n=>{
+                if (!isSubjectNode(n) || !n.fill) return true;
+                return isRequiredByProgramOrSpecialisation(n as ExtendedNode<SubjectExtension>, newNodes, adjacencyList, nodeMap, edges);
+            });
+        }
+
+        newNodes = newNodes.filter(n=>{
+            if (!isPrerequisiteNode(n)) return true;
+            const subjectNodes = newNodes.filter(nn=>isSubjectNode(nn)) as ExtendedNode<SubjectExtension>[];
+            return filterImpossiblePrerequisites(n as ExtendedNode<PrerequisiteExtension>, subjectNodes);
+        });
+
         // filter out edges that are no longer visible
         newEdges = newEdges.filter(e=>filterDisconnectedEdges(e, newNodes));
+
+        newEdges = newEdges.filter(e=>{
+            if (e.label === 'PREREQUISITE_FOR' && !isPrerequisiteNode(fromNodesById(e.target, newNodes))){
+                return false;
+            }
+            return true;
+        });
+
+        newNodes = newNodes.filter(n=>{
+            if (!isSubjectNode(n)) return true;
+            const s = n as ExtendedNode<SubjectExtension>;
+            if (s.data.prerequisites.length > 3 && getParentsByType<PrerequisiteExtension>(s,newNodes,adjacencyList,nodeMap,'Prerequisites').filter(p=>p.data.forSubject===s.data.code).length < 1){
+                return false;
+            }
+            return true;
+        });
+
 
         // filter out prerequisite nodes that do not lead to a visible subject
         newNodes = newNodes.filter(n=> {
@@ -352,40 +541,55 @@ export default function Home() {
          */
         newNodes.forEach(n=>{
             if (!isSubjectNode(n)) return;
-            const parentPrerequisites = getParentsByType(n as ExtendedNode<SubjectExtension>, newNodes, adjacencyList, nodeMap, 'Prerequisites');
-            if (isEligibleForSubject(parentPrerequisites as ExtendedNode<PrerequisiteExtension>[], completedSubjects)){
+            const parentPrerequisites = getParentsByType<PrerequisiteExtension>(n as ExtendedNode<SubjectExtension>, newNodes, adjacencyList, nodeMap, 'Prerequisites').filter(p=>p.data.forSubject===(n as ExtendedNode<SubjectExtension>).data.code);
+            if (isEligibleForSubject(parentPrerequisites as ExtendedNode<PrerequisiteExtension>[], getCompletedSubjects()) && isOfferedInCurrentPeriod(n as ExtendedNode<SubjectExtension>) === OfferStatus.YES){
                 n.fill = nodeFillMap['Subject'];
             } else {
-                n.fill = '#AAAAAA'
+                if(!hasTaken(n)) n.fill = colours.inaccessible
+            }
+        });
+
+        if (showPotentialElectives){
+            newNodes.forEach(n=>{
+                if (!isSubjectNode(n) || !n.fill) return;
+                if (!isRequiredByProgramOrSpecialisation(n as ExtendedNode<SubjectExtension>, newNodes, adjacencyList, nodeMap, edges)){
+                    if(n.fill !== colours.inaccessible) n.fill = new HEXGBA('#AA33AA').toHex();
+                }
+            });
+        }
+
+        newNodes.forEach(n=>{
+            if (!isSubjectNode(n) || !n.fill) return;
+            if (!hasTaken(n)) {
+                if(n.fill !== colours.inaccessible) n.fill = new HEXGBA(n.fill).multiply(0.7).toHex();
             }
         });
 
         newNodes.forEach(n=>{
-           if (!isSubjectNode(n) || !n.fill) return;
-           if (!isRequiredByProgramOrSpecialisation(n as ExtendedNode<SubjectExtension>, newNodes, adjacencyList, nodeMap)){
-               n.fill = (new HEXGBA(n.fill).multiply(0.55).toHex());
-           }
-        });
-
-        newNodes.forEach(n=>{
             if (!isPrerequisiteNode(n)) return;
-            if (prerequisiteIsFulfilled(n as ExtendedNode<PrerequisiteExtension>, completedSubjects)) {
+            if (prerequisiteIsFulfilled(n as ExtendedNode<PrerequisiteExtension>, getCompletedSubjects())) {
                 n.fill = nodeFillMap['Prerequisites'];
             } else {
-                n.fill = '#AAAAAA'
+                n.fill = colours.inaccessible
             }
         })
 
         setDisplayedNodes(newNodes);
         setDisplayedEdges(newEdges);
-    }, [nodes, selectedProgramSequence, selectedProgram]);
+    }, [nodes, selectedProgramSequence, selectedProgram, showPotentialElectives, completedPeriods, currentPeriod.subjectsTaken, updateToggle]);
 
     useEffect(() => {
-        const fetchPrograms = async () => {
-            await searchProgram('Bachelor of Information Systems (3687)');
-            setIsLoading(false);
-        };
-        fetchPrograms();
+        if(addedNodes.length > 0) expandConnected(addedNodes);
+        // console.log(addedNodes.map(n=>n.data.sequences))
+    }, [addedNodes]);
+
+    useEffect(() => {
+        // const fetchPrograms = async () => {
+        //     await searchProgram(defaultProgram);
+        //     setIsLoading(false);
+        // };
+        // fetchPrograms();
+        setIsLoading(false);
     }, []); // Empty dependency array ensures this runs once on mount
 
     if (isLoading) return <p>Loading...</p>;
@@ -394,55 +598,61 @@ export default function Home() {
         <main className={`h-[100vh] flex flex-col p-4`}>
             <div className={`border-2 p-1 flex`}>
                 <div className={`flex-2`}>
-                    <h1>Please Choose a Lineup to Begin.</h1>
+                    <h1>Please Search for a Program to Begin.</h1>
                     <hr/>
-                    <LineupSelector onSearchEvent={searchProgram} className={`p-1`}/>
-                    {selectedProgram && <div>
-                        <label>Choose your study period:</label>
-                        <select onChange={(s)=>setSelectedProgramSequence(s.currentTarget.value)}>{(selectedProgram as ExtendedNode<ProgramExtension>).data['programSequences'].map(s=>{
-                            return <option key={s} value={s}>{s}</option>
-                        })}</select>
-                    </div>}
+                    <LineupSelector onSearchEvent={searchProgram} onMajorEvent={forceAddSpecialisation} onMinorEvent={forceAddSpecialisation} onStartExploring={startExploring} className={`p-1`}/>
+
                 </div>
-                <div className={`border-r-2 mx-2`}></div>
-                <div className={`flex-3 flex`}>
-                    <div className={`max-w-[460px]`}>
-                        <h2>When double-clicking nodes, how should they expand?</h2>
-                        <input onChange={()=>setExpandMode(expandModes.ExpandPrerequisiteChain)} checked={expandMode==expandModes.ExpandPrerequisiteChain} type="radio" id="expand-fully" name="expand_behaviour" value="Fully"/>
-                        <label htmlFor="expand-fully"> Fully (show any relevant for electives)</label><br/>
-                        <input onChange={()=>setExpandMode(expandModes.ExpandPrerequisites)} checked={expandMode==expandModes.ExpandPrerequisites} type="radio" id="expand-partially" name="expand_behaviour" value="Partially"/>
-                        <label htmlFor="expand-partially"> Partially (show all needed for degree)</label><br/>
-                        <input onChange={()=>setExpandMode(expandModes.NeighboursOnly)} checked={expandMode==expandModes.NeighboursOnly} type="radio" id="expand-touching" name="expand_behaviour" value="Touching"/>
-                        <label htmlFor="expand-touching"> Only Touching Nodes (let me explore)</label><br/>
-                    </div>
+                {selectedProgram && <div className={`flex-3 flex`}>
                     <div className={`border-r-2 mx-2`}></div>
-                    <div className={'flex flex-col'}>
-                        <div>
-                            <label>Graph Display Mode: </label>
-                            <select onChange={(s)=>setDisplayMode(displayOptions[s.currentTarget.value as displayOptionKeys])}>
-                                {(Object.keys(displayOptions) as displayOptionKeys[]).map((c)=>{
-                                    return <option key={c} value={c}>{c}</option>
-                                })}
-                            </select>
+                    <div className={`flex-3 flex`}>
+                        <div className={'flex flex-col'}>
+                            <h2 className={`font-bold`}>Graph Analysis</h2>
+                            <hr/>
+                            <div>
+                                {displayMode === 'forceDirected2d' && <div>
+                                    <label>Cluster Nodes By: </label>
+                                    <select onChange={(s) => setClusterBy(s.currentTarget.value)}>
+                                        {clusterOptions.map(c => {
+                                            return <option key={c} value={c}>{c}</option>
+                                        })}
+                                    </select>
+                                </div>}
+                            </div>
+                            <h2 className={`font-bold`}>Program Filters</h2>
+                            <hr/>
+                            <div>
+                                <label>Show Potentially Relevant Electives: </label>
+                                <input type={'checkbox'} onChange={(e)=>{
+                                    setShowPotentialElectives(e.target.checked);
+                                }}/>
+                            </div>
+                            <div>
+                                <label>Selected Study Sequence: </label>
+                                <select onChange={(s)=> {
+                                    const sequence = s.currentTarget.value;
+                                    setSelectedProgramSequence(sequence);
+                                    if (sequence.includes('mid-')) {
+                                        setStartPeriod('spring');
+                                    } else {
+                                        setStartPeriod('autumn');
+                                    }
+                                }}>{(selectedProgram as ExtendedNode<ProgramExtension>).data['programSequences'].map(s=>{
+                                    return <option key={s} value={s}>{s}</option>
+                                })}</select>
+                            </div>
                         </div>
-                        {displayMode === 'forceDirected2d' && <div>
-                            <label>Cluster Nodes By: </label>
-                            <select onChange={(s) => setClusterBy(s.currentTarget.value)}>
-                                {clusterOptions.map(c => {
-                                    return <option key={c} value={c}>{c}</option>
-                                })}
-                            </select>
-                        </div>}
+                        <div className={`grow`}></div>
                     </div>
-                    <div className={`border-r-2 mx-2`}></div>
-                    <div className={`grow`}></div>
-                </div>
+                </div>}
             </div>
             <div>
             </div>
-            <ForceGraph layoutMode={displayMode} clickAction={selectElement} clickCanvas={resetSelectedElement} clusterBy={clusterBy} doubleClickNodeAction={(id) => addConnected({id})} className={`grow w-full relative`}
+            <ForceGraph layoutMode={displayMode} clickAction={selectElement} clickCanvas={resetSelectedElement} clusterBy={clusterBy} doubleClickNodeAction={onNodeClicked} className={`grow w-full relative`}
                         edges={displayedEdges} nodes={displayedNodes}/>
-            <InfoPanel className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit max-h-1/2 max-w-1/5 border-2 absolute right-1 top-0 bottom-0 my-auto overflow-y-scroll`} item={selectedElement}/>
+            <CourseTimeline className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit max-h-1/2 max-w-1/5 border-2 absolute left-1 bottom-0 my-auto overflow-y-scroll`}
+                            completedPeriods={completedPeriods} currentPeriod={currentPeriod}/>
+            <InfoPanel className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit max-h-1/2 max-w-1/5 border-2 absolute right-1 bottom-0 my-auto overflow-y-scroll`} item={selectedElement}/>
         </main>
     );
 }

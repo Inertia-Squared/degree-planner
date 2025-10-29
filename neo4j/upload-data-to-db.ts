@@ -1,8 +1,8 @@
-import neo4j, {Driver, ManagedTransaction, QueryResult, Record, RecordShape} from 'neo4j-driver';
+import neo4j, {Driver, ManagedTransaction} from 'neo4j-driver';
 import 'dotenv/config';
 import fs from "fs/promises";
 import {Major, Minor, ProgramSummary, SubjectChoice, SubjectSummary} from "../programs/program-refiner";
-import {highlight, regexMacros, setConfig, startTrackingProgress, stopTrackingProgress} from "../util";
+import {setConfig, startTrackingProgress, stopTrackingProgress} from "../util";
 import {SubjectData} from "../subjects/subject-scraper";
 import {EnrollRequirements} from "../subjects/subject-refiner";
 enum SpecialisationType {
@@ -21,12 +21,9 @@ enum SpecialisationType {
 
 const CONFIG = {
     inputPath: '../Automation/data/',
+    // inputPath: '../Snapshots/Full\ Handbook\ 1/',
 }
 
-// todo implement, Program/Subject should be extracted from nodeProperties (along with others) and handled modularly with an interface the implements the keyProps and other data - maybe revamp keyprops system?
-interface Program{}
-interface Subject{}
-interface SpecialRequirement{}
 
 export interface LogicalPrerequisite {
     course: string // Program | SpecialRequirement
@@ -41,7 +38,7 @@ export const keyOf = {
     ['minor']: 'Minor {minorName: $minorName}',
     ['subject']: 'Subject {code: $code}',
     ['choice']: 'SubjectChoice {choiceName: $choiceName, choices: $choices, parent: $parent}',
-    ['prerequisites']: 'Prerequisites {subjects: $subjects, course: $course}', // due to AI sometimes being silly, don't trust that we can always get a unique value based on properties, and force it to be accounted for in implementation
+    ['prerequisites']: 'Prerequisites {subjects: $subjects, course: $course, forSubject: $forSubject}',
 }
 
 function insertString(value: string, addition: string){
@@ -78,7 +75,8 @@ export const propsOf = {
         'school: $school, \n' +
         'discipline: $discipline, \n' +
         'subjectLink: $subjectLink,\n' +
-        'subjectSequences: $subjectSequences' +
+        'subjectSequences: $subjectSequences,\n' +
+        'teachingPeriods: $teachingPeriods' +
         '}',
     ['choice']: 'SubjectChoice {\n' +
         'choiceName: $choiceName, \n' +
@@ -88,6 +86,7 @@ export const propsOf = {
         '}',
     ['prerequisites']: 'Prerequisites {\n' +
         'course: $course,\n' +
+        'forSubject: $forSubject,\n' +
         'subjects: $subjects\n' +
         '}'
 }
@@ -140,6 +139,7 @@ export interface nodeProperties {
             discipline: string
             subjectLink: string
             subjectSequences: string[]
+            teachingPeriods: string[]
         }
     }
     choice: {
@@ -157,6 +157,7 @@ export interface nodeProperties {
         keyProps: {
             subjects: string // JSON
             course: string
+            forSubject: string
         }
         dataProps?: {}
     }
@@ -214,7 +215,7 @@ async function addNode<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>
 }
 
 async function addProperty<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>, property: {name: string, value: string}, append: boolean = true){
-    const addProp = `MATCH (n:${keyOf[node.type]}) SET n.${property.name} =${append ? ` n.${property.name} +` : ''} '${property.value}'`;
+    const addProp = `MATCH (n:${keyOf[node.type]}) SET n.${property.name} =${append ? ` n.${property.name} +` : ''} '${property.value.replace(/['"]/g,'\\$&')}'`; // escape quotes, this should be done everywhere but I can't be bothered right now
     await tx.run(addProp, {
         ...node.props.keyProps
     })
@@ -242,17 +243,37 @@ async function linkNodeToId<T extends PropsKey>(tx: ManagedTransaction, node: No
 }
 
 async function prerequisiteAwareLinkNodes<T extends PropsKey>(tx: ManagedTransaction, subject: SubjectSummary, subjectNode: Node<'subject'>, relationship: string, otherNode: Node<T>){
-    let shouldLinkDirectlyToProgram = true;
-    let prerequisiteNodeIds = []
+    let shouldLinkDirectlyToProgram;
+    let prerequisiteNodeIds;
     const subjectData = getSubjectFromSummary(subject);
-    if(subjectData){
-        prerequisiteNodeIds = await getSubjectPrerequisiteNodeIds(tx, subjectNode);
-        shouldLinkDirectlyToProgram = prerequisiteNodeIds.length === 0;
-    } else {
-        console.log(`Got undefined for ${subject.code}. Indicates bad scrape or subject discontinued.`);
+    if(!subjectData){
+        console.log(`Got undefined for ${subject.code}. Indicates bad scrape or subject discontinued. Making dummy node to link against.`);
         // todo should detect and prune these earlier? Or maybe leave them in as dummy nodes for students to decide
         //  what to do with, but they don't have any data attached so not sure how helpful it'll be :/
+        subjectNode = {
+            type: "subject",
+            props: {
+                keyProps: {
+                    code: subject.code
+                },
+                dataProps: {
+                    subjectName: subject.name ?? 'Unknown Subject',
+                    prerequisites: subject.prerequisites ?? 'Unknown Prerequisites',
+                    creditPoints: subject.creditPoints.toString() ?? 'Unknown',
+                    coordinator: 'Unknown Coordinator',
+                    description: 'Subject exists in handbook, but may not have a page yet. Please check manually.',
+                    school: 'Unknown',
+                    discipline: 'Unknown',
+                    subjectLink: 'Unknown',
+                    subjectSequences: [],
+                    teachingPeriods: [],
+                }
+            }
+        }
+        await addNode(tx, subjectNode);
     }
+    prerequisiteNodeIds = await getSubjectPrerequisiteNodeIds(tx, subjectNode);
+    shouldLinkDirectlyToProgram = prerequisiteNodeIds.length === 0;
                                                     // Assert that subjectNode is in fact extending PropsKey,
                                                     // because linter thinks Node<'subject'> only overlaps, not extend?
     if(shouldLinkDirectlyToProgram) {               // fixme if something breaks this is probably part of the problem
@@ -345,11 +366,12 @@ async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: Subjec
                         school: subjectData.school ?? 'none',
                         discipline: subjectData.discipline ?? 'none',
                         subjectLink: subjectData.link,
-                        subjectSequences: []
+                        subjectSequences: [],
+                        teachingPeriods: (subjectData.teachingPeriods ?? []).map(p=>JSON.stringify(p))
                     }
                 }
             }
-            await prerequisiteAwareLinkNodes(tx, sub, subjectNode, 'INCLUDES_CHOICE', choiceNode);
+            await prerequisiteAwareLinkNodes(tx, sub, subjectNode, 'REQUIRES_CHOICE', choiceNode);
         }
     }
 }
@@ -385,9 +407,9 @@ async function addSpecialisation(tx: ManagedTransaction, specialisation: Major |
                 }
             };
             if(await relationExists(tx, subjectNode, 'PATHWAY_TO')){
-                await prependNode(tx, specialisationNode, 'PATHWAY_TO', subjectNode);
+                await prependNode(tx, specialisationNode, 'REQUIRES_SUBJECT', subjectNode);
             }  else {
-                await linkNodes(tx, specialisationNode, 'INCLUDES_SUBJECT', subjectNode);
+                await linkNodes(tx, specialisationNode, 'REQUIRES_SUBJECT', subjectNode);
             }
         } else {
             await mergeAndLinkChoiceNode(tx, subject, specialisationNode);
@@ -404,7 +426,8 @@ async function nodePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: No
             props: {
                 keyProps: {
                     course: prerequisite.course,
-                    subjects: JSON.stringify(prerequisite.AND)
+                    subjects: JSON.stringify(prerequisite.AND),
+                    forSubject: subjectNode.props.keyProps.code
                 },
                 dataProps: {}
             }
@@ -435,7 +458,7 @@ async function linkProgramToSubject(tx: ManagedTransaction, programNode: Node<"p
                 keyProps: { code: subject.code }
             }
         } as Node<'subject'>
-        await prerequisiteAwareLinkNodes(tx, subject, subjectNode, 'INCLUDES_SUBJECT', programNode)
+        await prerequisiteAwareLinkNodes(tx, subject, subjectNode, 'REQUIRES_SUBJECT', programNode)
     } else {
         await mergeAndLinkChoiceNode(tx, subject, programNode);
     }
@@ -501,7 +524,8 @@ async function main(){
                             school: subject.school ?? 'none',
                             discipline: subject.discipline ?? 'none',
                             subjectLink: subject.link,
-                            subjectSequences: []
+                            subjectSequences: [],
+                            teachingPeriods: (subject.teachingPeriods ?? []).map(p=>JSON.stringify(p))
                         }
                     }
                 }
@@ -536,6 +560,11 @@ async function main(){
             console.log('Adding programs, majors, and minors...')
             pt = startTrackingProgress(0, programSummaries.length);
             for (const program of programSummaries){
+                // todo some programs in the refinement phase lose their sequence info, fix this later. Band-aid for now.
+                if (program.sequences.length < 1) {
+                    console.warn(`Skipping program ${program.name.replace(/[\n\t]/g,'')} due to no sequence data`)
+                    continue;
+                }
                 const programNode: Node<'program'> = {
                     type: 'program',
                     props: {

@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { read } from "@/lib/neo4j";
 import {NodeTypes, nodeDisplayNameMap, nodeFillMap, nodeSizeMap} from "@/lib/siteUtil";
 import {ExtendedNode} from "@/app/page";
-import {keyOf, PropsKey} from "../../../../../../neo4j/upload-data-to-db";
 
 export interface getConnectedNodesInterface {
     connections: {
@@ -23,7 +22,7 @@ export async function POST(request: Request) {
     }
 
     try {
-        const query = `MATCH (a)-[r]->(b) WHERE ID(a) IN ${JSON.stringify(parentNodeIds.map(i=>Number(i)))} RETURN TYPE(r) as r,b, id(r) as rID, id(b) as bID, id(a) as aID`;
+        const query = `MATCH (a)-[r]->(b) WHERE ID(a) IN ${JSON.stringify(parentNodeIds.map(i=>Number(i)))} AND NOT (b:Major OR b:Minor) RETURN r,b, id(r) as rID, id(b) as bID, id(a) as aID UNION DISTINCT MATCH (a:Prerequisites)<-[r:PREREQUISITE_FOR]-(b:Subject) WHERE ID(a) IN ${JSON.stringify(parentNodeIds.map(i=>Number(i)))} RETURN r,b, id(r) as rID, id(b) as bID, id(a) as aID`;
         console.log(query)
         const result = await read(query);
         const connections = result.map(record => {
@@ -40,7 +39,7 @@ export async function POST(request: Request) {
                 } as ExtendedNode<any>,
                 relation: {
                     id: record.rID.toNumber().toString(),
-                    label: record.r,
+                    label: record.r.type,
                     source: record.aID.toNumber().toString(),
                 }
             };
