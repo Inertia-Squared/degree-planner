@@ -1,9 +1,9 @@
-import {ExtendedNode, GenericNode, PrerequisiteExtension, SubjectExtension} from "@/app/page";
+import {ExtendedNode, Generic, isChoiceNode, Prerequisite, Subject} from "@/app/page";
 import {LogicalPrerequisite} from "../../../../neo4j/upload-data-to-db";
 import {getAsLogicalPrerequisite, getParentsByType} from "@/lib/graph/graphUtil";
 import {GraphEdge} from "reagraph";
 
-export function isEligibleForSubject(parentPrerequisites: ExtendedNode<PrerequisiteExtension>[], completedSubjects: ExtendedNode<SubjectExtension>[] | undefined){
+export function isEligibleForSubject(parentPrerequisites: ExtendedNode<Prerequisite>[], completedSubjects: ExtendedNode<Subject>[] | undefined){
     if (parentPrerequisites.length === 0) {
         return true;
     }
@@ -14,59 +14,56 @@ export function isEligibleForSubject(parentPrerequisites: ExtendedNode<Prerequis
     return satisfiesAtLeastOnePrerequisite;
 }
 
-export function prerequisiteIsFulfilled(prerequisite: ExtendedNode<PrerequisiteExtension>, completedSubjects: ExtendedNode<SubjectExtension>[] | undefined){
-    if (prerequisite.data.forSubject === 'COMP 3019'){
-        console.log(`Checking if prerequisite ${JSON.stringify(prerequisite)} is satisfied.`)
-        if (!completedSubjects || completedSubjects.length < 1) {
-            console.log('No completed subjects found. Cannot be satisfied.');
-            return false;
-        }
-        const logicalPrerequisites: LogicalPrerequisite = getAsLogicalPrerequisite(prerequisite.data.subjects);
-        console.log('Prerequisites parsed as:')
-        console.log(logicalPrerequisites);
-        let satisfied = true;
-        for (const requirement of logicalPrerequisites.AND) {
-            let containsAtLeastOne = false;
-            console.log(`Checking if ${JSON.stringify(requirement.OR)} is satisfied.`)
-            completedSubjects.forEach(s=>{
-                if (requirement.OR.includes(s.data.code)) {
-                    console.log(`${s.data.code} satisfies ${requirement.OR}`)
-                    containsAtLeastOne = true;
-                }
-            });
-            if (!containsAtLeastOne) satisfied = false;
-        }
-        return satisfied;
-    } else {
-        if (!completedSubjects || completedSubjects.length < 1) {
-            return false;
-        }
-        const logicalPrerequisites: LogicalPrerequisite = getAsLogicalPrerequisite(prerequisite.data.subjects);
-        let satisfied = true;
-        for (const requirement of logicalPrerequisites.AND) {
-            let containsAtLeastOne = false;
-            completedSubjects.forEach(s=>{
-                if (requirement.OR.includes(s.data.code)) {
-                    containsAtLeastOne = true;
-                }
-            });
-            if (!containsAtLeastOne) satisfied = false;
-        }
-        return satisfied;
+export function prerequisiteIsFulfilled(prerequisite: ExtendedNode<Prerequisite>, completedSubjects: ExtendedNode<Subject>[] | undefined){
+    if (!completedSubjects || completedSubjects.length < 1) {
+        return false;
     }
+    const logicalPrerequisites: LogicalPrerequisite = getAsLogicalPrerequisite(prerequisite.data.subjects);
+    let satisfied = true;
+    for (const requirement of logicalPrerequisites.AND) {
+        let containsAtLeastOne = false;
+        completedSubjects.forEach(s=>{
+            if (requirement.OR.includes(s.data.code)) {
+                containsAtLeastOne = true;
+            }
+        });
+        if (!containsAtLeastOne) satisfied = false;
+    }
+    return satisfied;
+}
+
+export function normaliseSubjectCode(code: string){
+    if (code.match(/^\w{4} \d{4}$/)) return code;
+    const match = code.match(/(\w{4})\s*(\d{4})/);
+    if (!match) return code;
+    return `${match[1]} ${match[2]}`.toUpperCase();
 }
 
 function parentEdgeHasLabel(node: ExtendedNode<any>, edges: GraphEdge[], labels: string[]){
             return edges.find(s=>labels.includes(s.label??'NEVER_MATCH') && s.target === node.id) !== undefined;
 }
 
-export function isRequiredByProgramOrSpecialisation(node: ExtendedNode<SubjectExtension>, visibleNodes: ExtendedNode<any>[], adjacencyList: Map<string, string[]>, nodeMap: Map<string, ExtendedNode<GenericNode>>, edges: GraphEdge[]){
-    const parentPrerequisites = getParentsByType(node, visibleNodes, adjacencyList, nodeMap, ['Prerequisites', 'SubjectChoice']);
+export enum RequiredType {
+    NOT_REQUIRED,
+    REQUIRED,
+    PREREQUISITE_OF_REQUIRED,
+}
+
+export function isRequiredByProgramOrSpecialisation(node: ExtendedNode<Subject>, visibleNodes: ExtendedNode<any>[], adjacencyList: Map<string, string[]>, nodeMap: Map<string, ExtendedNode<Generic>>, edges: GraphEdge[]){
+    const parentPrerequisites = getParentsByType<Prerequisite>(node, visibleNodes, adjacencyList, nodeMap, ['Prerequisites', 'SubjectChoice']);
     const parentProgramsOrByProxy = [];
-    if (parentEdgeHasLabel(node, edges, ['REQUIRES_SUBJECT'])) parentProgramsOrByProxy.push(node);
-    for (const parentPrerequisite of parentPrerequisites){
-        if (parentEdgeHasLabel(parentPrerequisite,edges, ['REQUIRES_SUBJECT', 'PROVIDES_SELECTION', 'REQUIRES_CHOICE'])) parentProgramsOrByProxy.push(parentPrerequisite);
+    if (parentEdgeHasLabel(node, edges, ['REQUIRES_SUBJECT'])) {
+        return RequiredType.REQUIRED;
     }
-    return parentProgramsOrByProxy.length > 0;
+    for (const parentPrerequisite of parentPrerequisites){
+        if (isChoiceNode(parentPrerequisite)) {
+            return RequiredType.REQUIRED;
+        }
+        if (parentEdgeHasLabel(parentPrerequisite,edges, ['REQUIRES_SUBJECT', 'PROVIDES_SELECTION', 'REQUIRES_CHOICE'])) {
+            if (parentPrerequisite.data.forSubject === node.data.code) return RequiredType.REQUIRED;
+            parentProgramsOrByProxy.push(parentPrerequisite);
+        }
+    }
+    return parentProgramsOrByProxy.length > 0 ? RequiredType.PREREQUISITE_OF_REQUIRED : RequiredType.NOT_REQUIRED;
 }
 

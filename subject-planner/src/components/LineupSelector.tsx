@@ -1,13 +1,13 @@
 import React, {MouseEvent, useRef, useState} from "react";
 import {getProgramNamesInterface} from "@/app/api/info/getProgramNames/route";
 import {getMajorsInterface} from "@/app/api/graph/getMajors/route";
-import {ExtendedNode, MajorExtension, MinorExtension} from "@/app/page";
+import {ExtendedNode, Major, Minor} from "@/app/page";
 import {getMinorsInterface} from "@/app/api/graph/getMinors/route";
 
 interface LineupSelectorProps {
     onSearchEvent: (programValue: string) => void
-    onMajorEvent: (node: ExtendedNode<MajorExtension | MinorExtension>) => void
-    onMinorEvent: (node: ExtendedNode<MajorExtension | MinorExtension>) => void
+    onMajorEvent: (node: ExtendedNode<Major | Minor>) => void
+    onMinorEvent: (node: ExtendedNode<Major | Minor>) => void
     className?: string
     onStartExploring: () => void
 }
@@ -29,11 +29,11 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
 
     const [majorDropdown, setMajorDropdown] = useState<getMajorsInterface>();
     const [showMajorDropDown, setShowMajorDropDown] = useState(false);
-    const [majorValue, setMajorValue] = useState<ExtendedNode<MajorExtension>>();
+    const [majorValue, setMajorValue] = useState<ExtendedNode<Major>>();
 
     const [minorDropdown, setMinorDropdown] = useState<getMinorsInterface>();
     const [showMinorDropDown, setShowMinorDropDown] = useState(false);
-    const [minorValue, setMinorValue] = useState<ExtendedNode<MinorExtension>>();
+    const [minorValue, setMinorValue] = useState<ExtendedNode<Minor>>();
 
     const [needsReset, setNeedsReset] = useState(false);
 
@@ -83,11 +83,12 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
 
     return (
         <div className={className}>
-            <div className={`flex flex-col min-w-[200px] space-y-2`}>
+            <div className={`flex flex-col min-w-[200px] space-y-2 overflow-x-scroll`}>
                 <div className={`form-row flex flex-col md:flex-row`}>
                     <label>Program Search:</label>
                     <input
-                        className={`w-full max-w-[400px] max-h-8`}
+                        disabled={needsReset}
+                        className={`w-full max-w-[300px] max-h-8`}
                         autoComplete={'off'}
                         ref={searchBar}
                         value={searchValue}
@@ -131,7 +132,7 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                 {((majorDropdown) && (showMajorDropDown || majorValue)) &&
                     <div>
                         Select a major:
-                        <select className={`form-row flex flex-col border-2 max-h-[110px] max-w-[600px] overflow-y-scroll`}>
+                        <select disabled={needsReset} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[400px] overflow-y-scroll`}>
                             {majorDropdown.majors.map(m=>{
                                 const stripped = m.data.majorName.replace(/[^\W\w]/g,'');
                                 return <option className={`hover:cursor-pointer !rounded-none text-start`} key={stripped} onClick={(e)=>{
@@ -148,7 +149,7 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                 {((minorDropdown) && (showMinorDropDown || minorValue)) &&
                     <div>
                         Select a minor:
-                        <select className={`form-row flex flex-col border-2 max-h-[110px] max-w-[600px] overflow-y-scroll`}>
+                        <select disabled={needsReset} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[400px] overflow-y-scroll`}>
                             {minorDropdown.minors.map(m=> {
                                 const stripped = m.data.minorName.replace(/[^\W\w]/g, '');
                                 return <option className={`hover:cursor-pointer !rounded-none text-start`} key={stripped} onClick={(e)=>{
@@ -165,7 +166,7 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                     </div>
                 }
                 <div className={`form-row`}>
-                    <button onClick={(e)=>startExploring(e)}>{needsReset ? 'Restart' : 'Start Exploring'}</button>
+                    <button disabled={program===''} className={`${program!=='' ? 'bg-gray-400 cursor-pointer' : 'bg-gray-700 cursor-not-allowed'}`} onClick={(e)=> startExploring(e)}>{needsReset ? 'Restart' : 'Start Exploring'}</button>
                     <div className={'grow'} />
                 </div>
             </div>

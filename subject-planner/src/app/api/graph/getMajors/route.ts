@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { read } from "@/lib/neo4j";
-import {ExtendedNode, MajorExtension} from "@/app/page";
+import {ExtendedNode, Major} from "@/app/page";
 import {nodeFillMap, nodeSizeMap} from "@/lib/siteUtil";
 
 export interface getMajorsInterface {
-    majors: ExtendedNode<MajorExtension>[]
+    majors: ExtendedNode<Major>[]
 }
 
 export async function GET(request: Request) {
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
                 },
                 fill: nodeFillMap['Major'],
                 size: nodeSizeMap['Major']
-            } as ExtendedNode<MajorExtension>;
+            } as ExtendedNode<Major>;
         });
 
         return NextResponse.json({majors} as getMajorsInterface);

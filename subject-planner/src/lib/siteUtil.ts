@@ -9,7 +9,7 @@ export const nodeDisplayNameMap: Record<NodeTypes, string> = {
 
 export const nodeFillMap: Record<NodeTypes, string> = {
     ['Program']: '#0C3C51',
-    ['Subject']: '#ff95b6',
+    ['Subject']: '#ffa5d6',
     ['Major']: '#195db0',
     ['Minor']: '#969bf9',
     ['Prerequisites']: '#F79767',

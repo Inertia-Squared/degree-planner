@@ -1,4 +1,4 @@
-import {ExtendedNode, GenericNode} from "@/app/page";
+import {ExtendedNode, Generic} from "@/app/page";
 import {LogicalPrerequisite} from "../../../../neo4j/upload-data-to-db";
 import {NodeTypes} from "@/lib/siteUtil";
 
@@ -6,7 +6,7 @@ export function getCourseCode(course: string){
     return (course.match(/(\d{4})/) ?? ['nomatch', 'nomatch'])[1];
 }
 
-export function getParentsByType<T>(node: ExtendedNode<any>, visibleNodes: ExtendedNode<any>[], adjacencyList: Map<string, string[]>, nodeMap: Map<string, ExtendedNode<GenericNode>>, parentType: NodeTypes | NodeTypes[]){
+export function getParentsByType<T>(node: ExtendedNode<any>, visibleNodes: ExtendedNode<any>[], adjacencyList: Map<string, string[]>, nodeMap: Map<string, ExtendedNode<Generic>>, parentType: NodeTypes | NodeTypes[]){
     const parentNodes = getParentNodes(node, adjacencyList, nodeMap);
     const parentPrerequisites = parentNodes.filter(p=>{
         if (parentType instanceof Array) {
@@ -18,7 +18,7 @@ export function getParentsByType<T>(node: ExtendedNode<any>, visibleNodes: Exten
     return parentPrerequisites.filter(p => visibleNodes.includes(p)) as ExtendedNode<T>[];
 }
 
-export function getParentNodes(node: ExtendedNode<any>, adjacencyList: Map<string, string[]>, nodeMap: Map<string, ExtendedNode<GenericNode>>){
+export function getParentNodes(node: ExtendedNode<any>, adjacencyList: Map<string, string[]>, nodeMap: Map<string, ExtendedNode<Generic>>){
     const parentNodeIds = getParentNodeIds(node, adjacencyList);
     return parentNodeIds.map(p=>nodeMap.get(p)).filter(n=>n!==undefined);
 }

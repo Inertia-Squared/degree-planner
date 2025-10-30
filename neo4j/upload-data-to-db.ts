@@ -2,7 +2,7 @@ import neo4j, {Driver, ManagedTransaction} from 'neo4j-driver';
 import 'dotenv/config';
 import fs from "fs/promises";
 import {Major, Minor, ProgramSummary, SubjectChoice, SubjectSummary} from "../programs/program-refiner";
-import {setConfig, startTrackingProgress, stopTrackingProgress} from "../util";
+import {normaliseSubjectCode, setConfig, startTrackingProgress, stopTrackingProgress} from "../util";
 import {SubjectData} from "../subjects/subject-scraper";
 import {EnrollRequirements} from "../subjects/subject-refiner";
 enum SpecialisationType {
@@ -203,7 +203,7 @@ function uniqueDataArgumentsOf(subjectNode: Node<PropsKey>, comparatorNode: Node
 }
 
 function getSubjectFromSummary(subject: SubjectSummary): SubjectData {
-    return <SubjectData>globals.subjects.find(s => s.code === subject.code);
+    return <SubjectData>globals.subjects.find(s => normaliseSubjectCode(s.code) === normaliseSubjectCode(subject.code));
 }
 
 async function addNode<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>){
@@ -254,7 +254,7 @@ async function prerequisiteAwareLinkNodes<T extends PropsKey>(tx: ManagedTransac
             type: "subject",
             props: {
                 keyProps: {
-                    code: subject.code
+                    code: normaliseSubjectCode(subject.code)
                 },
                 dataProps: {
                     subjectName: subject.name ?? 'Unknown Subject',
@@ -356,7 +356,7 @@ async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: Subjec
             const subjectNode: Node<'subject'> = {
                 type: 'subject',
                 props: {
-                    keyProps: { code: subjectData.code },
+                    keyProps: { code: normaliseSubjectCode(subjectData.code) },
                     dataProps: {
                         subjectName: subjectData.subject ?? 'none',
                         prerequisites: subjectData.originalPrerequisites ?? 'none',
@@ -403,7 +403,7 @@ async function addSpecialisation(tx: ManagedTransaction, specialisation: Major |
             const subjectNode: Node<'subject'> = {
                 type: 'subject',
                 props: {
-                    keyProps: { code: subject.code }
+                    keyProps: { code: normaliseSubjectCode(subject.code) }
                 }
             };
             if(await relationExists(tx, subjectNode, 'PATHWAY_TO')){
@@ -427,7 +427,7 @@ async function nodePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: No
                 keyProps: {
                     course: prerequisite.course,
                     subjects: JSON.stringify(prerequisite.AND),
-                    forSubject: subjectNode.props.keyProps.code
+                    forSubject: normaliseSubjectCode(subjectNode.props.keyProps.code)
                 },
                 dataProps: {}
             }
@@ -437,7 +437,7 @@ async function nodePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: No
         for (const subjectCode of prerequisite.AND.map(p=>p.OR).flat()) {
             const prerequisiteSubjectNode: Node<'subject'> = {
                 type: 'subject',
-                props: { keyProps: {code: subjectCode} }
+                props: { keyProps: {code: normaliseSubjectCode(subjectCode)} }
             }
             await linkNodes(tx, prerequisiteSubjectNode, 'PREREQUISITE_FOR', prerequisiteNode);
         }
@@ -455,7 +455,7 @@ async function linkProgramToSubject(tx: ManagedTransaction, programNode: Node<"p
         const subjectNode = {
             type: 'subject',
             props: {
-                keyProps: { code: subject.code }
+                keyProps: { code: normaliseSubjectCode(subject.code) }
             }
         } as Node<'subject'>
         await prerequisiteAwareLinkNodes(tx, subject, subjectNode, 'REQUIRES_SUBJECT', programNode)
@@ -514,7 +514,7 @@ async function main(){
                 const subjectNode: Node<'subject'> = {
                     type: 'subject',
                     props: {
-                        keyProps: { code: subject.code },
+                        keyProps: { code: normaliseSubjectCode(subject.code)},
                         dataProps: {
                             subjectName: subject.subject ?? 'none',
                             prerequisites: JSON.stringify(logicalPrerequisites,null,2) ?? subject.originalPrerequisites ?? 'none',
@@ -543,14 +543,14 @@ async function main(){
                         return {
                             course: p.course,
                             AND: p.prerequisites?.map(a=>{
-                                return {OR: a}
+                                return {OR: a.map(o=>normaliseSubjectCode(o))}
                             }) ?? []
                         }
                     }).filter(Boolean)
                 }
                 const subjectNode: Node<'subject'> = {
                     type: 'subject',
-                    props: {keyProps: { code: subject.code }}
+                    props: {keyProps: { code: normaliseSubjectCode(subject.code) }}
                 }
                 if(logicalPrerequisites.length > 0) await nodePrerequisiteGenerator(tx, subjectNode, logicalPrerequisites);
                 pt.progress++;
@@ -603,7 +603,7 @@ async function main(){
                             const subjectNode = {
                                 type: 'subject',
                                 props: {
-                                    keyProps: { code: subject.code }
+                                    keyProps: { code: normaliseSubjectCode(subject.code) }
                                 }
                             } as Node<'subject'>
                             await addProperty(tx, subjectNode, {name: 'subjectSequences', value: `${program.name}:${subjectSequencePair.sequence}`})

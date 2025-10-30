@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { read } from "@/lib/neo4j";
-import {ExtendedNode, ProgramExtension} from "@/app/page";
+import {ExtendedNode, Program} from "@/app/page";
 import {nodeFillMap, nodeSizeMap} from "@/lib/siteUtil";
 
 export interface getProgramsInterface {
-    programs: ExtendedNode<ProgramExtension>[]
+    programs: ExtendedNode<Program>[]
 }
 
 export async function GET(request: Request) {
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
                 },
                 fill: nodeFillMap['Program'],
                 size: nodeSizeMap['Program']
-            } as ExtendedNode<ProgramExtension>;
+            } as ExtendedNode<Program>;
         });
 
         return NextResponse.json({programs} as getProgramsInterface);

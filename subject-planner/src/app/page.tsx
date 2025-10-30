@@ -8,6 +8,7 @@ import {getProgramsInterface} from "@/app/api/graph/getPrograms/route";
 import {getConnectedNodesInterface} from "@/app/api/graph/getConnected/route";
 import {HEXGBA, nodeFillMap, NodeTypes} from "@/lib/siteUtil";
 import InfoPanel from "@/components/InfoPanel";
+import {BsArrowDownShort, BsArrowUpShort, BsGithub} from "react-icons/bs";
 
 import {
     filterDisconnectedEdges, filterImpossiblePrerequisites, filterLeafPrerequisites,
@@ -17,7 +18,7 @@ import {
 import {
     isEligibleForSubject,
     isRequiredByProgramOrSpecialisation,
-    prerequisiteIsFulfilled
+    prerequisiteIsFulfilled, RequiredType
 } from "@/lib/graph/graphColours";
 import {getParentsByType} from "@/lib/graph/graphUtil";
 import {CourseTimeline} from "@/components/CourseTimeline";
@@ -42,48 +43,48 @@ function containsAll(object: any, components: string[]){
 export interface ExtendedNode<T> extends GraphNode {
      data: T
 }
-export function isExtendedNode(obj: any){
+export function isExtendedNode(obj: any): obj is ExtendedNode<any> {
     return 'data' in obj;
 }
 
-export interface GenericNode {
+export interface Generic {
     type: NodeTypes
 }
-export function isGenericNode(obj: any){
+export function isGenericNode(obj: any): obj is ExtendedNode<Generic>{
     return isExtendedNode(obj) && containsAll(obj.data, ['type']);
 }
 
-export interface SubjectExtension extends GenericNode{
+export interface Subject extends Generic{
     type: 'Subject'
     code: string,
     prerequisites: string
     subjectSequences: string[]
     teachingPeriods: string[]
 }
-export function isSubjectNode(obj: any){
+export function isSubjectNode(obj: any): obj is ExtendedNode<Subject>{
     return isGenericNode(obj) && containsAll(obj.data, ['code','prerequisites','subjectSequences', 'teachingPeriods']);
 }
 
-export interface ProgramExtension extends GenericNode{
+export interface Program extends Generic{
     type: 'Program'
     programName: string,
     programSequences: string[]
 }
-export function isProgramNode(obj: any){
+export function isProgramNode(obj: any): obj is ExtendedNode<Program>{
     return isGenericNode(obj) && containsAll(obj.data,['programName','programSequences']);
 }
 
-export interface PrerequisiteExtension extends GenericNode {
+export interface Prerequisite extends Generic {
     type: 'Prerequisites'
     course: string
     subjects: string
     forSubject: string
 }
-export function isPrerequisiteNode(obj: any){
+export function isPrerequisiteNode(obj: any): obj is ExtendedNode<Prerequisite>{
     return isGenericNode(obj) && containsAll(obj.data, ['course', 'subjects', 'forSubject']);
 }
 
-export interface MajorExtension extends GenericNode {
+export interface Major extends Generic {
     type: 'Major'
     majorName: string
     majorType: SpecialisationType | string
@@ -91,11 +92,11 @@ export interface MajorExtension extends GenericNode {
     majorLink: string
     programConnectionId?: string
 }
-export function isMajorNode(obj: any){
+export function isMajorNode(obj: any): obj is ExtendedNode<Major>{
     return isGenericNode(obj) && containsAll(obj.data, ['majorName', 'majorType', 'majorLocations', 'majorLink']);
 }
 
-export interface MinorExtension extends GenericNode {
+export interface Minor extends Generic {
     type: 'Minor'
     minorName: string
     minorType: SpecialisationType | string
@@ -103,8 +104,17 @@ export interface MinorExtension extends GenericNode {
     minorLink: string
     programConnectionId?: string
 }
-export function isMinorNode(obj: any){
+export function isMinorNode(obj: any): obj is ExtendedNode<Minor>{
     return isGenericNode(obj) && containsAll(obj.data, ['minorName', 'minorType', 'minorLocations', 'minorLink']);
+}
+
+export interface Choice extends Generic {
+    type: 'SubjectChoice'
+    choiceName: string
+    parent: string
+}
+export function isChoiceNode(obj: any): obj is ExtendedNode<Choice> {
+    return isGenericNode(obj) && containsAll(obj.data, ['choiceName', 'parent']);
 }
 
 export function showNodeInfo(node: ExtendedNode<any>){
@@ -142,7 +152,7 @@ const displayOptions = {
 
 export interface StudyPeriodItem {
     period: StudyPeriod
-    subjectsTaken: ExtendedNode<SubjectExtension>[]
+    subjectsTaken: ExtendedNode<Subject>[]
 }
 
 
@@ -162,20 +172,20 @@ const colours = {
 }
 
 export default function Home() {
-    const [nodes, setNodes] = useState<ExtendedNode<GenericNode>[]>([]);
-    const [displayedNodes, setDisplayedNodes] = useState<ExtendedNode<GenericNode>[]>([]);
-    const [nodeMap, setNodeMap] = useState<Map<string, ExtendedNode<GenericNode>>>(new Map());
+    const [nodes, setNodes] = useState<ExtendedNode<Generic>[]>([]);
+    const [displayedNodes, setDisplayedNodes] = useState<ExtendedNode<Generic>[]>([]);
+    const [nodeMap, setNodeMap] = useState<Map<string, ExtendedNode<Generic>>>(new Map());
     const [adjacencyList, setAdjacencyList] = useState<Map<string, string[]>>(new Map())
     const [edges, setEdges] = useState<GraphEdge[]>([]);
     const [displayedEdges, setDisplayedEdges] = useState<GraphEdge[]>([]);
-    const [addedNodes, setAddedNodes] = useState<ExtendedNode<GenericNode>[]>([]);
+    const [addedNodes, setAddedNodes] = useState<ExtendedNode<Generic>[]>([]);
 
     const [clusterOptions, setClusterOptions] = useState(['select a node to see cluster options']);
     const [clusterBy, setClusterBy] = useState<string | undefined>(undefined);
-    const [selectedElement, setSelectedElement] = useState<ExtendedNode<GenericNode> | GraphEdge | undefined>(undefined);
+    const [selectedElement, setSelectedElement] = useState<ExtendedNode<Generic> | GraphEdge | undefined>(undefined);
     const [displayMode, setDisplayMode] = useState<LayoutTypes>(Object.values(displayOptions)[1]);
 
-    const [selectedProgram, setSelectedProgram] = useState<ExtendedNode<ProgramExtension> | undefined>(undefined);
+    const [selectedProgram, setSelectedProgram] = useState<ExtendedNode<Program> | undefined>(undefined);
     const [selectedProgramSequence, setSelectedProgramSequence] = useState<string | undefined>(undefined);
 
     const [isLoading, setIsLoading] = useState(true);
@@ -191,7 +201,13 @@ export default function Home() {
         subjectsTaken: []
     });
 
+    const [showLineup, setShowLineup] = useState<boolean>(true);
+
     const [updateToggle, setUpdateToggle] = useState<boolean>(false);
+
+    const [showSequences, setShowSequences] = useState<boolean>(true);
+
+    const [subjectsTaken, setSubjectsTaken] = useState<ExtendedNode<Subject>[]>([]);
 
     const searchProgram = async (searchString: string)=>{
         const response = await fetch(`/api/graph/getPrograms?programName=${searchString}`);
@@ -201,11 +217,11 @@ export default function Home() {
 
         const data = await response.json() as getProgramsInterface;
         if(data.programs !== nodes) setNodes(data.programs);
-        setSelectedProgram(data.programs[0] as ExtendedNode<ProgramExtension>);
+        setSelectedProgram(data.programs[0] as ExtendedNode<Program>);
         setSelectedProgramSequence(data.programs[0].data.programSequences[0]);
     }
 
-    const forceAddSpecialisation = (node: ExtendedNode<MajorExtension | MinorExtension>) => {
+    const forceAddSpecialisation = (node: ExtendedNode<Major | Minor>) => {
         if(!node.data.programConnectionId || !selectedProgram) return;
         node.size = 40;
         const newNodes = [...nodes.filter(n=>n.data.type !== node.data.type), node];
@@ -221,7 +237,8 @@ export default function Home() {
         setEdges(newEdges);
     }
 
-    function isOfferedInCurrentPeriod(node: ExtendedNode<SubjectExtension>): OfferStatus {
+    function isOfferedInCurrentPeriod(node: ExtendedNode<Subject>): OfferStatus {
+        if (!node.data.teachingPeriods || node.data.teachingPeriods.length < 1) return OfferStatus.UNKNOWN;
         let offerStatus: OfferStatus = OfferStatus.NO;
         node.data.teachingPeriods.map(p=>{
             if (offerStatus === OfferStatus.NO && asStudyPeriod(p) === 'unknown') offerStatus = OfferStatus.UNKNOWN;
@@ -245,8 +262,8 @@ export default function Home() {
             isNode ? nodes.find(n=>n.id===id) : edges.find(e=>e.id===id);
         setSelectedElement(element);
         if(isNode) {
-            if (element && element.data.type === 'Program') {
-                setSelectedProgram(element as ExtendedNode<ProgramExtension>);
+            if (element && isProgramNode(element)) {
+                setSelectedProgram(element);
                 const sequences = element.data['programSequences'];
                 if (sequences.length > 0) setSelectedProgramSequence(sequences[0])
             }
@@ -254,65 +271,50 @@ export default function Home() {
         }
     }
 
-    function hasCompleted(node: ExtendedNode<GenericNode>){
-        if (!isSubjectNode(node)) {
-            throw('Error: Attempted to check subject info on non-subject node');
-        }
-        let hasCompleted = false;
-        completedPeriods.forEach(p=>{
-            if (p.subjectsTaken.includes(node as ExtendedNode<SubjectExtension>)) hasCompleted = true;
-        })
-        return hasCompleted;
-    }
-
     function getCompletedSubjects(){
         return completedPeriods.map(p=>p.subjectsTaken).flat();
     }
 
-    function hasTaken(node: ExtendedNode<GenericNode>){
-        if (!isSubjectNode(node)) {
-            throw('Error: Attempted to check subject info on non-subject node');
-        }
-        return hasCompleted(node) || currentPeriod.subjectsTaken.includes(node as ExtendedNode<SubjectExtension>);
+    function hasTaken(node: ExtendedNode<Generic>){
+        return subjectsTaken.includes(node as ExtendedNode<Subject>);
     }
 
-    function onNodeClicked(id: string){
-        console.log('Checking node...')
+    function onNodeDoubleClicked(id: string){
+        // console.log('Checking node...')
+        setUpdateToggle(!updateToggle);
         const node = getNodeFromId(id);
         if (node && isSubjectNode(node)){
             if (hasTaken(node)) {
-                console.log('Has already been taken, skipping.')
                 return;
             }
-            const parentPrerequisites = getParentsByType<PrerequisiteExtension>(node, nodes, adjacencyList, nodeMap, 'Prerequisites').filter(p=>p.data.forSubject===(node as ExtendedNode<SubjectExtension>).data.code);
-            if (!isEligibleForSubject(parentPrerequisites, getCompletedSubjects()) || isOfferedInCurrentPeriod(node as ExtendedNode<SubjectExtension>) !== OfferStatus.YES) {
-                console.log('Is not eligible.')
-                console.log('Prerequisites Satisfied: ' + isEligibleForSubject(parentPrerequisites, getCompletedSubjects()));
-                console.log('Is currently offered: ' + !(isOfferedInCurrentPeriod(node as ExtendedNode<SubjectExtension>) !== OfferStatus.YES) + '(' + isOfferedInCurrentPeriod(node as ExtendedNode<SubjectExtension>) + ')')
-                console.log(parentPrerequisites);
+            const parentPrerequisites = getParentsByType<Prerequisite>(node, nodes, adjacencyList, nodeMap, 'Prerequisites').filter(p=>p.data.forSubject===(node).data.code);
+            if (!isEligibleForSubject(parentPrerequisites, getCompletedSubjects()) || isOfferedInCurrentPeriod(node) === OfferStatus.NO) {
                 return;
             }
-            const newCurrentPeriod = currentPeriod;
-            newCurrentPeriod.subjectsTaken.push(node as ExtendedNode<SubjectExtension>);
-
-            if ((currentPeriod.subjectsTaken.length) % 4 === 0) {
+            setShowSequences(false);
+            let newCurrentPeriod = currentPeriod;
+            newCurrentPeriod.subjectsTaken = [...newCurrentPeriod.subjectsTaken, node];
+            setSubjectsTaken([...subjectsTaken, node]);
+            if ((newCurrentPeriod.subjectsTaken.length) % 4 === 0) {
                 moveToNewPeriod(newCurrentPeriod);
             } else {
                 setCurrentPeriod(newCurrentPeriod);
             }
-            setUpdateToggle(!updateToggle);
         }
     }
 
     function moveToNewPeriod(oldCurrentPeriod: StudyPeriodItem){
-        if ((completedPeriods.length+1) % 2 === 0) {
-            setCompletedPeriods([...(completedPeriods ?? []), oldCurrentPeriod]);
+        const newCompletedPeriods = completedPeriods ?? [];
+        newCompletedPeriods.push(oldCurrentPeriod);
+
+        if ((completedPeriods.length) % 2 === 0) {
+            setCompletedPeriods(newCompletedPeriods);
             setCurrentPeriod({
                 period: startPeriod,
                 subjectsTaken: []
             });
         } else {
-            setCompletedPeriods([...(completedPeriods ?? []), oldCurrentPeriod]);
+            setCompletedPeriods(newCompletedPeriods);
             setCurrentPeriod({
                 period: startPeriod === 'autumn' ? 'spring' : 'autumn',
                 subjectsTaken: []
@@ -333,7 +335,7 @@ export default function Home() {
      * @param filterType
      * @param graph
      */
-    function chooseNode(excludeId: string, filterType: NodeTypes, graph: { oldNodes: ExtendedNode<GenericNode>[], oldEdges: GraphEdge[]}){
+    function chooseNode(excludeId: string, filterType: NodeTypes, graph: { oldNodes: ExtendedNode<Generic>[], oldEdges: GraphEdge[]}){
         const nodesToRemove = new Set<string>();
 
         // Initial nodes to remove based on the filterType
@@ -363,9 +365,9 @@ export default function Home() {
     }
 
     async function addConnected(params: {id: string}): Promise<void>;
-    async function addConnected(params: {manualAdd: {newNodes: ExtendedNode<GenericNode>[], newEdges: GraphEdge[]}}): Promise<void>;
+    async function addConnected(params: {manualAdd: {newNodes: ExtendedNode<Generic>[], newEdges: GraphEdge[]}}): Promise<void>;
 
-    async function addConnected(params: {id?: string, manualAdd?: { newNodes: ExtendedNode<GenericNode>[], newEdges: GraphEdge[] }
+    async function addConnected(params: {id?: string, manualAdd?: { newNodes: ExtendedNode<Generic>[], newEdges: GraphEdge[] }
     }) {
         let newNodes;
         let newEdges;
@@ -410,7 +412,6 @@ export default function Home() {
             adjacency.get(e.source)?.push(e.target);
         })
         setAdjacencyList(adjacency);
-
         setNodes(newNodes);
         setEdges(newEdges);
     }
@@ -454,14 +455,9 @@ export default function Home() {
         return {newNodes: newNodes, newEdges: newEdges}
     }
 
-    const expandConnected = async (nodesToExpand: ExtendedNode<GenericNode>[])=> {
-        const connectionsToAdd: { newNodes: ExtendedNode<GenericNode>[], newEdges: GraphEdge[] } = {newNodes: [], newEdges: []}
+    const expandConnected = async (nodesToExpand: ExtendedNode<Generic>[])=> {
+        const connectionsToAdd: { newNodes: ExtendedNode<Generic>[], newEdges: GraphEdge[] } = {newNodes: [], newEdges: []}
         const idsToAdd = nodesToExpand.map(n=>n.id)
-        // for (const node of nodesToExpand){
-        //     if(node.data.type === 'SubjectChoice' || isPrerequisiteNode(node) || isSubjectNode(node)){
-        //         idsToAdd.push(node.id);
-        //     }
-        // }
         const connections = await getConnected(idsToAdd);
         connectionsToAdd.newNodes.push(...connections.newNodes);
         connectionsToAdd.newEdges.push(...connections.newEdges);
@@ -477,6 +473,7 @@ export default function Home() {
         let newNodes = nodes;
         let newEdges = edges;
 
+        console.log(nodes.filter(n=>isSubjectNode(n)&&n.data.code.includes('COMP 2021')))
         /**
          * Graph Filtering Pass
          */
@@ -486,54 +483,49 @@ export default function Home() {
         if(selectedProgram && selectedProgram.data.programSequences && selectedProgramSequence) {
             if (selectedProgram) newNodes = newNodes.filter(n => {
                 if (!isSubjectNode(n)) return true;
-                return filterSubjectsNotInSequence(n as ExtendedNode<SubjectExtension>, selectedProgram.data.programName, selectedProgramSequence ?? '');
+                return filterSubjectsNotInSequence(n, selectedProgram.data.programName, selectedProgramSequence ?? '');
             });
         }
 
         // filter out prerequisites we know are not part of course
         if(selectedProgram) newNodes = newNodes.filter(n=> {
             if(!isPrerequisiteNode(n)) return true;
-            return filterPrerequisitesNotInCourse(n as ExtendedNode<PrerequisiteExtension>, selectedProgram.data.programName);
+            return filterPrerequisitesNotInCourse(n, selectedProgram.data.programName);
         });
 
 
         if(!showPotentialElectives) {
             newNodes = newNodes.filter(n=>{
                 if (!isSubjectNode(n) || !n.fill) return true;
-                return isRequiredByProgramOrSpecialisation(n as ExtendedNode<SubjectExtension>, newNodes, adjacencyList, nodeMap, edges);
+                return isRequiredByProgramOrSpecialisation(n, newNodes, adjacencyList, nodeMap, edges) !== RequiredType.NOT_REQUIRED;
             });
         }
 
         newNodes = newNodes.filter(n=>{
             if (!isPrerequisiteNode(n)) return true;
-            const subjectNodes = newNodes.filter(nn=>isSubjectNode(nn)) as ExtendedNode<SubjectExtension>[];
-            return filterImpossiblePrerequisites(n as ExtendedNode<PrerequisiteExtension>, subjectNodes);
+            const subjectNodes = nodes.filter(nn=>isSubjectNode(nn));
+            return filterImpossiblePrerequisites(n, subjectNodes);
         });
 
         // filter out edges that are no longer visible
         newEdges = newEdges.filter(e=>filterDisconnectedEdges(e, newNodes));
 
         newEdges = newEdges.filter(e=>{
-            if (e.label === 'PREREQUISITE_FOR' && !isPrerequisiteNode(fromNodesById(e.target, newNodes))){
-                return false;
-            }
-            return true;
+            return !(e.label === 'PREREQUISITE_FOR' && !isPrerequisiteNode(fromNodesById(e.target, newNodes)));
         });
 
         newNodes = newNodes.filter(n=>{
             if (!isSubjectNode(n)) return true;
-            const s = n as ExtendedNode<SubjectExtension>;
-            if (s.data.prerequisites.length > 3 && getParentsByType<PrerequisiteExtension>(s,newNodes,adjacencyList,nodeMap,'Prerequisites').filter(p=>p.data.forSubject===s.data.code).length < 1){
-                return false;
-            }
-            return true;
+            return !(n.data.prerequisites.length > 3
+                && getParentsByType<Prerequisite>(n, newNodes, adjacencyList, nodeMap, 'Prerequisites')
+                    .filter(p => p.data.forSubject === n.data.code).length < 1);
         });
 
 
         // filter out prerequisite nodes that do not lead to a visible subject
         newNodes = newNodes.filter(n=> {
             if(!isPrerequisiteNode(n)) return true;
-            return filterLeafPrerequisites(n as ExtendedNode<PrerequisiteExtension>, newEdges);
+            return filterLeafPrerequisites(n, newEdges);
         });
 
         /**
@@ -541,33 +533,40 @@ export default function Home() {
          */
         newNodes.forEach(n=>{
             if (!isSubjectNode(n)) return;
-            const parentPrerequisites = getParentsByType<PrerequisiteExtension>(n as ExtendedNode<SubjectExtension>, newNodes, adjacencyList, nodeMap, 'Prerequisites').filter(p=>p.data.forSubject===(n as ExtendedNode<SubjectExtension>).data.code);
-            if (isEligibleForSubject(parentPrerequisites as ExtendedNode<PrerequisiteExtension>[], getCompletedSubjects()) && isOfferedInCurrentPeriod(n as ExtendedNode<SubjectExtension>) === OfferStatus.YES){
+            const parentPrerequisites = getParentsByType<Prerequisite>
+            (n, newNodes, adjacencyList, nodeMap, 'Prerequisites').filter(p=>p.data.forSubject===n.data.code);
+            if (isEligibleForSubject(parentPrerequisites, getCompletedSubjects()) && isOfferedInCurrentPeriod(n) !== OfferStatus.NO){
                 n.fill = nodeFillMap['Subject'];
             } else {
                 if(!hasTaken(n)) n.fill = colours.inaccessible
             }
         });
 
-        if (showPotentialElectives){
-            newNodes.forEach(n=>{
-                if (!isSubjectNode(n) || !n.fill) return;
-                if (!isRequiredByProgramOrSpecialisation(n as ExtendedNode<SubjectExtension>, newNodes, adjacencyList, nodeMap, edges)){
-                    if(n.fill !== colours.inaccessible) n.fill = new HEXGBA('#AA33AA').toHex();
+
+        newNodes.forEach(n=>{
+            if (!isSubjectNode(n) || !n.fill) return;
+            const required = isRequiredByProgramOrSpecialisation(n, newNodes, adjacencyList, nodeMap, edges);
+            if (required !== RequiredType.REQUIRED){
+                if(n.fill !== colours.inaccessible) {
+                    if(required === RequiredType.NOT_REQUIRED){
+                        n.fill = new HEXGBA('#994499').toHex();
+                    } else {
+                        if(!hasTaken(n)) n.fill = new HEXGBA(n.fill).multiply(0.60).toHex();
+                    }
                 }
-            });
-        }
+            }
+        });
 
         newNodes.forEach(n=>{
             if (!isSubjectNode(n) || !n.fill) return;
             if (!hasTaken(n)) {
-                if(n.fill !== colours.inaccessible) n.fill = new HEXGBA(n.fill).multiply(0.7).toHex();
+                if(n.fill !== colours.inaccessible) n.fill = new HEXGBA(n.fill).multiply(0.75).toHex();
             }
         });
 
         newNodes.forEach(n=>{
             if (!isPrerequisiteNode(n)) return;
-            if (prerequisiteIsFulfilled(n as ExtendedNode<PrerequisiteExtension>, getCompletedSubjects())) {
+            if (prerequisiteIsFulfilled(n, getCompletedSubjects())) {
                 n.fill = nodeFillMap['Prerequisites'];
             } else {
                 n.fill = colours.inaccessible
@@ -576,7 +575,7 @@ export default function Home() {
 
         setDisplayedNodes(newNodes);
         setDisplayedEdges(newEdges);
-    }, [nodes, selectedProgramSequence, selectedProgram, showPotentialElectives, completedPeriods, currentPeriod.subjectsTaken, updateToggle]);
+    }, [nodes, selectedProgramSequence, selectedProgram, showPotentialElectives, completedPeriods.length, currentPeriod.subjectsTaken.length, updateToggle]);
 
     useEffect(() => {
         if(addedNodes.length > 0) expandConnected(addedNodes);
@@ -595,64 +594,71 @@ export default function Home() {
     if (isLoading) return <p>Loading...</p>;
 
     return (
-        <main className={`h-[100vh] flex flex-col p-4`}>
-            <div className={`border-2 p-1 flex`}>
-                <div className={`flex-2`}>
-                    <h1>Please Search for a Program to Begin.</h1>
-                    <hr/>
-                    <LineupSelector onSearchEvent={searchProgram} onMajorEvent={forceAddSpecialisation} onMinorEvent={forceAddSpecialisation} onStartExploring={startExploring} className={`p-1`}/>
-
-                </div>
-                {selectedProgram && <div className={`flex-3 flex`}>
-                    <div className={`border-r-2 mx-2`}></div>
-                    <div className={`flex-3 flex`}>
-                        <div className={'flex flex-col'}>
-                            <h2 className={`font-bold`}>Graph Analysis</h2>
-                            <hr/>
-                            <div>
-                                {displayMode === 'forceDirected2d' && <div>
-                                    <label>Cluster Nodes By: </label>
-                                    <select onChange={(s) => setClusterBy(s.currentTarget.value)}>
-                                        {clusterOptions.map(c => {
-                                            return <option key={c} value={c}>{c}</option>
-                                        })}
-                                    </select>
-                                </div>}
-                            </div>
-                            <h2 className={`font-bold`}>Program Filters</h2>
-                            <hr/>
-                            <div>
-                                <label>Show Potentially Relevant Electives: </label>
-                                <input type={'checkbox'} onChange={(e)=>{
-                                    setShowPotentialElectives(e.target.checked);
-                                }}/>
-                            </div>
-                            <div>
-                                <label>Selected Study Sequence: </label>
-                                <select onChange={(s)=> {
-                                    const sequence = s.currentTarget.value;
-                                    setSelectedProgramSequence(sequence);
-                                    if (sequence.includes('mid-')) {
-                                        setStartPeriod('spring');
-                                    } else {
-                                        setStartPeriod('autumn');
-                                    }
-                                }}>{(selectedProgram as ExtendedNode<ProgramExtension>).data['programSequences'].map(s=>{
-                                    return <option key={s} value={s}>{s}</option>
-                                })}</select>
-                            </div>
-                        </div>
-                        <div className={`grow`}></div>
-                    </div>
-                </div>}
-            </div>
-            <div>
-            </div>
-            <ForceGraph layoutMode={displayMode} clickAction={selectElement} clickCanvas={resetSelectedElement} clusterBy={clusterBy} doubleClickNodeAction={onNodeClicked} className={`grow w-full relative`}
+        <main className={`h-[100vh] flex flex-col ${showLineup ? 'p-2' : 'pb-2 px-2'}`}>
+            <ForceGraph layoutMode={displayMode} clickAction={selectElement} clickCanvas={resetSelectedElement} clusterBy={clusterBy} doubleClickNodeAction={onNodeDoubleClicked} className={`grow w-full h-full absolute top-0 left-0 z-10`}
                         edges={displayedEdges} nodes={displayedNodes}/>
-            <CourseTimeline className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit max-h-1/2 max-w-1/5 border-2 absolute left-1 bottom-0 my-auto overflow-y-scroll`}
-                            completedPeriods={completedPeriods} currentPeriod={currentPeriod}/>
-            <InfoPanel className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit max-h-1/2 max-w-1/5 border-2 absolute right-1 bottom-0 my-auto overflow-y-scroll`} item={selectedElement}/>
+                <div className={`border-2 p-1 flex flex-col md:flex-row overflow-x-scroll w-fit h-fit relative z-20 bg-white ${showLineup ? 'block' : 'hidden'}`}>
+                    <div className={`flex-2`}>
+                        <h1>Please Search for a Program to Begin.</h1>
+                        <hr/>
+                        <LineupSelector onSearchEvent={searchProgram} onMajorEvent={forceAddSpecialisation} onMinorEvent={forceAddSpecialisation} onStartExploring={startExploring} className={`p-1`}/>
+
+                    </div>
+                    {selectedProgram && <div className={`flex-3 flex`}>
+                        <div className={`border-r-2 mx-2`}></div>
+                        <div className={`flex-3 flex`}>
+                            <div className={'flex flex-col'}>
+                                <h2 className={`font-bold`}>Graph Analysis</h2>
+                                <hr/>
+                                <div>
+                                    {displayMode === 'forceDirected2d' && <div>
+                                        <label>Cluster Nodes By: </label>
+                                        <select onChange={(s) => setClusterBy(s.currentTarget.value)}>
+                                            {clusterOptions.map(c => {
+                                                return <option key={c} value={c}>{c}</option>
+                                            })}
+                                        </select>
+                                    </div>}
+                                </div>
+                                <h2 className={`font-bold`}>Program Filters</h2>
+                                <hr/>
+                                <div>
+                                    <label>Show Potentially Relevant Electives: </label>
+                                    <input type={'checkbox'} onChange={(e)=>{
+                                        setShowPotentialElectives(e.target.checked);
+                                    }}/>
+                                </div>
+                                {showSequences &&
+                                    <div>
+                                        <label>Selected Study Sequence: </label>
+                                        <select onChange={(s)=> {
+                                            const sequence = s.currentTarget.value;
+                                            setSelectedProgramSequence(sequence);
+                                            let newStartPeriod: StudyPeriod = 'autumn';
+                                            if (sequence.includes('mid-')) {
+                                                newStartPeriod = 'spring';
+                                            }
+                                            setStartPeriod(newStartPeriod);
+                                            if (!completedPeriods || completedPeriods.length < 1) {
+                                                const newStudyPeriod: StudyPeriodItem = currentPeriod;
+                                                newStudyPeriod.period = newStartPeriod;
+                                                setCurrentPeriod(newStudyPeriod);
+                                            }
+                                        }}>{(selectedProgram).data['programSequences'].map(s=>{
+                                            return <option key={s} value={s}>{s}</option>
+                                        })}</select>
+                                    </div>
+                                }
+                            </div>
+                            <div className={`grow`}></div>
+                        </div>
+                    </div>}
+                </div>
+            <div className={`flex flex-col border rounded-b-md w-8 h-6 hover:cursor-pointer z-20`} onClick={()=>setShowLineup(!showLineup)}>{showLineup && <BsArrowUpShort size={32}/>}{!showLineup && <BsArrowDownShort size={32}/>}</div>
+            <CourseTimeline className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute left-1 bottom-0 my-auto overflow-y-scroll`}
+                            completedPeriods={completedPeriods} currentPeriod={currentPeriod} onSkipPeriod={moveToNewPeriod}/>
+            <InfoPanel className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute right-1 bottom-0 my-auto overflow-y-scroll`} item={selectedElement}/>
+            <a href={'https://github.com/Inertia-Squared/degree-planner'} target={'_blank'} className={`fixed top-0 right-0 w-8 h-8 z-40 m-3`}><BsGithub size={32}/></a>
         </main>
     );
 }

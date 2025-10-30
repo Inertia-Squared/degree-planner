@@ -1,13 +1,13 @@
 import {
     ExtendedNode,
-    PrerequisiteExtension,
-    SubjectExtension
+    Prerequisite,
+    Subject
 } from "@/app/page";
 import {getCourseCode} from "@/lib/graph/graphUtil";
 import {GraphEdge} from "reagraph";
 import {prerequisiteIsFulfilled} from "@/lib/graph/graphColours";
 
-export function filterSubjectsNotInSequence(node: ExtendedNode<SubjectExtension>, selectedProgram: string, selectedSequence: string){
+export function filterSubjectsNotInSequence(node: ExtendedNode<Subject>, selectedProgram: string, selectedSequence: string){
     let isInSelectedSequence = false;
     if (node.data.subjectSequences.length < 1) return true;
     if (!node.data.subjectSequences.find(s=>s.includes(selectedProgram))) {
@@ -19,7 +19,7 @@ export function filterSubjectsNotInSequence(node: ExtendedNode<SubjectExtension>
     return isInSelectedSequence;
 }
 
-export function filterPrerequisitesNotInCourse(node: ExtendedNode<PrerequisiteExtension>, selectedProgramName: string){
+export function filterPrerequisitesNotInCourse(node: ExtendedNode<Prerequisite>, selectedProgramName: string){
     const programCode = getCourseCode(selectedProgramName);
     if (programCode === 'nomatch') {
         return true; // we don't have enough info to determine
@@ -38,7 +38,7 @@ export function filterDisconnectedEdges(edge: GraphEdge, visibleNodes: ExtendedN
     return hasSource && hasTarget;
 }
 
-export function filterLeafPrerequisites(node: ExtendedNode<PrerequisiteExtension>, edges: GraphEdge[]){
+export function filterLeafPrerequisites(node: ExtendedNode<Prerequisite>, edges: GraphEdge[]){
     let hasTarget = false;
     edges.forEach((edge)=>{
         if (edge.source === node.id && edge.label === 'PATHWAY_TO') hasTarget = true;
@@ -46,6 +46,6 @@ export function filterLeafPrerequisites(node: ExtendedNode<PrerequisiteExtension
     return hasTarget;
 }
 
-export function filterImpossiblePrerequisites(node: ExtendedNode<PrerequisiteExtension>, nodes: ExtendedNode<SubjectExtension>[]){
+export function filterImpossiblePrerequisites(node: ExtendedNode<Prerequisite>, nodes: ExtendedNode<Subject>[]){
     return prerequisiteIsFulfilled(node, nodes);
 }
