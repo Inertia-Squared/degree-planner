@@ -51,7 +51,7 @@ const InfoPanel = ({item, className}: InfoPanelProps) => {
             </div>
         </div>)
     } else {
-        return (<div className={`hover:cursor-pointer z-20 absolute right-0 top-4/5 bottom-1/5 border rounded-l-md w-8 h-8`} onClick={()=>setShow(!show)}><BsArrowLeftShort size={32}/></div>);
+        return (<div className={`hover:cursor-pointer z-20 absolute right-0 top-4/5 bottom-1/5 border rounded-l-md w-8 h-8 bg-white`} onClick={()=>setShow(!show)}><BsArrowLeftShort size={30}/></div>);
     }
 }
 

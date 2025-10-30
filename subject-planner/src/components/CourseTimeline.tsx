@@ -45,7 +45,7 @@ export const CourseTimeline = ({className, completedPeriods, currentPeriod, onSk
                 </div>
             </div>)
     } else {
-        return (<div className={`hover:cursor-pointer absolute z-20 left-0 top-4/5 bottom-1/5 border rounded-r-md w-8 h-8`} onClick={()=>setShow(!show)}><BsArrowRightShort size={32}/></div>);
+        return (<div className={`hover:cursor-pointer absolute z-20 left-0 top-4/5 bottom-1/5 border-2 rounded-r-md w-8 h-8 bg-white `} onClick={()=>setShow(!show)}><BsArrowRightShort className={'z-30'} size={30}/></div>);
     }
 }
 
