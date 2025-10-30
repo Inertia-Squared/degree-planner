@@ -8,7 +8,12 @@ import {getProgramsInterface} from "@/app/api/graph/getPrograms/route";
 import {getConnectedNodesInterface} from "@/app/api/graph/getConnected/route";
 import {HEXGBA, nodeFillMap, NodeTypes} from "@/lib/siteUtil";
 import InfoPanel from "@/components/InfoPanel";
-import {BsArrowDownShort, BsArrowUpShort, BsGithub} from "react-icons/bs";
+import {
+    BsArrowDownShort,
+    BsArrowUpShort,
+    BsGithub,
+    BsQuestion
+} from "react-icons/bs";
 
 import {
     filterDisconnectedEdges, filterImpossiblePrerequisites, filterLeafPrerequisites,
@@ -23,6 +28,7 @@ import {
 import {getParentsByType} from "@/lib/graph/graphUtil";
 import {CourseTimeline} from "@/components/CourseTimeline";
 import {SpecialisationType} from "../../../majors-minors/major-minor-scraper";
+import {PiGraphBold} from "react-icons/pi";
 
 // todo add type extensions for cringe node data fields
 
@@ -201,6 +207,9 @@ export default function Home() {
     const [showSequences, setShowSequences] = useState<boolean>(true);
 
     const [subjectsTaken, setSubjectsTaken] = useState<ExtendedNode<Subject>[]>([]);
+
+    const [showKey, setShowKey] = useState<boolean>(false);
+    const [showHelp, setShowHelp] = useState<boolean>(false);
 
     const searchProgram = async (searchString: string)=>{
         const response = await fetch(`/api/graph/getPrograms?programName=${searchString}`);
@@ -578,6 +587,17 @@ export default function Home() {
 
     return (
         <main className={`h-[100vh] flex flex-col ${showLineup ? 'p-2' : 'pb-2 px-2'}`}>
+            <div onClick={()=>setShowHelp(!showHelp)} className={`absolute right-0 top-24 z-31 flex flex-row bg-white`}><BsQuestion className={`max-h-8 border border-r-0 rounded-l-md `} size={32}/>{showHelp && <div className={`border px-1.5 max-w-[400px] min-w-[250px] overflow-y-scroll`}>
+                Welcome to <strong>MyDegree.help!</strong> To get started, you can type part or all of a program name into the search bar, the dropdown will fill automatically with any matching courses.
+                <br/> Selecting a Major or Minor is optional (if you don't want one, just don't select it), once you are happy with your choices, click 'Start Exploring' to plan your degree!
+                <br/><strong>IMPORTANT:</strong>
+                <br/><ul>
+                    <li>- To view information about a node, click it once.</li>
+                    <li>- To add a subject to your Degree Timeline, double-click it. You can only add subjects you are eligible for (i.e. are not greyed out)</li>
+                    <li>- As you complete more subjects, you will be eligible for the subjects that were previously greyed out.</li>
+                </ul>
+            </div>}</div>
+            <div onClick={()=>setShowKey(!showKey)} className={`absolute right-0 top-36 z-30 flex flex-row bg-white`}><PiGraphBold className={`max-h-8 border border-r-0 rounded-l-md `} size={32}/>{showKey && <img alt={'Legend for different node types'} className={`border px-1.5 max-w-[400px] min-w-[250px] overflow-y-scroll`} src={'nodes.jpg'}/>}</div>
             <ForceGraph layoutMode={displayMode} clickAction={selectElement} clickCanvas={resetSelectedElement} clusterBy={clusterBy} doubleClickNodeAction={onNodeDoubleClicked} className={`grow w-full h-full absolute top-0 left-0 z-10`}
                         edges={displayedEdges} nodes={displayedNodes}/>
                 <div className={`border-2 p-1 flex flex-col md:flex-row overflow-x-scroll w-fit h-fit relative z-20 bg-white ${showLineup ? 'block' : 'hidden'}`}>
@@ -638,9 +658,9 @@ export default function Home() {
                     </div>}
                 </div>
             <div className={`flex flex-col border rounded-b-md w-8 h-6 hover:cursor-pointer z-20`} onClick={()=>setShowLineup(!showLineup)}>{showLineup && <BsArrowUpShort size={32}/>}{!showLineup && <BsArrowDownShort size={32}/>}</div>
-            <CourseTimeline className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute left-1 bottom-0 my-auto overflow-y-scroll`}
+            <CourseTimeline className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute left-1 bottom-0 my-auto`}
                             completedPeriods={completedPeriods} currentPeriod={currentPeriod} onSkipPeriod={moveToNewPeriod}/>
-            <InfoPanel className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute right-1 bottom-0 my-auto overflow-y-scroll`} item={selectedElement}/>
+            <InfoPanel className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute right-1 bottom-0 my-auto`} item={selectedElement}/>
             <a href={'https://github.com/Inertia-Squared/degree-planner'} target={'_blank'} className={`fixed top-0 right-0 w-8 h-8 z-40 m-3`}><BsGithub size={32}/></a>
         </main>
     );

@@ -20,25 +20,28 @@ export const CourseTimeline = ({className, completedPeriods, currentPeriod, onSk
                     <div className={`grow`}>Degree Timeline</div>
                     <div className={`hover:cursor-pointer`} onClick={()=>setShow(!show)}><BsArrowLeftShort size={24}/></div>
                 </div>
+                <div className={`text-xs`}>This panel shows all your chosen subjects. Changing selections is in the next update.</div>
                 <hr/>
                 <hr/>
                 <hr/>
-                {completedPeriods.map((period, index) => {
-                    return (<div className={`flex flex-col`} key={index}>
-                        <div className={`mx-auto font-bold`}>{period.period.toUpperCase()}</div>
+                <div className={'flex flex-col overflow-y-scroll'}>
+                    {completedPeriods.map((period, index) => {
+                        return (<div className={`flex flex-col`} key={index}>
+                            <div className={`mx-auto font-bold`}>{period.period.toUpperCase()}</div>
+                            <hr/>
+                            {period.subjectsTaken.map(s=>{
+                                return (<div className={`flex flex-col`} key={s.id}>{s.data.code}</div>)
+                            })}
+                        </div>)
+                    })}
+                    <div className={`flex flex-col`}>
+                        <div className={`mx-auto font-bold`}>{currentPeriod.period.toUpperCase()}</div>
                         <hr/>
-                        {period.subjectsTaken.map(s=>{
+                        {currentPeriod.subjectsTaken.map(s=>{
                             return (<div className={`flex flex-col`} key={s.id}>{s.data.code}</div>)
                         })}
-                    </div>)
-                })}
-                <div className={`flex flex-col`}>
-                    <div className={`mx-auto font-bold`}>{currentPeriod.period.toUpperCase()}</div>
-                    <hr/>
-                    {currentPeriod.subjectsTaken.map(s=>{
-                        return (<div className={`flex flex-col`} key={s.id}>{s.data.code}</div>)
-                    })}
-                    <div className={`text-xs text-center border bg-green-400 w-2/3 mx-auto mt-1 rounded-sm`} onClick={()=>onSkipPeriod(currentPeriod)}>Skip This Semester<br/>(Take {currentPeriod.subjectsTaken.length} subject{currentPeriod.subjectsTaken.length!==1 ? 's' : ''})</div>
+                        <div className={`text-xs text-center border bg-green-400 w-2/3 mx-auto mt-1 rounded-sm`} onClick={()=>onSkipPeriod(currentPeriod)}>Skip This Semester<br/>(Take {currentPeriod.subjectsTaken.length} subject{currentPeriod.subjectsTaken.length!==1 ? 's' : ''})</div>
+                    </div>
                 </div>
             </div>)
     } else {
