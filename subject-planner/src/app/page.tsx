@@ -589,8 +589,8 @@ export default function Home() {
         <main className={`h-[100vh] flex flex-col ${showLineup ? 'p-2' : 'pb-2 px-2'}`}>
             <div onClick={()=>setShowHelp(!showHelp)} className={`absolute right-0 top-24 z-31 flex flex-row bg-white`}><BsQuestion className={`max-h-8 border border-r-0 rounded-l-md `} size={32}/>{showHelp && <div className={`border px-1.5 max-w-[400px] min-w-[250px] overflow-y-scroll`}>
                 Welcome to <strong>MyDegree.help!</strong> To get started, you can type part or all of a program name into the search bar, the dropdown will fill automatically with any matching courses.
-                <br/> Selecting a Major or Minor is optional (if you don't want one, just don't select it), once you are happy with your choices, click 'Start Exploring' to plan your degree!
-                <br/><strong>IMPORTANT:</strong>
+                <br/><br/> Selecting a Major or Minor is optional (if you don't want one, just don't select it), once you are happy with your choices, click 'Start Exploring' to plan your degree!
+                <br/><br/><strong>IMPORTANT:</strong>
                 <br/><ul>
                     <li>- To view information about a node, click it once.</li>
                     <li>- To add a subject to your Degree Timeline, double-click it. You can only add subjects you are eligible for (i.e. are not greyed out)</li>
