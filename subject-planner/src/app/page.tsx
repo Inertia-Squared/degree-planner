@@ -530,6 +530,10 @@ export default function Home() {
             if(!isPrerequisiteNode(n)) return true;
             return filterLeafPrerequisites(n, newEdges);
         });
+        newNodes = newNodes.filter(n=> {
+            if(!isPrerequisiteNode(n)) return true;
+            return filterLeafPrerequisites(n, newEdges);
+        });
 
         /**
          * Graph Semantic Highlighting Pass
@@ -581,7 +585,10 @@ export default function Home() {
     }, [nodes, selectedProgramSequence, selectedProgram, showPotentialElectives, completedPeriods.length, currentPeriod.subjectsTaken.length, updateToggle]);
 
     useEffect(() => {
-        if(addedNodes.length > 0) expandConnected(addedNodes);
+        // if(addedNodes.length > 0) expandConnected(addedNodes);
+        setTimeout(()=>{
+            if(addedNodes.length > 0) expandConnected(addedNodes);
+        }, 1500)
         // console.log(addedNodes.map(n=>n.data.sequences))
     }, [addedNodes]);
 

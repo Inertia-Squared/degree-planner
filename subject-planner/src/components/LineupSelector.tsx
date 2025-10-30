@@ -134,7 +134,7 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                 {((majorDropdown) && (showMajorDropDown || majorValue)) &&
                     <div>
                         Select a major:
-                        <select disabled={needsReset} onChange={(e)=>{
+                        <select defaultValue={'(Optional) Select a Major'} disabled={needsReset} onChange={(e)=>{
                             const m = majorDropdown?.majors.find(md=>md.id===e.currentTarget.value);
                             if (!m) return;
                             setShowMajorDropDown(false);
@@ -142,18 +142,19 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                             onMajorEvent(m);
                             e.preventDefault();
                         }} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[400px] overflow-y-scroll`}>
+                            <option disabled>(Optional) Select a Major</option>
                             {majorDropdown.majors.map(m=>{
                                 const stripped = m.data.majorName.replace(/[^\W\w]/g,'');
                                 return <option className={`hover:cursor-pointer !rounded-none text-start`} key={stripped} value={m.id}>{stripped}</option>
                             })}
                         </select>
-                        {(!majorValue && majorDropdown.majors.length > 0) && <p className={`text-blue-500 text-sm`}>OPTIONAL: Please select a major.</p>}
+                        {/*{(!majorValue && majorDropdown.majors.length > 0) && <p className={`text-blue-500 text-sm`}>OPTIONAL: Please select a major.</p>}*/}
                     </div>
                 }
                 {((minorDropdown) && (showMinorDropDown || minorValue)) &&
                     <div>
                         Select a minor:
-                        <select disabled={needsReset} onChange={(e)=>{
+                        <select disabled={needsReset} defaultValue={'(Optional) Select a Minor'} onChange={(e)=>{
                             const m = minorDropdown?.minors.find(md=>md.id===e.currentTarget.value);
                             if (!m) return;
                             setShowMinorDropDown(false);
@@ -161,6 +162,7 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                             onMinorEvent(m);
                             e.preventDefault();
                         }} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[400px] overflow-y-scroll`}>
+                            <option disabled>(Optional) Select a Minor</option>
                             {minorDropdown.minors.map(m=> {
                                 const stripped = m.data.minorName.replace(/[^\W\w]/g, '');
                                 return <option className={`hover:cursor-pointer !rounded-none text-start`} key={stripped} value={m.id}>
@@ -168,7 +170,7 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                                 </option>
                             })}
                         </select>
-                        {(!minorValue && minorDropdown.minors.length > 0) && <p className={`text-blue-500 text-sm`}>OPTIONAL: Please select a minor.</p>}
+                        {/*{(!minorValue && minorDropdown.minors.length > 0) && <p className={`text-blue-500 text-sm`}>OPTIONAL: Please select a minor.</p>}*/}
                     </div>
                 }
                 <div className={`form-row`}>
