@@ -51,6 +51,13 @@ export function getNumberFromText(text: string){
     return -1;
 }
 
+export function normaliseSubjectCode(code: string){
+    if (code.match(/^\w{4} \d{4}$/)) return code;
+    const match = code.match(/(\w{4})\s*(\d{4})/);
+    if (!match) return code;
+    return `${match[1]} ${match[2]}`.toUpperCase();
+}
+
 export function getLinkFromSubjectCode(link: string){
     return "https://hbook.westernsydney.edu.au/subject-details/" + link.replace(/ |\s/, '').toLowerCase();
 }

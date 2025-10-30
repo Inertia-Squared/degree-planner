@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { read } from "@/lib/neo4j";
-import {ExtendedNode, Program} from "@/app/page";
+import {ExtendedNode, Major} from "@/app/page";
 import {nodeFillMap, nodeSizeMap} from "@/lib/siteUtil";
 
-export interface getProgramsInterface {
-    programs: ExtendedNode<Program>[]
+export interface getMajorsInterface {
+    majors: ExtendedNode<Major>[]
 }
 
 export async function GET(request: Request) {
@@ -17,23 +17,24 @@ export async function GET(request: Request) {
     searchString = searchString.replace(/['";]/g, '');
     try {
         const result = await read(
-            `MATCH (a:Program) WHERE toLower(a.programName) CONTAINS "${searchString.toLowerCase()}" RETURN a, id(a) as ID`,
+            `MATCH (a:Major)<-[r]-(b:Program) where toLower(b.programName) contains '${searchString.toLowerCase()}' RETURN a, id(a) as ID, id(r) as rID`,
         );
-        const programs = result.map(record => {
-            const program = record.a;
+        const majors = result.map(record => {
+            const major = record.a;
             return {
                 id: record.ID.toNumber().toString(),
-                label: program.properties.programName,
+                label: major.properties.majorName,
                 data: {
-                    type: 'Program',
-                    ...program.properties
+                    type: 'Major',
+                    programConnectionId: record.rID.toNumber().toString(),
+                    ...major.properties
                 },
-                fill: nodeFillMap['Program'],
-                size: nodeSizeMap['Program']
-            } as ExtendedNode<Program>;
+                fill: nodeFillMap['Major'],
+                size: nodeSizeMap['Major']
+            } as ExtendedNode<Major>;
         });
 
-        return NextResponse.json({programs} as getProgramsInterface);
+        return NextResponse.json({majors} as getMajorsInterface);
     } catch (error) {
         console.error("API Error:", error);
         return NextResponse.json({ error: 'Failed to fetch data from Neo4j' }, { status: 500 });
