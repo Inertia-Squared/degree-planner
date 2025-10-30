@@ -18,7 +18,7 @@ export const CourseTimeline = ({className, completedPeriods, currentPeriod, onSk
                 <div className={`flex flex-row font-bold text-center text-xl items-center mx-2`}>
                     <div className={`grow`}></div>
                     <div className={`grow`}>Degree Timeline</div>
-                    <div className={`hover:cursor-pointer`} onClick={()=>setShow(!show)}><BsArrowLeftShort size={24}/></div>
+                    <div className={`flex hover:cursor-pointer grow`} onClick={()=>setShow(!show)}><div className={`grow`}/><BsArrowLeftShort size={24}/></div>
                 </div>
                 <div className={`text-xs`}>This panel shows all your chosen subjects. Changing selections is in the next update.</div>
                 <hr/>
