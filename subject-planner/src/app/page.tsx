@@ -585,11 +585,7 @@ export default function Home() {
     }, [nodes, selectedProgramSequence, selectedProgram, showPotentialElectives, completedPeriods.length, currentPeriod.subjectsTaken.length, updateToggle]);
 
     useEffect(() => {
-        // if(addedNodes.length > 0) expandConnected(addedNodes);
-        setTimeout(()=>{
-            if(addedNodes.length > 0) expandConnected(addedNodes);
-        }, 1500)
-        // console.log(addedNodes.map(n=>n.data.sequences))
+        if(addedNodes.length > 0) expandConnected(addedNodes);
     }, [addedNodes]);
 
     return (
