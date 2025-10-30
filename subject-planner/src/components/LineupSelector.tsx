@@ -106,23 +106,25 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                     <div className="w-full">
                         {!showProgramDropdown && program}
                         {showProgramDropdown &&
-                            <select className={`form-row flex flex-col border-2 max-h-[110px] max-w-[600px] overflow-y-scroll`}>
+                            <select defaultValue={'Please Select a Degree'} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[600px] overflow-y-scroll`} onChange={async (e)=>{
+                                const stripped = e.currentTarget.value;
+                                if (stripped !== program){
+                                    setProgram(stripped);
+                                    setSearchValue(stripped);
+                                    setShowProgramDropdown(false);
+                                    searchHandbook(stripped);
+                                    setShowMajorDropDown(true);
+                                    setMajorValue(undefined)
+                                    setMinorValue(undefined);
+                                    await getMajors(stripped);
+                                    await getMinors(stripped);
+                                }
+                                e.preventDefault();
+                            }}>
+                                <option disabled>Please Select a Degree</option>
                                 {programDropdown.map(p=>{
                                     const stripped = p.replace(/[^\W\w]/g,'');
-                                    return <option className={`hover:cursor-pointer !rounded-none text-start`} key={stripped} onClick={async (e)=>{
-                                        if (stripped !== program){
-                                            setProgram(stripped);
-                                            setSearchValue(stripped);
-                                            setShowProgramDropdown(false);
-                                            searchHandbook(stripped);
-                                            setShowMajorDropDown(true);
-                                            setMajorValue(undefined)
-                                            setMinorValue(undefined);
-                                            await getMajors(stripped);
-                                            await getMinors(stripped);
-                                        }
-                                        e.preventDefault();
-                                    }}>{stripped}</option>
+                                    return <option className={`hover:cursor-pointer !rounded-none text-start`} key={stripped} >{stripped}</option>
                                 })}
                             </select>
                         }
@@ -132,15 +134,17 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                 {((majorDropdown) && (showMajorDropDown || majorValue)) &&
                     <div>
                         Select a major:
-                        <select disabled={needsReset} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[400px] overflow-y-scroll`}>
+                        <select disabled={needsReset} onChange={(e)=>{
+                            const m = majorDropdown?.majors.find(md=>md.id===e.currentTarget.value);
+                            if (!m) return;
+                            setShowMajorDropDown(false);
+                            setMajorValue(m);
+                            onMajorEvent(m);
+                            e.preventDefault();
+                        }} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[400px] overflow-y-scroll`}>
                             {majorDropdown.majors.map(m=>{
                                 const stripped = m.data.majorName.replace(/[^\W\w]/g,'');
-                                return <option className={`hover:cursor-pointer !rounded-none text-start`} key={stripped} onClick={(e)=>{
-                                    setShowMajorDropDown(false);
-                                    setMajorValue(m);
-                                    onMajorEvent(m);
-                                    e.preventDefault();
-                                }}>{stripped}</option>
+                                return <option className={`hover:cursor-pointer !rounded-none text-start`} key={stripped} value={m.id}>{stripped}</option>
                             })}
                         </select>
                         {(!majorValue && majorDropdown.majors.length > 0) && <p className={`text-blue-500 text-sm`}>OPTIONAL: Please select a major.</p>}
@@ -149,15 +153,17 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                 {((minorDropdown) && (showMinorDropDown || minorValue)) &&
                     <div>
                         Select a minor:
-                        <select disabled={needsReset} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[400px] overflow-y-scroll`}>
+                        <select disabled={needsReset} onChange={(e)=>{
+                            const m = minorDropdown?.minors.find(md=>md.id===e.currentTarget.value);
+                            if (!m) return;
+                            setShowMinorDropDown(false);
+                            setMinorValue(m);
+                            onMinorEvent(m);
+                            e.preventDefault();
+                        }} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[400px] overflow-y-scroll`}>
                             {minorDropdown.minors.map(m=> {
                                 const stripped = m.data.minorName.replace(/[^\W\w]/g, '');
-                                return <option className={`hover:cursor-pointer !rounded-none text-start`} key={stripped} onClick={(e)=>{
-                                    setShowMinorDropDown(false);
-                                    setMinorValue(m);
-                                    onMinorEvent(m);
-                                    e.preventDefault();
-                                }}>
+                                return <option className={`hover:cursor-pointer !rounded-none text-start`} key={stripped} value={m.id}>
                                     {stripped}
                                 </option>
                             })}

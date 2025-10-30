@@ -2,7 +2,7 @@
 'use client'
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from "react";
-import {GraphEdge, GraphNode, LayoutTypes} from 'reagraph';
+import {GraphEdge, GraphNode} from 'reagraph';
 import LineupSelector from "@/components/LineupSelector";
 import {getProgramsInterface} from "@/app/api/graph/getPrograms/route";
 import {getConnectedNodesInterface} from "@/app/api/graph/getConnected/route";
@@ -145,16 +145,12 @@ const badClusterOptions = [
     'teachingPeriods',
 ]
 
-const displayOptions = {
-    ['Disabled']: 'forceatlas2',
-    ['Enabled']: 'forceDirected2d',
-} as const;
-
 export interface StudyPeriodItem {
     period: StudyPeriod
     subjectsTaken: ExtendedNode<Subject>[]
 }
 
+const displayMode = 'forceDirected2d';
 
 export type StudyPeriod = 'autumn' | 'spring' | 'unknown';
 const studyPeriods: StudyPeriod[] = ['autumn','spring','unknown'];
@@ -183,12 +179,9 @@ export default function Home() {
     const [clusterOptions, setClusterOptions] = useState(['select a node to see cluster options']);
     const [clusterBy, setClusterBy] = useState<string | undefined>(undefined);
     const [selectedElement, setSelectedElement] = useState<ExtendedNode<Generic> | GraphEdge | undefined>(undefined);
-    const [displayMode, setDisplayMode] = useState<LayoutTypes>(Object.values(displayOptions)[1]);
 
     const [selectedProgram, setSelectedProgram] = useState<ExtendedNode<Program> | undefined>(undefined);
     const [selectedProgramSequence, setSelectedProgramSequence] = useState<string | undefined>(undefined);
-
-    const [isLoading, setIsLoading] = useState(true);
 
     const [showPotentialElectives, setShowPotentialElectives] = useState<boolean>(false);
 
@@ -223,6 +216,7 @@ export default function Home() {
 
     const forceAddSpecialisation = (node: ExtendedNode<Major | Minor>) => {
         if(!node.data.programConnectionId || !selectedProgram) return;
+        if (nodes.includes(node)) return;
         node.size = 40;
         const newNodes = [...nodes.filter(n=>n.data.type !== node.data.type), node];
         setNodes(newNodes);
@@ -233,7 +227,7 @@ export default function Home() {
             target: node.id,
             label: 'HAS_SPECIALISATION',
         };
-        const newEdges = [...edges, newEdge];
+        const newEdges = [...edges.filter(e=>newNodes.find(n=>n.id===e.target)), newEdge];
         setEdges(newEdges);
     }
 
@@ -581,17 +575,6 @@ export default function Home() {
         if(addedNodes.length > 0) expandConnected(addedNodes);
         // console.log(addedNodes.map(n=>n.data.sequences))
     }, [addedNodes]);
-
-    useEffect(() => {
-        // const fetchPrograms = async () => {
-        //     await searchProgram(defaultProgram);
-        //     setIsLoading(false);
-        // };
-        // fetchPrograms();
-        setIsLoading(false);
-    }, []); // Empty dependency array ensures this runs once on mount
-
-    if (isLoading) return <p>Loading...</p>;
 
     return (
         <main className={`h-[100vh] flex flex-col ${showLineup ? 'p-2' : 'pb-2 px-2'}`}>
