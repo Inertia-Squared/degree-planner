@@ -9,7 +9,7 @@ export const nodeDisplayNameMap: Record<NodeTypes, string> = {
 
 export const nodeFillMap: Record<NodeTypes, string> = {
     ['Program']: '#0C3C51',
-    ['Subject']: '#ff95b6',
+    ['Subject']: '#ffa5d6',
     ['Major']: '#195db0',
     ['Minor']: '#969bf9',
     ['Prerequisites']: '#F79767',
@@ -20,7 +20,7 @@ export const nodeSizeMap: Record<NodeTypes, number> = {
     ['Program']: 50,
     ['Subject']: 20,
     ['Major']: 40,
-    ['Minor']: 30,
+    ['Minor']: 40,
     ['Prerequisites']: 10,
     ['SubjectChoice']: 10
 }
@@ -93,11 +93,17 @@ export class RGBA {
         }
     }
 
-    public toHex(){
+    public toHexAlpha(){
         return '#'+this.expand(Math.round(this.rgba.red*255).toString(16)) +
             this.expand(Math.round(this.rgba.green*255).toString(16)) +
             this.expand(Math.round(this.rgba.blue*255).toString(16)) +
             this.expand((this.rgba.alpha ? Math.round(this.rgba.alpha*255).toString(16) : ''));
+    }
+
+    public toHex() {
+        return '#'+this.expand(Math.round(this.rgba.red*255).toString(16)) +
+            this.expand(Math.round(this.rgba.green*255).toString(16)) +
+            this.expand(Math.round(this.rgba.blue*255).toString(16));
     }
 
 

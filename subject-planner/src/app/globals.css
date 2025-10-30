@@ -38,7 +38,7 @@ input {
   @apply border-2 px-1 rounded-md bg-gray-100
 }
 form {
-  @apply flex flex-col min-w-[200px] w-1/3 space-y-2
+  @apply flex flex-col min-w-[200px] space-y-2
 }
 
 .input-sizer {

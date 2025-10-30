@@ -1,5 +1,7 @@
 import {ExtendedNode} from "@/app/page";
 import {GraphEdge} from "reagraph";
+import {BsArrowLeftShort, BsArrowRightShort} from "react-icons/bs";
+import {useState} from "react";
 
 interface InfoPanelProps {
     item: ExtendedNode<any> | GraphEdge | undefined
@@ -10,7 +12,7 @@ interface InfoPanelProps {
 const hiddenTerms = [/*'subjectSequences', */'code']
 
 const InfoPanel = ({item, className}: InfoPanelProps) => {
-    const entries = Object.entries(item?.data ?? []).sort((a,b)=> {
+    const entries = Object.entries(item?.data ?? item ?? []).sort((a,b)=> {
         if (a[0].includes('Name')) return -10;
         if (b[0].includes('Name')) return 10;
         if (a[0].includes('type')) return -5;
@@ -18,19 +20,39 @@ const InfoPanel = ({item, className}: InfoPanelProps) => {
         if (a[0].includes('disclipline')) return -1;
         return 10;
     });
+    const [show, setShow] = useState(true);
 
-  //  console.log(JSON.stringify(entries))
-    return(<div className={`${className}`}>
-        {entries.map((e)=>{
-            let shouldTerminate = false;
-            hiddenTerms.forEach((t)=>{
-                if (t == e[0]) shouldTerminate = true;
-            })
-            if (shouldTerminate) return;
+    if (show) {
+        return(<div className={`flex flex-col ${className}`}>
 
-            return <li key={e[0]} className={`overflow-x-clip`}><strong>{e[0]}</strong>: <p className={``}>{(e[1] as string).toString()}</p></li>
-        })}
-    </div>)
+            <div className={`flex flex-row font-bold text-center text-xl items-center mx-2`}>
+                <div className={`hover:cursor-pointer flex-1`} onClick={()=>setShow(!show)}><BsArrowRightShort size={24}/></div>
+                Info Panel
+                <div className={`flex-1`}></div>
+            </div>
+            <div className={`text-xs`}>This panel provides info on the selected node. It will be more readable in the future!</div>
+            <hr/>
+            <hr/>
+            <hr/>
+            <div className={`flex flex-col overflow-y-scroll`}>
+                {entries.map((e)=>{
+                    let shouldTerminate = false;
+                    hiddenTerms.forEach((t)=>{
+                        if (t == e[0]) shouldTerminate = true;
+                    })
+                    if (shouldTerminate) return;
+
+                    if (e[0].includes('Link')){
+                        return <li key={e[0]} className={`overflow-x-clip`}><strong>{e[0]}</strong>: <a target={'_blank'} className={`underline text-blue-500`} key={e[0]} href={e[1] as string}>WSU Handbook</a></li>
+                    } else {
+                        return <li key={e[0]} className={`overflow-x-clip`}><strong>{e[0]}</strong>: <p className={``}>{(e[1] as string).toString()}</p></li>
+                    }
+                })}
+            </div>
+        </div>)
+    } else {
+        return (<div className={`hover:cursor-pointer z-20 absolute right-0 top-4/5 bottom-1/5 border rounded-l-md w-8 h-8`} onClick={()=>setShow(!show)}><BsArrowLeftShort size={32}/></div>);
+    }
 }
 
 export default InfoPanel;
