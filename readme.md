@@ -1,3 +1,4 @@
+This info is very outdated - it will be updated eventually but feel free to suggest any additions or edits in the meantime
 # Script Run Order
 1. link-collector.ts
 2. subject-scraper.ts
