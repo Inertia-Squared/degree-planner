@@ -263,6 +263,7 @@ export default function Home() {
     async function startExploring(){
         const newNodes = nodes.filter(n=>isProgramNode(n)||isMinorNode(n)||isMajorNode(n));
         setNodes(newNodes);
+        setFirstShowLineup(false);
         setShowLineup(false);
         expandConnected(newNodes);
     }
@@ -604,7 +605,7 @@ export default function Home() {
             <div onClick={()=> {
                 setShowHelp(!showHelp);
                 setFirstShowHelp(false);
-            }} className={`absolute right-0 top-24 z-31 flex flex-row ${!showHelp ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white ${(firstShowHelp) ? 'animate-bounceright w-12 translate-x-0' : 'w-8'}` : ''}`}><BsQuestion className={`${showHelp ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white` : ''}`} size={32}/>{showHelp && <div className={`border rounded-bl-lg px-1.5 max-w-[400px] min-w-[250px] overflow-y-scroll bg-white`}>
+            }} className={`absolute right-0 top-24 z-31 flex flex-row ${!showHelp ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white ${(firstShowHelp) ? 'animate-bounceright w-12 translate-x-0 !bg-green-300' : 'w-8'}` : ''}`}><BsQuestion className={`${showHelp ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white` : ''}`} size={32}/>{showHelp && <div className={`border rounded-bl-lg px-1.5 max-w-[400px] min-w-[250px] overflow-y-scroll bg-white`}>
                 Welcome to <strong>MyDegree.help!</strong> To get started, you can type part or all of a program name into the search bar, the dropdown will fill automatically with any matching courses.
                 <br/><br/> Selecting a Major or Minor is optional (if you don't want one, just don't select it), once you are happy with your choices, click 'Start Exploring' to plan your degree!
                 <br/><br/><strong>IMPORTANT:</strong>
@@ -616,8 +617,8 @@ export default function Home() {
             </div>}</div>
             <div onClick={()=> {
                 setShowKey(!showKey);
-                setFirstShowKey(false);
-            }} className={`absolute right-0 top-36 z-30 flex flex-row ${!showKey ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white ${(firstShowKey && nodes.length > 3) ? 'animate-bounceright w-12 translate-x-0' : 'w-8'}` : ''}`}><PiGraphBold className={`${showKey ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white` : ''}`} size={32}/>{showKey && <img alt={'Legend for different node types'} className={`border bg-white px-1.5 max-w-[400px] min-w-[250px] w-full overflow-y-scroll`} src={'nodes.jpg'}/>}</div>
+                if(!firstShowLineup) setFirstShowKey(false);
+            }} className={`absolute right-0 top-36 z-30 flex flex-row ${!showKey ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white ${(firstShowKey && nodes.length > 3) ? 'animate-bounceright w-12 translate-x-0 !bg-green-300' : 'w-8'}` : ''}`}><PiGraphBold className={`${showKey ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white` : ''}`} size={32}/>{showKey && <img alt={'Legend for different node types'} className={`border bg-white px-1.5 max-w-[400px] min-w-[250px] w-full overflow-y-scroll`} src={'nodes.jpg'}/>}</div>
             <ForceGraph layoutMode={displayMode} clickAction={selectElement} clickCanvas={resetSelectedElement} clusterBy={clusterBy} doubleClickNodeAction={onNodeDoubleClicked} className={`grow w-full h-full absolute top-0 left-0 z-10`}
                         edges={displayedEdges} nodes={displayedNodes}/>
                 <div className={`border-2 p-1 flex flex-col md:flex-row overflow-x-scroll w-fit max-w-full h-fit relative z-20 bg-white ${showLineup ? 'block' : 'hidden'}`}>
@@ -677,7 +678,7 @@ export default function Home() {
                         </div>
                     </div>}
                 </div>
-            <div className={`flex flex-col items-center border rounded-b-md w-8  hover:cursor-pointer z-20 transform ${(!showLineup && firstShowLineup && !firstShowHelp) ? 'animate-bounce -translate-y-0.5 h-9' : 'animate-none h-6'} ${showLineup ? 'bg-white' : 'bg-green-300'}`} onClick={()=> {
+            <div className={`flex flex-col items-center border rounded-b-md w-8  hover:cursor-pointer z-20 transform ${(!showLineup && firstShowLineup && !firstShowHelp) ? 'animate-bounce -translate-y-0.5 h-9 !bg-green-300' : 'animate-none h-6'} bg-white`} onClick={()=> {
                 setShowLineup(!showLineup);
             }}>{showLineup && <BsArrowUpShort size={32}/>}{!showLineup &&<BiSearch className={`${(firstShowLineup && !firstShowHelp) ? 'pt-2.5' : ''}`} size={32}/>}</div>
             <CourseTimeline className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute left-1 bottom-0 my-auto`}
