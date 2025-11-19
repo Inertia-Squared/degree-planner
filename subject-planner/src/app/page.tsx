@@ -2,7 +2,7 @@
 'use client'
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from "react";
-import {GraphEdge, GraphNode} from 'reagraph';
+import {GraphEdge, GraphNode, LayoutTypes} from 'reagraph';
 import LineupSelector from "@/components/LineupSelector";
 import {getProgramsInterface} from "@/app/api/graph/getPrograms/route";
 import {getConnectedNodesInterface} from "@/app/api/graph/getConnected/route";
@@ -156,7 +156,7 @@ export interface StudyPeriodItem {
     subjectsTaken: ExtendedNode<Subject>[]
 }
 
-const displayMode = 'forceDirected2d';
+const displayMode: LayoutTypes = 'forceDirected2d';
 
 export type StudyPeriod = 'autumn' | 'spring' | 'unknown';
 const studyPeriods: StudyPeriod[] = ['autumn','spring','unknown'];
