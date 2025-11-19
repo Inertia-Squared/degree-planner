@@ -141,7 +141,7 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                             setMajorValue(m);
                             onMajorEvent(m);
                             e.preventDefault();
-                        }} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[400px] overflow-y-scroll`}>
+                        }} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[400px] w-full overflow-y-scroll`}>
                             <option disabled>(Optional) Select a Major</option>
                             {majorDropdown.majors.map(m=>{
                                 const stripped = m.data.majorName.replace(/[^\W\w]/g,'');
@@ -161,7 +161,7 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                             setMinorValue(m);
                             onMinorEvent(m);
                             e.preventDefault();
-                        }} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[400px] overflow-y-scroll`}>
+                        }} className={`form-row flex flex-col border-2 max-h-[110px] max-w-[400px] w-full overflow-y-scroll`}>
                             <option disabled>(Optional) Select a Minor</option>
                             {minorDropdown.minors.map(m=> {
                                 const stripped = m.data.minorName.replace(/[^\W\w]/g, '');
@@ -174,7 +174,7 @@ const LineupSelector = ({ className, onSearchEvent, onMajorEvent, onMinorEvent, 
                     </div>
                 }
                 <div className={`form-row`}>
-                    <button disabled={program===''} className={`${program!=='' ? 'bg-gray-400 cursor-pointer' : 'bg-gray-700 cursor-not-allowed'}`} onClick={(e)=> startExploring(e)}>{needsReset ? 'Restart' : 'Start Exploring'}</button>
+                    <button disabled={program===''} className={`${program!=='' ? 'bg-gray-400 cursor-pointer' : 'bg-gray-700 cursor-not-allowed'} ${(program && !needsReset) ? 'animate-pulse' : 'animate-none'}`} onClick={(e)=> startExploring(e)}>{needsReset ? 'Restart' : 'Start Exploring'}</button>
                     <div className={'grow'} />
                 </div>
             </div>

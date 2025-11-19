@@ -1,62 +1,91 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+    --background: #ffffff;
+    --foreground: #171717;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
 }
 
 main {
-  background: var(--background);
+    background: var(--background);
 }
 
 select {
-  @apply border rounded-sm px-0.5
+    @apply border rounded-sm px-0.5
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .form-row {
-  @apply flex space-x-2
+    @apply flex space-x-2
 }
 
 button {
-  @apply border-2 px-2 py-0.5 rounded-lg bg-gray-200
+    @apply border-2 px-2 py-0.5 rounded-lg bg-gray-200
 }
 
 input {
-  @apply border-2 px-1 rounded-md bg-gray-100
+    @apply border-2 px-1 rounded-md bg-gray-100
 }
+
 form {
-  @apply flex flex-col min-w-[200px] space-y-2
+    @apply flex flex-col min-w-[200px] space-y-2
 }
 
 .input-sizer {
-  display: inline-grid;
-  vertical-align: top;
-  align-items: center;
+    display: inline-grid;
+    vertical-align: top;
+    align-items: center;
 }
 
 .input-sizer > input,
 .input-sizer > span {
-  grid-area: 1 / 1 / 2 / 2;
+    grid-area: 1 / 1 / 2 / 2;
 }
 
 .input-sizer > input {
-  width: 100%;
+    width: 100%;
 }
 
 .input-sizer > span {
-  visibility: hidden;
-  white-space: pre;
+    visibility: hidden;
+    white-space: pre;
+}
+
+@theme {
+    --animate-bounceleft: bounceleft 1s ease-in-out infinite;
+    @keyframes bounceleft {
+        0%, 100% {
+            transform: translateX(-25%);
+            animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+        }
+        50% {
+            transform: none;
+            animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+        }
+    }
+}
+
+@theme {
+    --animate-bounceright: bounceright 1s ease-in-out infinite;
+    @keyframes bounceright {
+        0%, 100% {
+            transform: translateX(25%);
+            animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+        }
+        50% {
+            transform: none;
+            animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+        }
+    }
 }
