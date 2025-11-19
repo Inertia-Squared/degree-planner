@@ -30,7 +30,7 @@ import {SpecialisationType} from "../../../majors-minors/major-minor-scraper";
 import {PiGraphBold} from "react-icons/pi";
 import {BiSearch} from "react-icons/bi";
 
-// todo add type extensions for cringe node data fields
+// todo fix failure-case for Ba. of Arts, Ma. 0026 & Mi. 0024
 
 const ForceGraph = dynamic(() => import('../components/ForceGraph'), {
     ssr: false,
