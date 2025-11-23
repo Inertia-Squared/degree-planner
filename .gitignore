@@ -1,4 +1,4 @@
 /data-scraping/.env
-/data-scraping/Automation/Data/
 
 */**/node_modules
+/data-scraping/Automation/Data
