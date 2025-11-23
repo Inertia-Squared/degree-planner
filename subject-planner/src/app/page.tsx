@@ -484,7 +484,6 @@ export default function Home() {
         let newNodes = nodes;
         let newEdges = edges;
 
-        console.log(nodes.filter(n=>isSubjectNode(n)&&n.data.code.includes('COMP 2021')))
         /**
          * Graph Filtering Pass
          */
