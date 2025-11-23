@@ -68,12 +68,13 @@ build the reordering from, or implemented after reordering is completed.
 
 ## Backend
 ### Separate WSU-Specific Datastructures from data model
-Keep data model open and modular, we will likely need one or two other example universities in order to do this properly 
-without shooting ourselves in the foot.
+To keep data model open and modular, we will likely need one or two other example universities in order to do this properly without shooting ourselves in the foot.
+
+Currently, there are no explicit dependencies to WSU from what I know, but there may be some implicit/transient ones in the way data is handled, specifically when it comes to the minutia of structures.
 
 ### Auto-generate Neo4J Schema
-Currently, the schema is defined in TS and in plaintext JSON for Neo4J. Because the Autocomplete is useful, the DataType 
-should be moved into its own file, and then a script should be written to parse the TS file into a JSON usable by Neo4J
+Currently, the schema is defined in TS and in a plaintext JSON-like format for Neo4J in the ```upload-data.to-db.ts``` file. 
+Because the Autocomplete is useful, the data type should be moved into its own file, and then a script should be written to parse the TS file into the JSON-like format usable by Neo4J at runtime.
 
 ### Refactor Data Names
 Originally, all data/field names had to be unique to prevent overlapping.
