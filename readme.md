@@ -19,12 +19,12 @@
 - Ensure your .env is in this directory
 - Set up your Gemini API key or start LMStudio
   - If using LMStudio, set the CONFIG.modelName to whatever model you chose, you can run ```lms ls``` to view available models.
-- Run ```tsx Automation/buildDataFromSubset.ts```
+- Run ```npx tsx Automation/buildDataFromSubset.ts```
 
 ### Using a Snapshot (Skips LLM Inference)
 - Copy the contents from ```data-scraping/Snapshots/[Snapshot]``` to ```data-scraping/Automation/Data``` (you may need to create the Data folder manually)
 - Ensure your working directory is in ```[Project Root]/data-scraping```
-- Run ```tsx neo4j/upload-data-to-db.ts```
+- Run ```npx tsx neo4j/upload-data-to-db.ts```
 
 # Running the Website
 - cd into subject-planner
