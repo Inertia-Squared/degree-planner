@@ -13,7 +13,7 @@
     "@google/genai": "^1.10.0",
     "@lmstudio/sdk": "^1.2.2",
     "dotenv": "^17.2.1",
-    "neo4j-driver": "^5.28.1",
+    "neo4j-driver": "^5.28.2",
     "playwright": "^1.53.1",
     "tsx": "^4.20.6",
     "typescript": "^5.8.3",
