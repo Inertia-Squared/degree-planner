@@ -5,7 +5,7 @@
 
 - Your password should be saved in your .env file (which should be in ```[Project Root]/data-scraping```) as NEO4J_PASSWORD
 
-- Before proceeding, ensure Neo4j is open and you have started the server instance
+- Before running the scraper or website, ensure Neo4j is open and you have started the server instance
 
 - If running the LLM inference online, you must add a GEMINI_API_KEY to your .env
   - If running a local model, see the instructions in 'Extra Stuff' below to install and set up [LMStudio](https://lmstudio.ai/)
