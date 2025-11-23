@@ -90,7 +90,7 @@ made unique, all data fields should be refactored so that the same type of data/
 ## Refactoring/Cleanup
 ### Modularise page.tsx
 Currently, page.tsx is far too bloated, UI components need to be modularised and have props passed down.
-### Move nodes logic in page.tsx to separate file
+### Move Nodes Logic in page.tsx to Separate File
 Node render, filter, and API logic is currently in the page.tsx file, this should be moved to its own GraphManager.tsx file.
 ## Known Fail-Cases
 ### Bachelor of Arts | Major: 0026, Minor: 0024
