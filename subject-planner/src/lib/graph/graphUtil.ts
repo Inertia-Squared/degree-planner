@@ -1,5 +1,5 @@
 import {ExtendedNode, Generic} from "@/app/page";
-import {LogicalPrerequisite} from "../../../../neo4j/upload-data-to-db";
+import {LogicalPrerequisite} from "../../../../data-scraping/neo4j/upload-data-to-db";
 import {NodeTypes} from "@/lib/siteUtil";
 
 export function getCourseCode(course: string){

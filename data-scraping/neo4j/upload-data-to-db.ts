@@ -20,7 +20,7 @@ enum SpecialisationType {
  */
 
 const CONFIG = {
-    inputPath: '../Automation/data/',
+    inputPath: 'Automation/data/',
     // inputPath: '../Snapshots/Full\ Handbook\ 1/',
 }
 

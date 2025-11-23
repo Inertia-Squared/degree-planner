@@ -139,8 +139,8 @@ async function queryModel(subject: SubjectData, attempts: number = 0){
         } catch (e) {
             // save output in case we're STUCK stuck
             if(CONFIG.verbose) console.log('Failed to query: ', e);
-            await fs.writeFile("./data/subjects-manual-required.json", JSON.stringify(state.manualSubjects,null,2), {encoding: "utf-8"});
-            await fs.writeFile("./data/subjects-refined-partial.json", JSON.stringify(state.prunedSubjectData,null,2), {encoding: "utf-8"});
+            await fs.writeFile("Automation/data/subjects-manual-required.json", JSON.stringify(state.manualSubjects,null,2), {encoding: "utf-8"});
+            await fs.writeFile("Automation/data/subjects-refined-partial.json", JSON.stringify(state.prunedSubjectData,null,2), {encoding: "utf-8"});
             // assume API is temporarily busy, try again every 15 seconds
             let result;
             await new Promise((resolve) => {

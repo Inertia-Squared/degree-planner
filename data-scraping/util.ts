@@ -222,9 +222,9 @@ export async function scrape(state: any, CONFIG: any, searchPage: (a:string)=>Pr
 
 async function logDebugState(debugInfo: any){
     try{
-        await fs.mkdir('./data');
+        await fs.mkdir('Automation/data');
     } catch(err) {}
-    await fs.writeFile('./data/debugInfo.json', JSON.stringify(debugInfo,null,2), 'utf8');
+    await fs.writeFile('Automation/data/debugInfo.json', JSON.stringify(debugInfo,null,2), 'utf8');
 }
 
 export async function initSearch(state: any, link: string){

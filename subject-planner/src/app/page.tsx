@@ -27,7 +27,7 @@ import {
 } from "@/lib/graph/graphColours";
 import {getParentsByType} from "@/lib/graph/graphUtil";
 import {CourseTimeline} from "@/components/CourseTimeline";
-import {SpecialisationType} from "../../../majors-minors/major-minor-scraper";
+import {SpecialisationType} from "../../../data-scraping/majors-minors/major-minor-scraper";
 import {PiGraphBold} from "react-icons/pi";
 
 // todo add type extensions for cringe node data fields

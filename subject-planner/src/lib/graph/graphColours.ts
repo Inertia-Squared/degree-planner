@@ -1,5 +1,5 @@
 import {ExtendedNode, Generic, isChoiceNode, Prerequisite, Subject} from "@/app/page";
-import {LogicalPrerequisite} from "../../../../neo4j/upload-data-to-db";
+import {LogicalPrerequisite} from "../../../../data-scraping/neo4j/upload-data-to-db";
 import {getAsLogicalPrerequisite, getParentsByType} from "@/lib/graph/graphUtil";
 import {GraphEdge} from "reagraph";
 

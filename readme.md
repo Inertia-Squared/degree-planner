@@ -1,8 +1,45 @@
-This info is very outdated - it will be updated eventually but feel free to suggest any additions or edits in the meantime
-# Script Run Order
-1. link-collector.ts
-2. subject-scraper.ts
-3. subject-refiner.ts
+# Setup/Installation
+- Download and install [Neo4j Desktop](https://neo4j.com/download/).
+
+- Create a new database using default values (username: neo4j + Password)
+
+- Your password should be saved in your .env (in the root of the data-scraping folder) files as NEO4J_PASSWORD
+
+- Before proceeding, ensure Neo4j is open and you have started the server instance
+
+- If running the LLM inference online, you must add a GEMINI_API_KEY to your .env
+  - If running a local model, see the instructions in 'Extra Stuff' below to install and set up LMStudio
+- You will need to run ```npm i``` for both the data-scraping and subject-planner directories, as they are technically separate projects. They will be separated soon, but aside from some shared type definitions they are functionally separate.
+
+# Running the Scraper/DB (Required to run Website)
+## Methods
+### From Scratch
+- Set CONFIG.programLinksFile of ```data-scraping/Automation/buildDataFromSubset.ts``` to any JSON file path which is a list of links to WSU handbook programs.
+- cd into ```[Project Root]/data-scraping```
+- Ensure your .env is in this directory
+- Set up your Gemini API key or start LMStudio
+  - If using LMStudio, set the CONFIG.modelName to whatever model you chose, you can run ```lms ls``` to view available models.
+- Run ```tsx Automation/buildDataFromSubset.ts```
+
+### Using a Snapshot
+- Copy the contents from data-scraping/Snapshots/[Snapshot] to data-scraping/Automation/Data (you may need to create the Data folder manually)
+- Ensure your working directory is in ```[Project Root]/data-scraping```
+- Run ```tsx neo4j/upload-data-to-db.ts```
+
+# Running the Website
+- cd into subject-planner
+- Ensure Neo4J is open and the database has been started
+- Add a .env file to the subject-planner folder with your NEO4J_PASSWORD, currently the username is assumed to be neo4j, as the name MUST be neo4j to work when hosting on a terminal-only server (neo4j enterprise restrictions).
+- run ```npm run dev```
+- Your site should be up on localhost:3000
+
+# Contributing
+## Style Guide
+### File Naming
+This project was made under some tight deadlines and was very rushed, which has resulted in some messy code and inconsistencies.
+All new files should be in camelCase for non-class files, and PascalCase for class-based/instantiated files (including TypeDefs).
+
+Over time, the other files will be refactored to move in-line with this naming convention.
 
 # Extra Stuff
 ## Local LLM for Processing Aide
@@ -10,35 +47,6 @@ Some fields (such as the subject prerequisites) are done manually and are thus n
 
 For my hardware, I use https://model.lmstudio.ai/download/lmstudio-community/gemma-3-12B-it-qat-GGUF for a mix of speed and reliability
 
-But a smaller model should be fine, though the smaller context and brain may lead to more outliers and failure-cases.
+If you can't run a sufficient local model, you can also plug in a Gemini API key and ensure the subject-refiner.ts config has online set to true.
 
-The subject-scraper.ts file uses LM Studio to process the data locally. You can input any model you have downloaded, it's pretty plug-and-play, just go to https://lmstudio.ai/, grab the latest version, install the JS package using 
-```npm install @lmstudio/sdk --save```
-get a model downloaded, and set the model name in the config to match!
-
-example hard-case:
-Querying based on subject: TEAC 5019 Mathematics Curriculum 1
-Prerequisites:
-TEAC 7004 OR TEAC 7161 AND
-TEAC 7032 AND
-TEAC 7027 OR TEAC 7160
-Query Result:  
-[
-{
-"course": "any",
-"prerequisites": [
-[
-"TEAC 7004",
-"TEAC 7161"
-],
-[
-"TEAC 7032"
-],
-[
-"TEAC 7027",
-"TEAC 7160"
-]
-]
-}
-]
-
+The subject-scraper.ts file uses LM Studio to process the data locally. You can input any model you have downloaded, it's pretty plug-and-play, just go to https://lmstudio.ai/, grab the latest version and download a model that fits in your system!
