@@ -1,6 +1,7 @@
 import {StudyPeriodItem} from "@/app/page";
 import {useState} from "react";
-import {BsArrowLeftShort, BsArrowRightShort} from "react-icons/bs";
+import {BsArrowLeftShort} from "react-icons/bs";
+import {BiTime} from "react-icons/bi";
 
 interface TimelineProps {
     className?: string,
@@ -10,7 +11,7 @@ interface TimelineProps {
 }
 
 export const CourseTimeline = ({className, completedPeriods, currentPeriod, onSkipPeriod}: TimelineProps) => {
-    const [show, setShow] = useState(true);
+    const [show, setShow] = useState(false);
 
     if (show) {
         return (
@@ -45,7 +46,7 @@ export const CourseTimeline = ({className, completedPeriods, currentPeriod, onSk
                 </div>
             </div>)
     } else {
-        return (<div className={`hover:cursor-pointer absolute z-20 left-0 top-4/5 bottom-1/5 border-2 rounded-r-md w-8 h-8 bg-white `} onClick={()=>setShow(!show)}><BsArrowRightShort className={'z-30'} size={30}/></div>);
+        return (<div className={`hover:cursor-pointer absolute z-20 left-0 top-4/5 bottom-1/5 border-2 rounded-r-md w-8 h-8 bg-white `} onClick={()=>setShow(!show)}><BiTime className={'z-30'} size={28}/></div>);
     }
 }
 

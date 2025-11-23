@@ -9,7 +9,6 @@ import {getConnectedNodesInterface} from "@/app/api/graph/getConnected/route";
 import {HEXGBA, nodeFillMap, NodeTypes} from "@/lib/siteUtil";
 import InfoPanel from "@/components/InfoPanel";
 import {
-    BsArrowDownShort,
     BsArrowUpShort,
     BsGithub,
     BsQuestion
@@ -29,8 +28,9 @@ import {getParentsByType} from "@/lib/graph/graphUtil";
 import {CourseTimeline} from "@/components/CourseTimeline";
 import {SpecialisationType} from "../../../data-scraping/majors-minors/major-minor-scraper";
 import {PiGraphBold} from "react-icons/pi";
+import {BiSearch} from "react-icons/bi";
 
-// todo add type extensions for cringe node data fields
+// todo fix failure-case for Ba. of Arts, Ma. 0026 & Mi. 0024
 
 const ForceGraph = dynamic(() => import('../components/ForceGraph'), {
     ssr: false,
@@ -49,6 +49,7 @@ function containsAll(object: any, components: string[]){
 export interface ExtendedNode<T> extends GraphNode {
      data: T
 }
+
 export function isExtendedNode(obj: any): obj is ExtendedNode<any> {
     return 'data' in obj;
 }
@@ -200,7 +201,8 @@ export default function Home() {
         subjectsTaken: []
     });
 
-    const [showLineup, setShowLineup] = useState<boolean>(true);
+    const [showLineup, setShowLineup] = useState<boolean>(false);
+    const [firstShowLineup, setFirstShowLineup] = useState<boolean>(true);
 
     const [updateToggle, setUpdateToggle] = useState<boolean>(false);
 
@@ -209,7 +211,11 @@ export default function Home() {
     const [subjectsTaken, setSubjectsTaken] = useState<ExtendedNode<Subject>[]>([]);
 
     const [showKey, setShowKey] = useState<boolean>(false);
+    const [firstShowKey, setFirstShowKey] = useState<boolean>(true);
+
     const [showHelp, setShowHelp] = useState<boolean>(false);
+    const [firstShowHelp, setFirstShowHelp] = useState<boolean>(true);
+
 
     const searchProgram = async (searchString: string)=>{
         const response = await fetch(`/api/graph/getPrograms?programName=${searchString}`);
@@ -257,6 +263,8 @@ export default function Home() {
     async function startExploring(){
         const newNodes = nodes.filter(n=>isProgramNode(n)||isMinorNode(n)||isMajorNode(n));
         setNodes(newNodes);
+        setFirstShowLineup(false);
+        setShowLineup(false);
         expandConnected(newNodes);
     }
 
@@ -588,9 +596,16 @@ export default function Home() {
         if(addedNodes.length > 0) expandConnected(addedNodes);
     }, [addedNodes]);
 
+    useEffect(() => {
+        if (!firstShowHelp) setFirstShowLineup(false);
+    }, [showLineup]);
+
     return (
         <main className={`h-[100vh] flex flex-col ${showLineup ? 'p-2' : 'pb-2 px-2'}`}>
-            <div onClick={()=>setShowHelp(!showHelp)} className={`absolute right-0 top-24 z-31 flex flex-row`}><BsQuestion className={`max-h-8 border border-r-0 rounded-l-md bg-white`} size={32}/>{showHelp && <div className={`border px-1.5 max-w-[400px] min-w-[250px] overflow-y-scroll bg-white`}>
+            <div onClick={()=> {
+                setShowHelp(!showHelp);
+                setFirstShowHelp(false);
+            }} className={`absolute right-0 top-24 z-31 flex flex-row ${!showHelp ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white ${(firstShowHelp) ? 'animate-bounceright w-12 translate-x-0 !bg-green-300' : 'w-8'}` : ''}`}><BsQuestion className={`${showHelp ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white` : ''}`} size={32}/>{showHelp && <div className={`border rounded-bl-lg px-1.5 max-w-[400px] w-full min-w-[250px] overflow-y-scroll bg-white`}>
                 Welcome to <strong>MyDegree.help!</strong> To get started, you can type part or all of a program name into the search bar, the dropdown will fill automatically with any matching courses.
                 <br/><br/> Selecting a Major or Minor is optional (if you don't want one, just don't select it), once you are happy with your choices, click 'Start Exploring' to plan your degree!
                 <br/><br/><strong>IMPORTANT:</strong>
@@ -600,10 +615,13 @@ export default function Home() {
                     <li>- As you complete more subjects, you will be eligible for the subjects that were previously greyed out.</li>
                 </ul>
             </div>}</div>
-            <div onClick={()=>setShowKey(!showKey)} className={`absolute right-0 top-36 z-30 flex flex-row`}><PiGraphBold className={`max-h-8 border border-r-0 rounded-l-md bg-white`} size={32}/>{showKey && <img alt={'Legend for different node types'} className={`border bg-white px-1.5 max-w-[400px] min-w-[250px] overflow-y-scroll`} src={'nodes.jpg'}/>}</div>
+            <div onClick={()=> {
+                setShowKey(!showKey);
+                if(!firstShowLineup) setFirstShowKey(false);
+            }} className={`absolute right-0 top-36 z-30 flex flex-row ${!showKey ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white ${(firstShowKey && nodes.length > 3) ? 'animate-bounceright w-12 translate-x-0 !bg-green-300' : 'w-8'}` : ''}`}><PiGraphBold className={`${showKey ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white` : ''}`} size={32}/>{showKey && <img alt={'Legend for different node types'} className={`border bg-white px-1.5 max-w-[400px] min-w-[250px] w-full overflow-y-scroll`} src={'nodes.jpg'}/>}</div>
             <ForceGraph layoutMode={displayMode} clickAction={selectElement} clickCanvas={resetSelectedElement} clusterBy={clusterBy} doubleClickNodeAction={onNodeDoubleClicked} className={`grow w-full h-full absolute top-0 left-0 z-10`}
                         edges={displayedEdges} nodes={displayedNodes}/>
-                <div className={`border-2 p-1 flex flex-col md:flex-row overflow-x-scroll w-fit h-fit relative z-20 bg-white ${showLineup ? 'block' : 'hidden'}`}>
+                <div className={`border-2 p-1 flex flex-col md:flex-row overflow-x-scroll w-fit max-w-full h-fit relative z-20 bg-white ${showLineup ? 'block' : 'hidden'}`}>
                     <div className={`flex-2`}>
                         <h1>Please Search for a Program to Begin.</h1>
                         <hr/>
@@ -611,11 +629,11 @@ export default function Home() {
 
                     </div>
                     {selectedProgram && <div className={`flex-3 flex`}>
-                        <div className={`border-r-2 mx-2`}></div>
+                        <div className={`border-r-2 mx-2 hidden md:block`}></div>
                         <div className={`flex-3 flex`}>
                             <div className={'flex flex-col'}>
                                 <h2 className={`font-bold`}>Graph Analysis</h2>
-                                <hr/>
+                                <hr className={`max-w-[95%] md:max-w-full`}/>
                                 <div>
                                     {displayMode === 'forceDirected2d' && <div>
                                         <label>Cluster Nodes By: </label>
@@ -627,7 +645,7 @@ export default function Home() {
                                     </div>}
                                 </div>
                                 <h2 className={`font-bold`}>Program Filters</h2>
-                                <hr/>
+                                <hr className={`max-w-[95%] md:max-w-full`}/>
                                 <div>
                                     <label>Show Potentially Relevant Electives: </label>
                                     <input type={'checkbox'} onChange={(e)=>{
@@ -637,7 +655,7 @@ export default function Home() {
                                 {showSequences &&
                                     <div>
                                         <label>Selected Study Sequence: </label>
-                                        <select onChange={(s)=> {
+                                        <select className={`max-w-[95%]`} onChange={(s)=> {
                                             const sequence = s.currentTarget.value;
                                             setSelectedProgramSequence(sequence);
                                             let newStartPeriod: StudyPeriod = 'autumn';
@@ -660,11 +678,13 @@ export default function Home() {
                         </div>
                     </div>}
                 </div>
-            <div className={`flex flex-col border rounded-b-md w-8 h-6 hover:cursor-pointer z-20 bg-white`} onClick={()=>setShowLineup(!showLineup)}>{showLineup && <BsArrowUpShort size={32}/>}{!showLineup && <BsArrowDownShort size={32}/>}</div>
+            <div className={`flex flex-col items-center border rounded-b-md w-8  hover:cursor-pointer z-20 transform ${(!showLineup && firstShowLineup && !firstShowHelp) ? 'animate-bounce -translate-y-0.5 h-9 !bg-green-300' : 'animate-none h-6'} bg-white`} onClick={()=> {
+                setShowLineup(!showLineup);
+            }}>{showLineup && <BsArrowUpShort size={32}/>}{!showLineup &&<BiSearch className={`${(firstShowLineup && !firstShowHelp) ? 'pt-2.5' : ''}`} size={32}/>}</div>
             <CourseTimeline className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute left-1 bottom-0 my-auto`}
                             completedPeriods={completedPeriods} currentPeriod={currentPeriod} onSkipPeriod={moveToNewPeriod}/>
             <InfoPanel className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute right-1 bottom-0 my-auto`} item={selectedElement}/>
-            <a href={'https://github.com/Inertia-Squared/degree-planner'} target={'_blank'} className={`fixed top-0 right-0 w-8 h-8 z-40 m-3`}><BsGithub size={32}/></a>
+            {/*<a href={'https://github.com/Inertia-Squared/degree-planner'} target={'_blank'} className={`fixed top-0 right-0 w-8 h-8 z-40 m-3`}><BsGithub size={32}/></a>*/}
         </main>
     );
 }

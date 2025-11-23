@@ -1,7 +1,8 @@
 import {ExtendedNode} from "@/app/page";
 import {GraphEdge} from "reagraph";
-import {BsArrowLeftShort, BsArrowRightShort} from "react-icons/bs";
+import {BsArrowRightShort} from "react-icons/bs";
 import {useState} from "react";
+import {BiBook} from "react-icons/bi";
 
 interface InfoPanelProps {
     item: ExtendedNode<any> | GraphEdge | undefined
@@ -20,12 +21,12 @@ const InfoPanel = ({item, className}: InfoPanelProps) => {
         if (a[0].includes('disclipline')) return -1;
         return 10;
     });
-    const [show, setShow] = useState(true);
+    const [show, setShow] = useState(false);
 
     if (show) {
         return(<div className={`flex flex-col ${className}`}>
 
-            <div className={`flex flex-row font-bold text-center text-xl items-center mx-2`}>
+            <div className={`flex flex-row font-bold text-center text-xl items-center mx-2 `}>
                 <div className={`hover:cursor-pointer flex-1`} onClick={()=>setShow(!show)}><BsArrowRightShort size={24}/></div>
                 Info Panel
                 <div className={`flex-1`}></div>
@@ -51,7 +52,7 @@ const InfoPanel = ({item, className}: InfoPanelProps) => {
             </div>
         </div>)
     } else {
-        return (<div className={`hover:cursor-pointer z-20 absolute right-0 top-4/5 bottom-1/5 border rounded-l-md w-8 h-8 bg-white`} onClick={()=>setShow(!show)}><BsArrowLeftShort size={30}/></div>);
+        return (<div className={`hover:cursor-pointer z-20 absolute right-0 top-4/5 bottom-1/5 border rounded-l-md w-8 h-8 bg-white`} onClick={()=>setShow(!show)}><BiBook size={30}/></div>);
     }
 }
 
