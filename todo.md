@@ -71,7 +71,7 @@ Currently, a subtype of SubjectChoice nodes are used as a crutch when the scrape
 
 When many of these nodes are present, it can be quite confusing and defeats the purpose of the graph visualisation.
 
-These nodes should either be combined into some more central interface and hidden from the graph view, and/or we should use LLM processing to determine the subject pool during the scraping/postprocessing.
+These nodes should either be combined into some more central interface and hidden from the graph view, and/or we should use LLM processing to determine the subject pool during scraping/postprocessing.
 
 ## Backend
 ### Separate WSU-Specific Datastructures from data model
