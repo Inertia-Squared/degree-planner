@@ -45,7 +45,8 @@ Over time, the other files will be refactored to move in-line with this naming c
 ## Local LLM for Processing Aide
 Some fields (such as the subject prerequisites) are done manually and are thus near impossible to process programmatically without an absurd amount of edge-case handling. To remedy this, the application uses local LLMs to process the data.
 
-For my hardware, I use https://model.lmstudio.ai/download/lmstudio-community/gemma-3-12B-it-qat-GGUF for a mix of speed and reliability
+For the capabilities of my hardware, I generally use the biggest Q4 model I can fit into 16GB of VRAM, but I found the Google's Gemma and MistralAI's Mistral or Magistral models work best.
+While generally speaking chain-of-thought models produce better results, the smaller ones hallucinate too much to be worthwhile, so your mileage may vary. The system prompt could also use some work, as currently it will favour moving OR prerequisites into their own nodes, which is inefficient (but technically valid), but attempting to correct this often leads to bad outputs, so some disambiguation may be necessary.
 
 If you can't run a sufficient local model, you can also plug in a Gemini API key and ensure the subject-refiner.ts config has online set to true.
 
