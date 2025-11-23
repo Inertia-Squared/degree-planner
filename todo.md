@@ -66,6 +66,13 @@ User should be given the option to do onboarding again at any time.
 This will essentially be a more limited implementation of the reordering logic, so this should be designed as a subset to 
 build the reordering from, or implemented after reordering is completed.
 
+### Improve Visualisation of SubjectChoice Nodes
+Currently, a subtype of SubjectChoice nodes are used as a crutch when the scraper knows that the user must pick from a pool of subjects, but does not know what the pool is.
+
+When many of these nodes are present, it can be quite confusing and defeats the purpose of the graph visualisation.
+
+These nodes should either be combined into some more central interface and hidden from the graph view, and/or we should use LLM processing to determine the subject pool during the scraping/postprocessing.
+
 ## Backend
 ### Separate WSU-Specific Datastructures from data model
 To keep data model open and modular, we will likely need one or two other example universities in order to do this properly without shooting ourselves in the foot.
