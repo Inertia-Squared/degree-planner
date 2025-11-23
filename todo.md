@@ -12,8 +12,7 @@ possible, and inform the user of what preferences couldn't be met.
 Add ability to view and filter/cluster subject by:
 - Campus offered (partially implemented for program sequences)
 - Subject Assessment Information
-- 'Extra Info' - anything we scrape that we can't categorise should still be shown to the user, we'll need to find a way 
-- to make this organised and well-formatted. Maybe more LLM postprocessing with a style guide?
+- 'Extra Info' - anything we scrape that we can't categorise should still be shown to the user, we'll need to find a way to make this organised and well-formatted. Maybe more LLM postprocessing with a style guide?
 
 ### Import/Export Plan
 Implement ability to export plan as a Spreadsheet or Link (spreadsheet for reference, Link for saving/sharing).
