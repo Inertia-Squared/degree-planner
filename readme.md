@@ -3,7 +3,7 @@
 
 - Create a new database using default values (username: neo4j + Password)
 
-- Your password should be saved in your .env (in the root of the data-scraping folder) files as NEO4J_PASSWORD
+- Your password should be saved in your .env file (which should be in ```[Project Root]/data-scraping```) as NEO4J_PASSWORD
 
 - Before proceeding, ensure Neo4j is open and you have started the server instance
 
