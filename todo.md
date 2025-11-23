@@ -62,7 +62,7 @@ Keep if a user has completed onboarding in PersistentStorage, and don't onboard 
 
 User should be given the option to do onboarding again at any time.
 
-### Undo/Redo system
+### Undo/Redo System
 This will essentially be a more limited implementation of the reordering logic, so this should be designed as a subset to 
 build the reordering from, or implemented after reordering is completed.
 
