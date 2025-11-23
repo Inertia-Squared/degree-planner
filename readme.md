@@ -9,7 +9,7 @@
 
 - If running the LLM inference online, you must add a GEMINI_API_KEY to your .env
   - If running a local model, see the instructions in 'Extra Stuff' below to install and set up [LMStudio](https://lmstudio.ai/)
-- You will need to run ```npm i``` for both the data-scraping and subject-planner directories, as they are technically separate projects. They will be separated soon, but aside from some shared type definitions they are functionally separate.
+- You will need to run ```npm i``` for both the data-scraping and subject-planner directories, as they are technically separate projects. They will be separated soon, but aside from some shared type definitions they are already functionally separate.
 
 # Running the Scraper/DB (Required to run Website)
 ## Methods
