@@ -13,7 +13,7 @@
 
 # Running the Scraper/DB (Required to run Website)
 ## Methods
-### From Scratch
+### From Scratch (Requires LLM Inference)
 - Set CONFIG.programLinksFile of ```data-scraping/Automation/buildDataFromSubset.ts``` to any JSON file path which is a list of links to WSU handbook programs.
 - cd into ```[Project Root]/data-scraping```
 - Ensure your .env is in this directory
@@ -21,8 +21,8 @@
   - If using LMStudio, set the CONFIG.modelName to whatever model you chose, you can run ```lms ls``` to view available models.
 - Run ```tsx Automation/buildDataFromSubset.ts```
 
-### Using a Snapshot
-- Copy the contents from data-scraping/Snapshots/[Snapshot] to data-scraping/Automation/Data (you may need to create the Data folder manually)
+### Using a Snapshot (Skips LLM Inference)
+- Copy the contents from ```data-scraping/Snapshots/[Snapshot]``` to ```data-scraping/Automation/Data``` (you may need to create the Data folder manually)
 - Ensure your working directory is in ```[Project Root]/data-scraping```
 - Run ```tsx neo4j/upload-data-to-db.ts```
 
