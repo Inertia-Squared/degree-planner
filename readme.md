@@ -29,7 +29,7 @@
 # Running the Website
 - cd into subject-planner
 - Ensure Neo4J is open and the database has been started
-- Add a .env file to the subject-planner folder with your NEO4J_PASSWORD, currently the username is assumed to be neo4j, as the name MUST be neo4j to work when hosting on a terminal-only server (neo4j enterprise restrictions).
+- Add a .env file to the subject-planner folder with your NEO4J_PASSWORD, currently the username is assumed to be neo4j, as the name MUST be neo4j to work when hosting on a terminal-only server (neo4j enterprise restrictions). This might be changed in future, but can cause complications if you don't know about this caveat in advance, so to reduce headaches it will remain hard-coded until there is a good reason to do otherwise.
 - run ```npm run dev```
 - Your site should be up on localhost:3000
 
