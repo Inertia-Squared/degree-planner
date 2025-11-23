@@ -3,17 +3,22 @@
 ### Recommendation Engine / Solver
 Implement recommendation engine that can suggest or autocomplete a degree lineup given any combination of program, major, or minor.
 
-Should also be able to score potential paths based on a set of sane defaults that the user can customise (e.g. preferred campus, assessment type etc.) should first explore paths as if preferences are a requirement, then if none can be found (e.g. required subject runs on a non-preferred campus only), it will then prioritise paths that meet as many criteria as possible, and inform the user of what preferences couldn't be met.
+Should also be able to score potential paths based on a set of sane defaults that the user can customise (e.g. preferred 
+campus, assessment type etc.)should first explore paths as if preferences are a requirement, then if none can be found 
+(e.g. required subject runs on a non-preferred campus only), it will then prioritise paths that meet as many criteria as 
+possible, and inform the user of what preferences couldn't be met.
 
 ### More Filter Details
 Add ability to view and filter/cluster subject by:
 - Campus offered (partially implemented for program sequences)
 - Subject Assessment Information
-- 'Extra Info' - anything we scrape that we can't categorise should still be shown to the user, we'll need to find a way to make this organised and well-formatted. Maybe more LLM postprocessing with a style guide?
+- 'Extra Info' - anything we scrape that we can't categorise should still be shown to the user, we'll need to find a way 
+- to make this organised and well-formatted. Maybe more LLM postprocessing with a style guide?
 
 ### Import/Export Plan
 Implement ability to export plan as a Spreadsheet or Link (spreadsheet for reference, Link for saving/sharing).
-The Link system should be deterministic and consistent between different versions of the database (as long as the relevant data is still present).
+The Link system should be deterministic and consistent between different versions of the database (as long as the relevant 
+data is still present).
 
 ### Prerequisites Subgraph in InfoPanel
 Implement subgraph in a mini-viewport that renders in the InfoPanel which shows all prerequisite nodes that are required first.
@@ -24,7 +29,8 @@ If not valid, the app should suggest the minimal amount of changes required to m
 
 ## UX
 ### Improved Onboarding / Guided Tutorial
-Implement a guided tutorial which walks the user step-by step through the process of planning a degree with a short hand-crafted example case.
+Implement a guided tutorial which walks the user step-by step through the process of planning a degree with a short 
+hand-crafted example case.
 ### Tool-Based Interactions
 Eliminate UI elements by constraining interactions to context-based tools use.
 
@@ -58,26 +64,31 @@ Keep if a user has completed onboarding in PersistentStorage, and don't onboard 
 User should be given the option to do onboarding again at any time.
 
 ### Undo/Redo system
-This will essentially be a more limited implementation of the reordering logic, so this should be designed as a subset to build the reordering from, or implemented after reordering is completed.
+This will essentially be a more limited implementation of the reordering logic, so this should be designed as a subset to 
+build the reordering from, or implemented after reordering is completed.
 
 ## Backend
 ### Separate WSU-Specific Datastructures from data model
-Keep data model open and modular, we will likely need one or two other example universities in order to do this properly without shooting ourselves in the foot.
+Keep data model open and modular, we will likely need one or two other example universities in order to do this properly 
+without shooting ourselves in the foot.
 
 ### Auto-generate Neo4J Schema
-Currently, the schema is defined in TS and in plaintext JSON for Neo4J. Because the Autocomplete is useful, the DataType should be moved into its own file, and then a script should be written to parse the TS file into a JSON usable by Neo4J
+Currently, the schema is defined in TS and in plaintext JSON for Neo4J. Because the Autocomplete is useful, the DataType 
+should be moved into its own file, and then a script should be written to parse the TS file into a JSON usable by Neo4J
 
 ### Refactor Data Names
 Originally, all data/field names had to be unique to prevent overlapping.
 
 However, this gets quite messy, as instead of just the field 'name', we have 'programName', 'subjectName', etc.
 
-Now that helper functions have been implemented to ensure queries with identical fields between two objects are automatically made unique, all data fields should be refactored so that the same type of data/field has the same name, as it makes certain features for autocomplete, analysis, and clustering more trivial.
+Now that helper functions have been implemented to ensure queries with identical fields between two objects are automatically 
+made unique, all data fields should be refactored so that the same type of data/field has the same name, as it makes certain features for autocomplete, analysis, and clustering more trivial.
 
 ---
 # Fixes
 ## General
-- Fix bug where occasionally when selecting the last subject for a semester, it is added but does not show as selected in the graph view.
+- Fix bug where occasionally when selecting the last subject for a semester, it is added but does not show as selected in 
+- the graph view.
 ## Refactoring/Cleanup
 ### Modularise page.tsx
 Currently, page.tsx is far too bloated, UI components need to be modularised and have props passed down.
