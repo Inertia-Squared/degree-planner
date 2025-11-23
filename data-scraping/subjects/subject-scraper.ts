@@ -66,6 +66,10 @@ const state = {
     },
 } as StateType;
 
+/**
+ * Scrapes a single subject page for its data.
+ * @param link The URL of the subject page to scrape.
+ */
 async function searchPage(link: string) {
     const page = await initSearch(state, link);
     if(!page) return;
@@ -188,6 +192,9 @@ async function searchPage(link: string) {
     await page.close();
 }
 
+/**
+ * Main function for the subject scraper.
+ */
 async function main(){
     try {
         state.targetPages = JSON.parse(await fs.readFile(CONFIG.subjectFile, {encoding: "utf-8"}));

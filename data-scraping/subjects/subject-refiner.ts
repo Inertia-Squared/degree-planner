@@ -94,6 +94,9 @@ function chunkArray<T>(arr: T[], chunkSize: number): T[][] {
     return chunkedArray;
 }
 
+/**
+ * Starts the language model, either online or local.
+ */
 async function startModel(){
     if(CONFIG.online){
         state.model = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
@@ -105,7 +108,12 @@ async function startModel(){
     }
 }
 
-
+/**
+ * Queries the language model with a subject's prerequisite data.
+ * @param subject The subject data to query.
+ * @param attempts The number of attempts made so far.
+ * @returns The parsed response from the model.
+ */
 async function queryModel(subject: SubjectData, attempts: number = 0){
     if(!CONFIG.online){
         const query = CONFIG.systemPrompt + `
@@ -157,14 +165,18 @@ async function queryModel(subject: SubjectData, attempts: number = 0){
     throw "No Model Loaded";
 }
 
+/**
+ * Processes a query string by removing special characters.
+ * @param query The string to process.
+ * @returns The processed string.
+ */
 function processQueryString(query: string){
     return query.replace(/ /g, ' ').replace(/-/g,'');
 }
 
-// Since both pruned and non-pruned are ordered, we can just scan through once and replace as we go
-// this looks O(N^2) but it's actually O(N)
-// This only works if state.subjectData has not had an element removed since prunedSubjectData was set,
-//  as the removed element may cause the loop to get stuck
+/**
+ * Recombines the pruned subject data back into the main subject data array.
+ */
 function recombineSubjectData(){
     let j = 0;
     let subjectsAreMatching;
@@ -174,6 +186,9 @@ function recombineSubjectData(){
     }
 }
 
+/**
+ * Main function for the subject refiner.
+ */
 async function main(){
     const loadModelTask = startModel();
 
@@ -232,10 +247,9 @@ setConfig(CONFIG.dataFile).then((r)=> {
 });
 
 
-// We need a slightly more complex exit procedure to make sure the model doesn't stay loaded after usage.
-// This procedure should be called any time the program must stop.
-
-
+/**
+ * Gracefully exits the process, ensuring the language model is unloaded.
+ */
 async function exitProcedure(){
     console.log("Shutting down...");
     if (state.model && !CONFIG.online) {

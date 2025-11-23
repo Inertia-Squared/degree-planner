@@ -76,6 +76,12 @@ export interface ProgramSummary {
     minors?: Minor[]
 }
 
+/**
+ * Checks if any string in an array matches a given regular expression or an array of regular expressions.
+ * @param arr The array of strings to check.
+ * @param exp The regular expression or array of regular expressions to match against.
+ * @returns True if a match is found, false otherwise.
+ */
 function containsMatch(arr: string[], exp: RegExp | RegExp[]) {
     if(!arr) return false;
     if (exp instanceof RegExp) {
@@ -115,13 +121,18 @@ function matchName(rows: string[][], exp: RegExp, currentIndex: {index: number} 
                 }
             }
         }
-        //console.info('Search failed at index ' + currentIndex.index + ' out of ' + (rows.length - 1) + ' for current program ' + currentProgram)
         return 'YR_ESCAPE_SEQ';
-        //throwAndLog("Could not find "+exp.source+". Last tested row: " + (rows[currentIndex.index] ?? 'undefined').toString());
     }
     return '';
 }
 
+/**
+ * Finds the first match for an array of regular expressions in a 2D array of strings.
+ * @param rows The 2D array of strings to search.
+ * @param exps The array of regular expressions to match.
+ * @param currentIndex An object containing the current index to search from.
+ * @returns The first matching string, or 'YR_ESCAPE_SEQ' if no match is found.
+ */
 function matchManyRegex(rows: string[][], exps: RegExp[], currentIndex: {index: number}){
     for(; currentIndex.index < rows.length; currentIndex.index++){
         for (const exp of exps) {
@@ -193,6 +204,11 @@ function extractYearData(rows: string[][], currentIndex: {index: number}): Year 
     return year;
 }
 
+/**
+ * Determines the session type from a given session name string.
+ * @param sessionName The name of the session.
+ * @returns The corresponding SessionType enum value.
+ */
 function getSessionType(sessionName: string): SessionType {
     switch (true) { // Black magic fuckery
         case regexMacros.isAutumn.test(sessionName):
@@ -212,6 +228,12 @@ function getSessionType(sessionName: string): SessionType {
     }
 }
 
+/**
+ * Extracts session data, including subjects, from a table of program data.
+ * @param rows The rows of the table.
+ * @param currentIndex The current index in the rows array.
+ * @returns A Session object.
+ */
 function extractSessionData(rows: string[][], currentIndex: {index: number}): Session {
     let session = {} as Session;
     session.subjects = []
@@ -252,7 +274,12 @@ function extractSessionData(rows: string[][], currentIndex: {index: number}): Se
     return session;
 }
 
-// this is bad, everything is getting duplicated, but it works so shush
+/**
+ * Extracts subject data for a specialisation.
+ * @param rows The rows of data to process.
+ * @param currentIndex The current index in the rows.
+ * @returns A Session object containing the subjects for the specialisation.
+ */
 function extractSpecialisationData(rows: string[][], currentIndex: {index: number}): Session {
     let session = {} as Session;
     session.subjects = []
@@ -282,6 +309,12 @@ function extractSpecialisationData(rows: string[][], currentIndex: {index: numbe
     return session;
 }
 
+/**
+ * Extracts a summary of a subject from a table row.
+ * @param row The table row containing the subject information.
+ * @param overrideCreditPoints An optional value to override the credit points.
+ * @returns A SubjectSummary object, or undefined if the row is invalid.
+ */
 function extractSubjectSummary(row: string[], overrideCreditPoints?: number): SubjectSummary | undefined{
     if(CONFIG.verbose) console.log('Extracting summary data for ' + row);
     if(!overrideCreditPoints && isNaN(parseInt(row[2]))) {
@@ -295,6 +328,12 @@ function extractSubjectSummary(row: string[], overrideCreditPoints?: number): Su
     }
 }
 
+/**
+ * Checks if a subject has been replaced by another, and returns the replacement if so.
+ * @param subject The original subject summary.
+ * @param rowAfterSubject The row following the subject, which may contain replacement information.
+ * @returns The original or replaced subject summary.
+ */
 function getReplaced(subject: SubjectSummary, rowAfterSubject: string[]){
     if(CONFIG.verbose) console.log('checking if subject ' + subject.code + ' should be replaced with {' + rowAfterSubject + '}')
     if(!rowAfterSubject) return subject;
@@ -318,6 +357,12 @@ function getReplaced(subject: SubjectSummary, rowAfterSubject: string[]){
     } as SubjectSummary
 }
 let currentProgram = '';
+/**
+ * Extracts data for a single subject or a subject choice from the program structure.
+ * @param rows The rows of the program structure table.
+ * @param currentIndex The current index in the rows.
+ * @returns A SubjectSummary, SubjectChoice, or undefined.
+ */
 function extractSubjectData(rows: string[][], currentIndex: {index: number}): SubjectSummary | SubjectChoice | undefined {
     if(CONFIG.verbose) console.log('Getting subject data...');
     let subjectInfo = matchManyRegex(rows, [regexMacros.hasChoice, regexMacros.subjectCode, regexMacros.choiceEdgeCase], currentIndex);
@@ -396,6 +441,11 @@ function extractSubjectData(rows: string[][], currentIndex: {index: number}): Su
     }
 }
 
+/**
+ * Extracts location information from the program data.
+ * @param data The raw program data.
+ * @returns An array of LocationInfo objects.
+ */
 function getLocationData(data: ProgramData){
     const locationHeaders = new Map<string, string>();
     if(!data || data.locations.length <= 0) return;
@@ -418,6 +468,11 @@ function getLocationData(data: ProgramData){
     return locations;
 }
 
+/**
+ * Builds a list of specialisations (majors or minors) from the raw scraped data.
+ * @param list The list to populate with specialisation data.
+ * @param data The raw major/minor data.
+ */
 function buildSpecialisation(list: Major[] | Minor[], data: MajorMinorData[]){
     for (let rawSpec of data){
         const specialisation = {} as Major | Minor;
@@ -441,6 +496,9 @@ function buildSpecialisation(list: Major[] | Minor[], data: MajorMinorData[]){
     }
 }
 
+/**
+ * Main function to refine the program data.
+ */
 async function main(){
     const progData = JSON.parse(
         await fs.readFile(`${CONFIG.inputPath}programs-unrefined.json`, {encoding: 'utf-8'})) as ProgramData[];

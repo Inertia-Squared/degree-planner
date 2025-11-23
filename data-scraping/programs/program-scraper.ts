@@ -57,6 +57,10 @@ const state = {
 const scrapedAlternate: string[] = [];
 const scrapedEmpty: string[] = [];
 
+/**
+ * Scrapes a single program page for its data.
+ * @param link The URL of the program page to scrape.
+ */
 async function searchPage(link: string) {
     /**
      * Connect to the page, and set a quick timeout so we don't get stuck if an expected object is missing
@@ -199,6 +203,9 @@ async function searchPage(link: string) {
     await page.close();
 }
 
+/**
+ * Main function for the program scraper.
+ */
 async function main() {
     let totalPages = 0;
     try {

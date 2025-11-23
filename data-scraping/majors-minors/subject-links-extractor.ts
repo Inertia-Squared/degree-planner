@@ -7,6 +7,9 @@ const CONFIG = {
     outputFile: '../links/linked/program/extracted-subject-links.json',
 }
 
+/**
+ * Extracts all subject links from the major/minor data and saves them to a file.
+ */
 async function main(){
     console.log('Extracting links of related subjects...');
 

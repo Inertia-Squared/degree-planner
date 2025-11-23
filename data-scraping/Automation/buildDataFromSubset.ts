@@ -13,6 +13,9 @@ const CONFIG = {
     programLinksFile: 'links/programs-subset-smaller.json'
 }
 
+/**
+ * Main function to orchestrate the data scraping and processing pipeline.
+ */
 async function main(){
     const timer = setInterval(()=>{
         elapsed++;
@@ -92,6 +95,10 @@ main().then(()=>{
     process.exit(0);
 })
 
+/**
+ * Ensures that a directory exists, creating it if it doesn't.
+ * @param dir The path of the directory to ensure exists.
+ */
 async function ensureDir(dir: string){
     try{
         await fs.mkdir(dir);
@@ -99,9 +106,11 @@ async function ensureDir(dir: string){
 }
 
 /**
- * Stuff to run the scripts
+ * Runs a script in a child process.
+ * @param scriptPath The path to the script to run.
+ * @param args An array of arguments to pass to the script.
+ * @returns A promise that resolves when the script exits.
  */
-
 function runScript(scriptPath: string, args: string[]): Promise<void> {
     return new Promise((resolve, reject)=>{
         let process = childProcess.fork(scriptPath, args, {silent: true});

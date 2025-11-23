@@ -61,6 +61,10 @@ const state = {
     }
 } as StateType;
 
+/**
+ * Scrapes a single major or minor page for its data.
+ * @param link The URL of the page to scrape.
+ */
 async function searchPage(link: string) {
     const page = await initSearch(state, link);
     if(!page) return;
@@ -107,6 +111,9 @@ async function searchPage(link: string) {
     await page.close();
 }
 
+/**
+ * Main function for the major/minor scraper.
+ */
 async function main(){
     try {
         state.targetPages = JSON.parse(await fs.readFile(CONFIG.majorMinorFile, {encoding: "utf-8"}));

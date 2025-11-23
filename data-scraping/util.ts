@@ -40,7 +40,11 @@ export const regexMacros = {
     levelPool: /Level (\d) Pool/
 }
 
-// very scuffed, but we'll never need more than this so it can stay scuffed :D
+/**
+ * Converts a number written as a word (up to six) into its integer equivalent.
+ * @param text The text to parse.
+ * @returns The number, or -1 if no match is found.
+ */
 export function getNumberFromText(text: string){
     if(text.match(/(^| )one( |$)/i))    return 1;
     if(text.match(/(^| )two( |$)/i))    return 2;
@@ -51,6 +55,11 @@ export function getNumberFromText(text: string){
     return -1;
 }
 
+/**
+ * Standardises a subject code to the format "ABCD 1234".
+ * @param code The subject code to normalise.
+ * @returns The normalised subject code.
+ */
 export function normaliseSubjectCode(code: string){
     if (code.match(/^\w{4} \d{4}$/)) return code;
     const match = code.match(/(\w{4})\s*(\d{4})/);
@@ -58,16 +67,30 @@ export function normaliseSubjectCode(code: string){
     return `${match[1]} ${match[2]}`.toUpperCase();
 }
 
+/**
+ * Generates a handbook link for a given subject code.
+ * @param link The subject code.
+ * @returns The full URL for the subject details page.
+ */
 export function getLinkFromSubjectCode(link: string){
     return "https://hbook.westernsydney.edu.au/subject-details/" + link.replace(/ |\s/, '').toLowerCase();
 }
 
-// Some parent scripts may handle IPC for one channel but not the other, so send it to both.
+/**
+ * Logs an error message to the console and throws an exception.
+ * @param message The message to log and throw.
+ */
 export function throwAndLog(message: string){
     console.log('ERROR: ' + message);
     throw message;
 }
 
+/**
+ * Starts a progress tracker that logs the percentage complete to the console.
+ * @param progress The initial progress value.
+ * @param targetProgress The target value for progress.
+ * @returns A timer object for managing the tracker.
+ */
 export function startTrackingProgress(progress: number, targetProgress?: number){
     const timerObject = {
         progress,
@@ -84,6 +107,10 @@ export function startTrackingProgress(progress: number, targetProgress?: number)
     return timerObject as TimerObjectType;
 }
 
+/**
+ * Stops a previously started progress tracker.
+ * @param timerObject The timer object to stop.
+ */
 export function stopTrackingProgress(timerObject: TimerObjectType){
     if (timerObject.progressTracker) {
         clearInterval(timerObject.progressTracker);
@@ -102,6 +129,13 @@ export interface TableColumnExtractionRules {
     selectorFilters?: PlayWrightSelectorOptions
 }
 
+/**
+ * Constructs a rule for table column extraction.
+ * @param name The class name of the column.
+ * @param filter An optional text filter to apply.
+ * @param searchForNot If true, the filter will be inverted.
+ * @returns A rule object for table extraction.
+ */
 export function constructStringRule(name: string, filter?: string, searchForNot: boolean = false){
     if (searchForNot) {
         return {
@@ -139,6 +173,11 @@ export async function extractTableDataStructured(locators: Locator[], rules: Tab
     return data;
 }
 
+/**
+ * Extracts all text content from a table, returning it as a 2D array of strings.
+ * @param table The Playwright locator for the table.
+ * @returns A 2D array representing the table's data.
+ */
 export async function extractTableData(table: Locator){
     const rows = await table.locator('tr').all();
     return await Promise.all(rows.map(async row=>{
@@ -146,6 +185,12 @@ export async function extractTableData(table: Locator){
     }));
 }
 
+/**
+ * Finds elements that have an ID containing a given string.
+ * @param locator A Playwright locator to search within.
+ * @param id The string to search for in the ID attribute.
+ * @returns An array of locators for the matching elements.
+ */
 export async function getElementBySimilarId(locator: Locator, id: string){
     return (await Promise.all((await locator.all()).map(async loc=>{
         return await loc.getAttribute('id').then(result=> {
@@ -154,6 +199,12 @@ export async function getElementBySimilarId(locator: Locator, id: string){
     }))).filter(Boolean);
 }
 
+/**
+ * Extracts data from all tables whose IDs contain a given string.
+ * @param locator A Playwright locator to search within.
+ * @param id The string to search for in the table IDs.
+ * @returns A map where keys are table IDs and values are the extracted table data.
+ */
 export async function getTablesBySimilarId(locator: Locator, id: string){
     const tableData = new Map<string, string[][]>;
     const tables = await getElementBySimilarId(locator, id);
@@ -167,6 +218,11 @@ export async function getTablesBySimilarId(locator: Locator, id: string){
     return tableData;
 }
 
+/**
+ * Sets up the input and output file paths for a script, using command-line arguments or defaults.
+ * @param defaultInput The default input file path.
+ * @returns An object containing the input and output file paths.
+ */
 export async function setConfig(defaultInput: string) {
     const inputFile = process.argv[2];
     const outputFile = process.argv[3];
@@ -187,6 +243,12 @@ export async function setConfig(defaultInput: string) {
 
 }
 
+/**
+ * Manages the scraping process, including browser launch, page navigation, and data persistence.
+ * @param state An object containing the current state of the scraper.
+ * @param CONFIG The configuration object for the scraper.
+ * @param searchPage A function that performs the scraping on a single page.
+ */
 export async function scrape(state: any, CONFIG: any, searchPage: (a:string)=>Promise<void>){
     console.log(`Initialising scrape of ${state.targetPages.length} pages.`);
 
@@ -220,6 +282,10 @@ export async function scrape(state: any, CONFIG: any, searchPage: (a:string)=>Pr
     if(state.browser) await state.browser.close();
 }
 
+/**
+ * Logs the debug information to a file.
+ * @param debugInfo The debug information to log.
+ */
 async function logDebugState(debugInfo: any){
     try{
         await fs.mkdir('Automation/data');
@@ -227,6 +293,12 @@ async function logDebugState(debugInfo: any){
     await fs.writeFile('Automation/data/debugInfo.json', JSON.stringify(debugInfo,null,2), 'utf8');
 }
 
+/**
+ * Initialises a Playwright page and navigates to a given URL.
+ * @param state The scraper's state object.
+ * @param link The URL to navigate to.
+ * @returns A Playwright page object, or undefined if an error occurs.
+ */
 export async function initSearch(state: any, link: string){
     if(!state.browser) {
         console.error('Browser not found!');
@@ -247,10 +319,18 @@ export async function initSearch(state: any, link: string){
     return page;
 }
 
+/**
+ * Prints underlined text to the console.
+ * @param text The text to underline.
+ */
 export function underline(text: string){
     console.log(tf.u + text + tf.r);
 }
 
+/**
+ * Prints highlighted text to the console.
+ * @param text The text to highlight.
+ */
 export function highlight(text: string){
     console.log(tf.i + text + tf.r);
 }

@@ -21,6 +21,9 @@ const state = {
     targetProgressLock: false,
 } as StateType;
 
+/**
+ * Searches the main handbook page for links to programs, majors/minors, and subject details.
+ */
 async function searchPage() {
     console.log('Setting up browser...');
     const browser = await playwright.chromium.launch({
@@ -54,7 +57,10 @@ async function searchPage() {
     await browser.close();
 }
 
-// this function shouldn't be called too much in order to avoid deadlock/starvation
+/**
+ * Atomically adds a value to the target progress of the timer object.
+ * @param amt The amount to add to the target progress.
+ */
 async function addTargetProgress(amt: number) {
     while(state.targetProgressLock){
         // wait for target progress
@@ -64,6 +70,9 @@ async function addTargetProgress(amt: number) {
     state.targetProgressLock = false;
 }
 
+/**
+ * Saves the collected links to JSON files.
+ */
 async function saveData(){
     try {await fs.mkdir('./links');} catch(err) {
         try {
@@ -81,10 +90,18 @@ async function saveData(){
     }
 }
 
+/**
+ * Sanitises a string to be used as a valid file name.
+ * @param fileName The string to sanitise.
+ * @returns The sanitised file name.
+ */
 function stringToFileName(fileName: string): string {
     return fileName.replace(/[\/|\\:*?"<>]/g, " ");
 }
 
+/**
+ * Main function to run the link collector script.
+ */
 async function main(){
     await searchPage();
     await saveData();

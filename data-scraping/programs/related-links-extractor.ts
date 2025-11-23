@@ -7,6 +7,9 @@ const CONFIG = {
     outputFile: '../links/linked/program',
 }
 
+/**
+ * Get all Subject, Major, and Minor links and combine them into three master lists.
+ */
 async function main(){
     console.log('Extracting links of related programs for searching...');
 

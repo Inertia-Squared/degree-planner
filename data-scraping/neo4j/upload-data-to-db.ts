@@ -41,6 +41,12 @@ export const keyOf = {
     ['prerequisites']: 'Prerequisites {subjects: $subjects, course: $course, forSubject: $forSubject}',
 }
 
+/**
+ * Inserts a string into another string, after each parameter placeholder.
+ * @param value The original string.
+ * @param addition The string to insert.
+ * @returns The modified string.
+ */
 function insertString(value: string, addition: string){
     return value.replace(/\$[A-z0-9_]*/g, `$&${addition}`);
 }
@@ -170,19 +176,43 @@ export interface Node<T extends PropsKey> {
     props: nodeProperties[T]
 }
 
+/**
+ * Creates a unique key-value pair for two nodes, handling potential naming conflicts.
+ * @param nodeA The first node.
+ * @param nodeB The second node.
+ * @returns A combined object of key properties.
+ */
 function uniqueNodeKeyPair(nodeA: Node<PropsKey>, nodeB: Node<PropsKey>){
     return {...nodeA.props.keyProps, ...uniqueKeyArgumentsOf(nodeB, nodeA)}
 }
 
+/**
+ * Creates a unique data property pair for two nodes, handling potential naming conflicts.
+ * @param nodeA The first node.
+ * @param nodeB The second node.
+ * @returns A combined object of data properties.
+ */
 function uniqueNodeDataPair(nodeA: Node<PropsKey>, nodeB: Node<PropsKey>){
     return {...nodeA.props.dataProps, ...uniqueDataArgumentsOf(nodeB,nodeA)}
 }
 
+/**
+ * Returns a unique key for a node, appending '2' if it has the same type as a comparator node.
+ * @param subjectNode The node to get the key for.
+ * @param comparatorNode The node to compare against.
+ * @returns The unique key string.
+ */
 function uniqueKeyOf(subjectNode: Node<PropsKey>, comparatorNode: Node<PropsKey>){
                                                                         // electric boogaloo
     return subjectNode.type === comparatorNode.type ? insertString(keyOf[subjectNode.type],'2') : keyOf[subjectNode.type];
 }
 
+/**
+ * Returns a unique set of key arguments for a node, appending '2' to keys if it has the same type as a comparator node.
+ * @param subjectNode The node to get the key arguments for.
+ * @param comparatorNode The node to compare against.
+ * @returns The unique key arguments object.
+ */
 function uniqueKeyArgumentsOf(subjectNode: Node<PropsKey>, comparatorNode: Node<PropsKey>){
     const nodePropsString = JSON.stringify(subjectNode.props.keyProps);
     return (subjectNode.type === comparatorNode.type) ?
@@ -190,11 +220,23 @@ function uniqueKeyArgumentsOf(subjectNode: Node<PropsKey>, comparatorNode: Node<
         : subjectNode.props.keyProps;
 }
 
+/**
+ * Returns a unique property string for a node, appending '2' to property names if it has the same type as a comparator node.
+ * @param subjectNode The node to get the property string for.
+ * @param comparatorNode The node to compare against.
+ * @returns The unique property string.
+ */
 function uniqueDataOf(subjectNode: Node<PropsKey>, comparatorNode: Node<PropsKey>){
     // electric boogaloo
     return subjectNode.type === comparatorNode.type ? insertString(propsOf[subjectNode.type],'2') : propsOf[subjectNode.type];
 }
 
+/**
+ * Returns a unique set of data arguments for a node, appending '2' to keys if it has the same type as a comparator node.
+ * @param subjectNode The node to get the data arguments for.
+ * @param comparatorNode The node to compare against.
+ * @returns The unique data arguments object.
+ */
 function uniqueDataArgumentsOf(subjectNode: Node<PropsKey>, comparatorNode: Node<PropsKey>){
     const nodePropsString = JSON.stringify(subjectNode.props.dataProps);
     return (subjectNode.type === comparatorNode.type) ?
@@ -202,10 +244,20 @@ function uniqueDataArgumentsOf(subjectNode: Node<PropsKey>, comparatorNode: Node
         : subjectNode.props.dataProps;
 }
 
+/**
+ * Retrieves the full subject data for a given subject summary.
+ * @param subject The subject summary.
+ * @returns The full SubjectData object.
+ */
 function getSubjectFromSummary(subject: SubjectSummary): SubjectData {
     return <SubjectData>globals.subjects.find(s => normaliseSubjectCode(s.code) === normaliseSubjectCode(subject.code));
 }
 
+/**
+ * Adds a node to the database.
+ * @param tx The transaction to use.
+ * @param node The node to add.
+ */
 async function addNode<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>){
     const addNode = `MERGE (n:${propsOf[node.type]})`
     await tx.run(addNode, {
@@ -214,6 +266,13 @@ async function addNode<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>
     });
 }
 
+/**
+ * Adds or appends a property to a node.
+ * @param tx The transaction to use.
+ * @param node The node to modify.
+ * @param property The property to add or append.
+ * @param append Whether to append the value if the property already exists.
+ */
 async function addProperty<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>, property: {name: string, value: string}, append: boolean = true){
     const addProp = `MATCH (n:${keyOf[node.type]}) SET n.${property.name} =${append ? ` n.${property.name} +` : ''} '${property.value.replace(/['"]/g,'\\$&')}'`; // escape quotes, this should be done everywhere but I can't be bothered right now
     await tx.run(addProp, {
@@ -221,6 +280,13 @@ async function addProperty<T extends PropsKey>(tx: ManagedTransaction, node: Nod
     })
 }
 
+/**
+ * Links two nodes with a given relationship.
+ * @param tx The transaction to use.
+ * @param nodeA The starting node.
+ * @param relation The relationship type.
+ * @param nodeB The ending node.
+ */
 async function linkNodes<T extends PropsKey>(tx: ManagedTransaction, nodeA: Node<T>, relation: string,  nodeB: Node<T>){
     const linkNodes = "MATCH " +
         `(a:${keyOf[nodeA.type]}),` +
@@ -232,6 +298,13 @@ async function linkNodes<T extends PropsKey>(tx: ManagedTransaction, nodeA: Node
     });
 }
 
+/**
+ * Links a node to another node by its ID.
+ * @param tx The transaction to use.
+ * @param node The starting node.
+ * @param relation The relationship type.
+ * @param id The ID of the ending node.
+ */
 async function linkNodeToId<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>, relation: string, id: string){
     const linkNodes = "MATCH " +
         `(a:${keyOf[node.type]}),` +
@@ -242,6 +315,14 @@ async function linkNodeToId<T extends PropsKey>(tx: ManagedTransaction, node: No
     });
 }
 
+/**
+ * Links a node to a subject, taking into account the subject's prerequisites.
+ * @param tx The transaction to use.
+ * @param subject The subject summary.
+ * @param subjectNode The subject node.
+ * @param relationship The relationship type.
+ * @param otherNode The other node to link from.
+ */
 async function prerequisiteAwareLinkNodes<T extends PropsKey>(tx: ManagedTransaction, subject: SubjectSummary, subjectNode: Node<'subject'>, relationship: string, otherNode: Node<T>){
     let shouldLinkDirectlyToProgram;
     let prerequisiteNodeIds;
@@ -286,6 +367,13 @@ async function prerequisiteAwareLinkNodes<T extends PropsKey>(tx: ManagedTransac
     }
 }
 
+/**
+ * Prepends a node to an existing relationship chain.
+ * @param tx The transaction to use.
+ * @param startNode The node to prepend.
+ * @param relation The relationship type.
+ * @param endNode The node at the end of the existing chain.
+ */
 async function prependNode<T extends PropsKey>(tx: ManagedTransaction, startNode: Node<T>, relation: string, endNode: Node<T>){
     const prependQuery = `MATCH (b)-[${relation}]->(c:${keyOf[endNode.type]})
                           MERGE (a:${keyOf[startNode.type]})
@@ -296,6 +384,13 @@ async function prependNode<T extends PropsKey>(tx: ManagedTransaction, startNode
     })
 }
 
+/**
+ * Checks if a connection exists between two nodes.
+ * @param tx The transaction to use.
+ * @param startNode The starting node.
+ * @param endNode The ending node.
+ * @returns True if a connection exists, false otherwise.
+ */
 async function connectionExists(tx: ManagedTransaction, startNode: Node<PropsKey>, endNode: Node<PropsKey>) {
     const matchQuery = `MATCH (a:${keyOf[startNode.type]})-[r]-(b:${uniqueKeyOf(endNode, startNode)}) RETURN r`;
     const queryResult = await tx.run(
@@ -305,6 +400,14 @@ async function connectionExists(tx: ManagedTransaction, startNode: Node<PropsKey
     return queryResult.records.length > 0;
 }
 
+/**
+ * Checks if a specific relationship exists from a node.
+ * @param tx The transaction to use.
+ * @param startNode The starting node.
+ * @param relation The relationship type.
+ * @param endNode An optional ending node to check for.
+ * @returns True if the relationship exists, false otherwise.
+ */
 async function relationExists(tx: ManagedTransaction, startNode: Node<PropsKey>, relation: string, endNode?: Node<PropsKey>) {
     const matchQuery = `MATCH (a:${keyOf[startNode.type]})-[r:${relation}]-(b${endNode ? ':' + uniqueKeyOf(endNode, startNode) : ''}) RETURN r`;
     const queryResult = await tx.run(
@@ -314,6 +417,12 @@ async function relationExists(tx: ManagedTransaction, startNode: Node<PropsKey>,
     return queryResult.records.length > 0;
 }
 
+/**
+ * Removes the connection between two nodes.
+ * @param tx The transaction to use.
+ * @param startNode The starting node.
+ * @param endNode The ending node.
+ */
 async function removeConnection(tx: ManagedTransaction, startNode: Node<PropsKey>, endNode: Node<PropsKey>){
     const removeQuery = `MATCH (a:${keyOf[startNode.type]})-[r]-(b:${uniqueKeyOf(endNode, startNode)}) DELETE r`;
     await tx.run(
@@ -322,6 +431,12 @@ async function removeConnection(tx: ManagedTransaction, startNode: Node<PropsKey
     );
 }
 
+/**
+ * Merges and links a subject choice node to a parent node.
+ * @param tx The transaction to use.
+ * @param choiceData The subject choice data.
+ * @param parentNode The parent node.
+ */
 async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: SubjectChoice, parentNode: Node<PropsKey>){
     // convert SubjectSummary array to string if necessary, it's an easy key, a stupid one, sure, but it works :)
     const choiceDescription = JSON.stringify(choiceData.choices,null,2);
@@ -376,6 +491,13 @@ async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: Subjec
     }
 }
 
+/**
+ * Adds a specialisation (major or minor) to the database and links it to its parent program.
+ * @param tx The transaction to use.
+ * @param specialisation The specialisation data.
+ * @param type The type of specialisation ('major' or 'minor').
+ * @param parentProgram The parent program node.
+ */
 async function addSpecialisation(tx: ManagedTransaction, specialisation: Major | Minor, type: PropsKey, parentProgram: Node<'program'>){
     const specialisationNode: Node<typeof type> = {
         type: type,
@@ -418,6 +540,12 @@ async function addSpecialisation(tx: ManagedTransaction, specialisation: Major |
     await linkNodes(tx, parentProgram, `HAS_${type.toUpperCase()}`, specialisationNode);
 }
 
+/**
+ * Generates and adds prerequisite nodes for a subject.
+ * @param tx The transaction to use.
+ * @param subjectNode The subject node.
+ * @param logicalPrerequisites The logical prerequisite data.
+ */
 async function nodePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: Node<"subject">, logicalPrerequisites: LogicalPrerequisite[]){
     const prerequisiteNodes = []
     for(let prerequisite of logicalPrerequisites){
@@ -445,11 +573,23 @@ async function nodePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: No
     }
 }
 
+/**
+ * Gets the IDs of all prerequisite nodes for a given subject.
+ * @param tx The transaction to use.
+ * @param subjectNode The subject node.
+ * @returns An array of prerequisite node IDs.
+ */
 async function getSubjectPrerequisiteNodeIds(tx: ManagedTransaction, subjectNode: Node<'subject'>){
     const prerequisiteNodeQuery = `MATCH (a:${keyOf[subjectNode.type]})<--(b:Prerequisites) RETURN id(b) as ID`;
     return (await tx.run(prerequisiteNodeQuery, {...subjectNode.props.keyProps})).records.map(record=>record.get('ID').low);
 }
 
+/**
+ * Links a program to a subject or subject choice.
+ * @param tx The transaction to use.
+ * @param programNode The program node.
+ * @param subject The subject or subject choice.
+ */
 async function linkProgramToSubject(tx: ManagedTransaction, programNode: Node<"program">, subject: SubjectChoice | SubjectSummary) {
     if('code' in subject){
         const subjectNode = {
@@ -464,6 +604,9 @@ async function linkProgramToSubject(tx: ManagedTransaction, programNode: Node<"p
     }
 }
 
+/**
+ * Main function to upload the scraped and refined data to the Neo4j database.
+ */
 async function main(){
     const URI = 'neo4j://localhost:7687';
     const USER = 'neo4j';

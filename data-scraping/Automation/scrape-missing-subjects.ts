@@ -23,6 +23,9 @@ const state = {
 
 let elapsed = 0;
 
+/**
+ * Main function to recursively scrape for missing subjects based on prerequisites.
+ */
 async function main(){
     const timer = setInterval(()=>{
         elapsed++;
@@ -88,12 +91,22 @@ setConfig(CONFIG.workingPath).then((r)=> {
     })
 });
 
+/**
+ * Ensures that a directory exists, creating it if it doesn't.
+ * @param dir The path of the directory to ensure exists.
+ */
 async function ensureDir(dir: string){
     try{
         await fs.mkdir(dir);
     } catch (e) {}
 }
 
+/**
+ * Runs a script in a child process.
+ * @param scriptPath The path to the script to run.
+ * @param args An array of arguments to pass to the script.
+ * @returns A promise that resolves when the script exits.
+ */
 function runScript(scriptPath: string, args: string[]): Promise<void> {
     return new Promise((resolve, reject)=>{
         let process = childProcess.fork(scriptPath, args, {silent: true});
