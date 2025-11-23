@@ -86,8 +86,7 @@ made unique, all data fields should be refactored so that the same type of data/
 ---
 # Fixes
 ## General
-- Fix bug where occasionally when selecting the last subject for a semester, it is added but does not show as selected in 
-- the graph view.
+- Fix bug where occasionally when selecting the last subject for a semester, it is added but does not show as selected in the graph view.
 ## Refactoring/Cleanup
 ### Modularise page.tsx
 Currently, page.tsx is far too bloated, UI components need to be modularised and have props passed down.
