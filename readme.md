@@ -8,7 +8,7 @@
 - Before proceeding, ensure Neo4j is open and you have started the server instance
 
 - If running the LLM inference online, you must add a GEMINI_API_KEY to your .env
-  - If running a local model, see the instructions in 'Extra Stuff' below to install and set up LMStudio
+  - If running a local model, see the instructions in 'Extra Stuff' below to install and set up [LMStudio](https://lmstudio.ai/)
 - You will need to run ```npm i``` for both the data-scraping and subject-planner directories, as they are technically separate projects. They will be separated soon, but aside from some shared type definitions they are functionally separate.
 
 # Running the Scraper/DB (Required to run Website)
@@ -50,4 +50,4 @@ While generally speaking chain-of-thought models produce better results, the sma
 
 If you can't run a sufficient local model, you can also plug in a Gemini API key and ensure the subject-refiner.ts config has online set to true.
 
-The subject-scraper.ts file uses LM Studio to process the data locally. You can input any model you have downloaded, it's pretty plug-and-play, just go to https://lmstudio.ai/, grab the latest version and download a model that fits in your system!
+The subject-scraper.ts file uses LM Studio to process the data locally. You can input any model you have downloaded, it's pretty plug-and-play!
