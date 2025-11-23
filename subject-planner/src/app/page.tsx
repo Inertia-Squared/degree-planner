@@ -2,7 +2,7 @@
 'use client'
 import dynamic from 'next/dynamic';
 import { useEffect, useState } from "react";
-import {GraphEdge, GraphNode, LayoutTypes} from 'reagraph';
+import {GraphEdge} from 'reagraph';
 import LineupSelector from "@/components/LineupSelector";
 import {getProgramsInterface} from "@/app/api/graph/getPrograms/route";
 import {getConnectedNodesInterface} from "@/app/api/graph/getConnected/route";
@@ -10,7 +10,6 @@ import {HEXGBA, nodeFillMap, NodeTypes} from "@/lib/siteUtil";
 import InfoPanel from "@/components/InfoPanel";
 import {
     BsArrowUpShort,
-    BsGithub,
     BsQuestion
 } from "react-icons/bs";
 
@@ -26,9 +25,12 @@ import {
 } from "@/lib/graph/graphColours";
 import {getParentsByType} from "@/lib/graph/graphUtil";
 import {CourseTimeline} from "@/components/CourseTimeline";
-import {SpecialisationType} from "../../../data-scraping/majors-minors/major-minor-scraper";
 import {PiGraphBold} from "react-icons/pi";
 import {BiSearch} from "react-icons/bi";
+import { ExtendedNode, Generic, Major, Minor, OfferStatus, Prerequisite, Program, StudyPeriod, StudyPeriodItem, Subject } from '@/types';
+import { asStudyPeriod, isMajorNode, isMinorNode, isPrerequisiteNode, isProgramNode, isSubjectNode } from '@/funcs';
+import { badClusterOptions, colours, displayMode } from '@/consts';
+import HelpWindow from '@/components/ui/HelpWindow';
 
 // todo fix failure-case for Ba. of Arts, Ma. 0026 & Mi. 0024
 
@@ -36,144 +38,8 @@ const ForceGraph = dynamic(() => import('../components/ForceGraph'), {
     ssr: false,
 });
 
-function containsAll(object: any, components: string[]){
-    let missingComponent = false;
-    components.forEach((component)=>{
-        if (!(component in object)) {
-            missingComponent = true;
-        }
-    })
-    return !missingComponent;
-}
 
-export interface ExtendedNode<T> extends GraphNode {
-     data: T
-}
-
-export function isExtendedNode(obj: any): obj is ExtendedNode<any> {
-    return 'data' in obj;
-}
-
-export interface Generic {
-    type: NodeTypes
-}
-export function isGenericNode(obj: any): obj is ExtendedNode<Generic>{
-    return isExtendedNode(obj) && containsAll(obj.data, ['type']);
-}
-
-export interface Subject extends Generic{
-    type: 'Subject'
-    code: string,
-    prerequisites: string
-    subjectSequences: string[]
-    teachingPeriods: string[]
-}
-export function isSubjectNode(obj: any): obj is ExtendedNode<Subject>{
-    return isGenericNode(obj) && containsAll(obj.data, ['code','prerequisites','subjectSequences', 'teachingPeriods']);
-}
-
-export interface Program extends Generic{
-    type: 'Program'
-    programName: string,
-    programSequences: string[]
-}
-export function isProgramNode(obj: any): obj is ExtendedNode<Program>{
-    return isGenericNode(obj) && containsAll(obj.data,['programName','programSequences']);
-}
-
-export interface Prerequisite extends Generic {
-    type: 'Prerequisites'
-    course: string
-    subjects: string
-    forSubject: string
-}
-export function isPrerequisiteNode(obj: any): obj is ExtendedNode<Prerequisite>{
-    return isGenericNode(obj) && containsAll(obj.data, ['course', 'subjects', 'forSubject']);
-}
-
-export interface Major extends Generic {
-    type: 'Major'
-    majorName: string
-    majorType: SpecialisationType | string
-    majorLocations: string[]
-    majorLink: string
-    programConnectionId?: string
-}
-export function isMajorNode(obj: any): obj is ExtendedNode<Major>{
-    return isGenericNode(obj) && containsAll(obj.data, ['majorName', 'majorType', 'majorLocations', 'majorLink']);
-}
-
-export interface Minor extends Generic {
-    type: 'Minor'
-    minorName: string
-    minorType: SpecialisationType | string
-    minorLocations: string[]
-    minorLink: string
-    programConnectionId?: string
-}
-export function isMinorNode(obj: any): obj is ExtendedNode<Minor>{
-    return isGenericNode(obj) && containsAll(obj.data, ['minorName', 'minorType', 'minorLocations', 'minorLink']);
-}
-
-export interface Choice extends Generic {
-    type: 'SubjectChoice'
-    choiceName: string
-    parent: string
-}
-export function isChoiceNode(obj: any): obj is ExtendedNode<Choice> {
-    return isGenericNode(obj) && containsAll(obj.data, ['choiceName', 'parent']);
-}
-
-export function showNodeInfo(node: ExtendedNode<any>){
-    console.log(`Info on Node | Is Generic: ${isGenericNode(node)}, 
-    Is Subject: ${isSubjectNode(node)}, Is Program: ${isProgramNode(node)}, 
-    Is Prerequisite: ${isPrerequisiteNode(node)}`)
-}
-
-enum OfferStatus {
-    NO,
-    YES,
-    UNKNOWN
-}
-
-const badClusterOptions = [
-    'subjectSequences',
-    'programSequences',
-    'choiceSequences',
-    'description',
-    'subjectLink',
-    'programLink',
-    'majorLink',
-    'minorLink',
-    'code',
-    'prerequisites',
-    'creditPoints',
-    'subjectName',
-    'teachingPeriods',
-]
-
-export interface StudyPeriodItem {
-    period: StudyPeriod
-    subjectsTaken: ExtendedNode<Subject>[]
-}
-
-const displayMode: LayoutTypes = 'forceDirected2d';
-
-export type StudyPeriod = 'autumn' | 'spring' | 'unknown';
-const studyPeriods: StudyPeriod[] = ['autumn','spring','unknown'];
-
-export function asStudyPeriod(period: string){
-    const value = studyPeriods.find(s=>period.toLowerCase().includes(s));
-    if (!value){
-        return 'unknown';
-    }
-    return value;
-}
-
-const colours = {
-    inaccessible: '#AAAAAA'
-}
-
+// Interfaces above
 export default function Home() {
     const [nodes, setNodes] = useState<ExtendedNode<Generic>[]>([]);
     const [displayedNodes, setDisplayedNodes] = useState<ExtendedNode<Generic>[]>([]);
@@ -374,9 +240,6 @@ export default function Home() {
 
         return graph;
     }
-
-    async function addConnected(params: {id: string}): Promise<void>;
-    async function addConnected(params: {manualAdd: {newNodes: ExtendedNode<Generic>[], newEdges: GraphEdge[]}}): Promise<void>;
 
     async function addConnected(params: {id?: string, manualAdd?: { newNodes: ExtendedNode<Generic>[], newEdges: GraphEdge[] }
     }) {
@@ -601,19 +464,7 @@ export default function Home() {
 
     return (
         <main className={`h-[100vh] flex flex-col ${showLineup ? 'p-2' : 'pb-2 px-2'}`}>
-            <div onClick={()=> {
-                setShowHelp(!showHelp);
-                setFirstShowHelp(false);
-            }} className={`absolute right-0 top-24 z-31 flex flex-row ${!showHelp ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white ${(firstShowHelp) ? 'animate-bounceright w-12 translate-x-0 !bg-green-300' : 'w-8'}` : ''}`}><BsQuestion className={`${showHelp ? `max-h-8 items-center border border-r-0 rounded-l-md bg-white` : ''}`} size={32}/>{showHelp && <div className={`border rounded-bl-lg px-1.5 max-w-[400px] w-full min-w-[250px] overflow-y-scroll bg-white`}>
-                Welcome to <strong>MyDegree.help!</strong> To get started, you can type part or all of a program name into the search bar, the dropdown will fill automatically with any matching courses.
-                <br/><br/> Selecting a Major or Minor is optional (if you don't want one, just don't select it), once you are happy with your choices, click 'Start Exploring' to plan your degree!
-                <br/><br/><strong>IMPORTANT:</strong>
-                <br/><ul>
-                    <li>- To view information about a node, click it once.</li>
-                    <li>- To add a subject to your Degree Timeline, double-click it. You can only add subjects you are eligible for (i.e. are not greyed out)</li>
-                    <li>- As you complete more subjects, you will be eligible for the subjects that were previously greyed out.</li>
-                </ul>
-            </div>}</div>
+            <HelpWindow showHelp={showHelp} firstShowHelp={firstShowHelp} onSetShowHelp={setShowHelp} onSetFirstShowHelp={setFirstShowHelp} />
             <div onClick={()=> {
                 setShowKey(!showKey);
                 if(!firstShowLineup) setFirstShowKey(false);
