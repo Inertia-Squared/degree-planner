@@ -343,6 +343,8 @@ export default function Home() {
         return nodes.find(n=>n.id===id);
     }
 
+    // todo add 'FilteredReasons' enum which is refreshed on all nodes at the start and then appended to a node when being filtered based on the filter rule applied.
+    //  Should help with debugging nodes that aren't behaving.
     useEffect(() => {
         let newNodes = nodes;
         let newEdges = edges;
@@ -351,7 +353,11 @@ export default function Home() {
          * Graph Filtering Pass
          */
         // filter out nodes not relevant to selected program
-
+        newNodes.forEach(n=>{
+            if (isSubjectNode(n) && n.data.code === 'PERF 1025') {
+                console.log(n)
+            }
+        })
 
         if(selectedProgram && selectedProgram.data.programSequences && selectedProgramSequence) {
             if (selectedProgram) newNodes = newNodes.filter(n => {
