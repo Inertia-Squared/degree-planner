@@ -1,11 +1,8 @@
-import {
-    ExtendedNode,
-    Prerequisite,
-    Subject
-} from "@/app/page";
+
 import {getCourseCode} from "@/lib/graph/graphUtil";
 import {GraphEdge} from "reagraph";
 import {prerequisiteIsFulfilled} from "@/lib/graph/graphColours";
+import { ExtendedNode, Prerequisite, Subject } from "@/utils/types";
 
 export function filterSubjectsNotInSequence(node: ExtendedNode<Subject>, selectedProgram: string, selectedSequence: string){
     let isInSelectedSequence = false;

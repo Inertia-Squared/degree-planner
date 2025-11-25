@@ -1,7 +1,7 @@
-import { isChoiceNode } from "@/funcs";
+import { isChoiceNode } from "@/utils/funcs";
 import {LogicalPrerequisite} from "../../../../data-scraping/neo4j/upload-data-to-db";
 import {getAsLogicalPrerequisite, getParentsByType} from "@/lib/graph/graphUtil";
-import { ExtendedNode, Generic, Prerequisite, Subject } from "@/types";
+import { ExtendedNode, Generic, Prerequisite, Subject } from "@/utils/types";
 import {GraphEdge} from "reagraph";
 
 export function isEligibleForSubject(parentPrerequisites: ExtendedNode<Prerequisite>[], completedSubjects: ExtendedNode<Subject>[] | undefined){

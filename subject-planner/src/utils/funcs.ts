@@ -1,5 +1,7 @@
+import { NodeTypes } from "@/lib/siteUtil";
 import { studyPeriods } from "./consts";
 import { Choice, ExtendedNode, Generic, Major, Minor, Prerequisite, Program, Subject } from "./types";
+import { GraphEdge } from "reagraph";
 
 export function containsAll(object: any, components: string[]){
     let missingComponent = false;
@@ -60,3 +62,36 @@ export function asStudyPeriod(period: string){
     }
     return value;
 }
+
+export function fromNodesById(id: string, nodes: ExtendedNode<any>[]){
+        return nodes.find(n=>n.id===id);
+    }
+
+export function chooseNode(excludeId: string, filterType: NodeTypes, graph: { oldNodes: ExtendedNode<Generic>[], oldEdges: GraphEdge[]}){
+        const nodesToRemove = new Set<string>();
+
+        // Initial nodes to remove based on the filterType
+        graph.oldNodes.forEach(n => {
+            if (n.data.type === filterType && n.id !== excludeId) {
+                nodesToRemove.add(n.id);
+            }
+        });
+
+        // Recursively find and mark all children for removal
+        let  newNodesAdded = true;
+        while (newNodesAdded) {
+            newNodesAdded = false;
+            graph.oldEdges.forEach(edge => {
+                if (nodesToRemove.has(edge.source) && ! nodesToRemove.has(edge.target)) {
+                    nodesToRemove.add(edge.target);
+                    newNodesAdded = true;
+                }
+            });
+        }
+
+        // Filter out the marked nodes and their  edges
+        graph.oldNodes = graph.oldNodes.filter(n => !nodesToRemove.has(n.id));
+        graph.oldEdges = graph.oldEdges.filter(e => !nodesToRemove.has(e.source) && !nodesToRemove.has(e.target));
+
+        return graph;
+    }
