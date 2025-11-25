@@ -27,7 +27,18 @@ import {getParentsByType} from "@/lib/graph/graphUtil";
 import {CourseTimeline} from "@/components/CourseTimeline";
 import {PiGraphBold} from "react-icons/pi";
 import {BiSearch} from "react-icons/bi";
-import { ExtendedNode, Generic, Major, Minor, OfferStatus, Prerequisite, Program, StudyPeriod, StudyPeriodItem, Subject } from '@/types';
+import {
+    ExtendedNode, FilteredReasons,
+    Generic,
+    Major,
+    Minor,
+    OfferStatus,
+    Prerequisite,
+    Program,
+    StudyPeriod,
+    StudyPeriodItem,
+    Subject
+} from '@/types';
 import { asStudyPeriod, isMajorNode, isMinorNode, isPrerequisiteNode, isProgramNode, isSubjectNode } from '@/funcs';
 import { badClusterOptions, colours, displayMode } from '@/consts';
 import HelpWindow from '@/components/ui/HelpWindow';
@@ -343,47 +354,50 @@ export default function Home() {
         return nodes.find(n=>n.id===id);
     }
 
-    // todo add 'FilteredReasons' enum which is refreshed on all nodes at the start and then appended to a node when being filtered based on the filter rule applied.
-    //  Should help with debugging nodes that aren't behaving.
+
     useEffect(() => {
         let newNodes = nodes;
         let newEdges = edges;
+
+        newNodes.forEach(n => n.data.filtered = FilteredReasons.NONE);
 
         /**
          * Graph Filtering Pass
          */
         // filter out nodes not relevant to selected program
-        newNodes.forEach(n=>{
-            if (isSubjectNode(n) && n.data.code === 'PERF 1025') {
-                console.log(n)
-            }
-        })
-
         if(selectedProgram && selectedProgram.data.programSequences && selectedProgramSequence) {
             if (selectedProgram) newNodes = newNodes.filter(n => {
                 if (!isSubjectNode(n)) return true;
-                return filterSubjectsNotInSequence(n, selectedProgram.data.programName, selectedProgramSequence ?? '');
+                const keep = filterSubjectsNotInSequence(n, selectedProgram.data.programName, selectedProgramSequence ?? '');
+                if (!keep) n.data.filtered = FilteredReasons.SUBJECT_NOT_IN_SEQUENCE;
+                return keep;
             });
         }
 
         // filter out prerequisites we know are not part of course
         if(selectedProgram) newNodes = newNodes.filter(n=> {
             if(!isPrerequisiteNode(n)) return true;
-            return filterPrerequisitesNotInCourse(n, selectedProgram.data.programName);
+            const keep = filterPrerequisitesNotInCourse(n, selectedProgram.data.programName);
+            if (!keep) n.data.filtered = FilteredReasons.PREREQUISITE_NOT_IN_COURSE;
+            return keep;
         });
 
 
         if(!showPotentialElectives) {
             newNodes = newNodes.filter(n=>{
                 if (!isSubjectNode(n) || !n.fill) return true;
-                return isRequiredByProgramOrSpecialisation(n, newNodes, adjacencyList, nodeMap, edges) !== RequiredType.NOT_REQUIRED;
+                const keep = isRequiredByProgramOrSpecialisation(n, newNodes, adjacencyList, nodeMap, edges) !== RequiredType.NOT_REQUIRED;
+                if (!keep) n.data.filtered = FilteredReasons.NOT_REQUIRED_ELECTIVE;
+                return keep;
             });
         }
 
         newNodes = newNodes.filter(n=>{
             if (!isPrerequisiteNode(n)) return true;
             const subjectNodes = nodes.filter(nn=>isSubjectNode(nn));
-            return filterImpossiblePrerequisites(n, subjectNodes);
+            const keep = filterImpossiblePrerequisites(n, subjectNodes);
+            if (!keep) n.data.filtered = FilteredReasons.IMPOSSIBLE_PREREQUISITE;
+            return keep;
         });
 
         // filter out edges that are no longer visible
@@ -395,21 +409,33 @@ export default function Home() {
 
         newNodes = newNodes.filter(n=>{
             if (!isSubjectNode(n)) return true;
-            return !(n.data.prerequisites.length > 3
+            const keep = !(n.data.prerequisites.length > 3
                 && getParentsByType<Prerequisite>(n, newNodes, adjacencyList, nodeMap, 'Prerequisites')
                     .filter(p => p.data.forSubject === n.data.code).length < 1);
+            if (!keep) n.data.filtered = FilteredReasons.DANGLING_PREREQUISITE_SUBJECT;
+            return keep;
         });
 
 
         // filter out prerequisite nodes that do not lead to a visible subject
         newNodes = newNodes.filter(n=> {
             if(!isPrerequisiteNode(n)) return true;
-            return filterLeafPrerequisites(n, newEdges);
+            const keep = filterLeafPrerequisites(n, newEdges);
+            if (!keep) n.data.filtered = FilteredReasons.LEAF_PREREQUISITE_NODE;
+            return keep;
         });
         newNodes = newNodes.filter(n=> {
             if(!isPrerequisiteNode(n)) return true;
-            return filterLeafPrerequisites(n, newEdges);
+            const keep = filterLeafPrerequisites(n, newEdges);
+            if (!keep) n.data.filtered = FilteredReasons.LEAF_PREREQUISITE_NODE;
+            return keep;
         });
+
+        nodes.forEach(n=>{
+            if (isSubjectNode(n) && n.data.code === 'PERF 1025') {
+                console.log(n)
+            }
+        })
 
         /**
          * Graph Semantic Highlighting Pass

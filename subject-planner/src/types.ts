@@ -19,6 +19,16 @@ export enum OfferStatus {
     UNKNOWN
 }
 
+export enum FilteredReasons {
+    SUBJECT_NOT_IN_SEQUENCE,
+    PREREQUISITE_NOT_IN_COURSE,
+    NOT_REQUIRED_ELECTIVE,
+    IMPOSSIBLE_PREREQUISITE,
+    DANGLING_PREREQUISITE_SUBJECT,
+    LEAF_PREREQUISITE_NODE,
+    NONE
+}
+
 export interface Choice extends Generic {
     type: 'SubjectChoice'
     choiceName: string
@@ -66,4 +76,5 @@ export interface Subject extends Generic{
 
 export interface Generic {
     type: NodeTypes
+    filtered?: FilteredReasons
 }
