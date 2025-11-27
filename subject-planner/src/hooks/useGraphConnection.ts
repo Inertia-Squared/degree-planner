@@ -71,7 +71,7 @@ export function useGraphConnection({
       setAddedNodes(newNodes);
       return { newNodes, newEdges };
     },
-    [edges, nodes]
+    [edges, nodes, setAddedNodes]
   );
 
   const addConnected = useCallback(
