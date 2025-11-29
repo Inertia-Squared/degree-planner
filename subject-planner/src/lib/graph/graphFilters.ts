@@ -10,7 +10,7 @@ import {
   GraphFilterProps,
   Prerequisite,
   Subject
-} from "../../utils/types";
+} from "@/utils/types";
 import {fromNodesById, getCourseCode, getParentsByType, isPrerequisiteNode, isSubjectNode} from "@/lib/graph/graphUtil";
 import {GraphEdge} from "reagraph";
 

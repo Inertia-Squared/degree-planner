@@ -10,7 +10,7 @@ import {
   StudyPeriod,
   StudyPeriodItem,
   Subject,
-} from "../utils/types";
+} from "@/utils/types";
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { badClusterOptions } from "@/utils/consts";
 import {
@@ -21,7 +21,7 @@ import {
     isProgramNode,
     isSubjectNode
 } from "@/lib/graph/graphUtil";
-import { isEligibleForSubject } from "../lib/graph/graphColours";
+import { isEligibleForSubject } from "@/lib/graph/graphColours";
 
 export function useSubjectCriteria({
   nodes,
