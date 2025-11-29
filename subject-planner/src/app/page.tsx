@@ -15,7 +15,7 @@ import {
 import HelpWindow from "@/components/ui/HelpWindow";
 import { displayMode } from "@/utils/consts";
 import ProgramWindow from "@/components/ui/ProgramWindow";
-import NodeReferrence from "@/components/ui/NodeReferrence";
+import NodeReference from "@/components/ui/NodeReferrence";
 import LineupWindow from "@/components/ui/LineupWindow";
 import { nodeFilters } from "@/utils/nodeFilters";
 import { useGraphConnection } from "@/hooks/useGraphConnection";
@@ -55,11 +55,13 @@ export default function Home() {
     period: startPeriod,
     subjectsTaken: [],
   });
+  const [subjectsTaken, setSubjectsTaken] = useState<ExtendedNode<Subject>[]>([]);
+
+
   const [showLineup, setShowLineup] = useState<boolean>(false);
   const [firstShowLineup, setFirstShowLineup] = useState<boolean>(true);
   const [updateToggle, setUpdateToggle] = useState<boolean>(false);
   const [showSequences, setShowSequences] = useState<boolean>(true);
-  const [subjectsTaken, setSubjectsTaken] = useState<ExtendedNode<Subject>[]>([]);
   const [showKey, setShowKey] = useState<boolean>(false);
   const [firstShowKey, setFirstShowKey] = useState<boolean>(true);
   const [showHelp, setShowHelp] = useState<boolean>(false);
@@ -103,7 +105,7 @@ export default function Home() {
         onSetShowHelp={setShowHelp}
         onSetFirstShowHelp={setFirstShowHelp}
       />
-      <NodeReferrence
+      <NodeReference
         setShowKey={setShowKey}
         showKey={showKey}
         firstShowLineup={firstShowLineup}
