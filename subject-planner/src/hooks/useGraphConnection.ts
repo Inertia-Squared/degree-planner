@@ -1,8 +1,8 @@
 import { getConnectedNodesInterface } from "@/app/api/graph/getConnected/route";
-import { chooseNode } from "@/utils/funcs";
 import { ExtendedNode, Generic } from "@/utils/types";
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { GraphEdge } from "reagraph";
+import {chooseNode} from "@/lib/graph/graphUtil";
 
 
 

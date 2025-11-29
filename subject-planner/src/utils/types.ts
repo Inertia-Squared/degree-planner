@@ -1,6 +1,5 @@
-import { GraphNode } from "reagraph";
-import { SpecialisationType } from "../../../data-scraping/majors-minors/major-minor-scraper";
-import { NodeTypes } from "@/lib/siteUtil";
+import {GraphEdge, GraphNode} from "reagraph";
+import {SpecialisationType} from "../../../data-scraping/majors-minors/major-minor-scraper";
 
 export type StudyPeriod = 'autumn' | 'spring' | 'unknown';
 
@@ -17,6 +16,16 @@ export enum OfferStatus {
     NO,
     YES,
     UNKNOWN
+}
+
+export enum FilteredReasons {
+    SUBJECT_NOT_IN_SEQUENCE,
+    PREREQUISITE_NOT_IN_COURSE,
+    NOT_REQUIRED_ELECTIVE,
+    IMPOSSIBLE_PREREQUISITE,
+    DANGLING_PREREQUISITE_SUBJECT,
+    LEAF_PREREQUISITE_NODE,
+    NONE
 }
 
 export interface Choice extends Generic {
@@ -64,6 +73,28 @@ export interface Subject extends Generic{
     teachingPeriods: string[]
 }
 
+export type NodeTypes = 'Program' | 'Subject' | 'Major' | 'Minor' | 'Prerequisites' | 'SubjectChoice';
+
 export interface Generic {
     type: NodeTypes
+    filtered?: FilteredReasons
+}
+
+export interface GraphCommonProps {
+    nodes: ExtendedNode<Generic>[],
+    edges: GraphEdge[],
+    adjacencyList: Map<string, string[]>,
+    nodeMap: Map<string, ExtendedNode<Generic>>,
+}
+
+export interface GraphFilterProps extends GraphCommonProps {
+    selectedProgram: ExtendedNode<Program> | undefined,
+    selectedProgramSequence: string | undefined,
+    showPotentialElectives: boolean
+}
+
+export interface GraphColourProps extends GraphCommonProps {
+    getCompletedSubjects: () => ExtendedNode<Subject>[],
+    isOfferedInCurrentPeriod: (node: ExtendedNode<Subject>) => OfferStatus,
+    hasTaken: (node: ExtendedNode<Generic>) => boolean
 }

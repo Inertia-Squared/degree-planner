@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { read } from "@/lib/neo4j";
-import {NodeTypes, nodeDisplayNameMap, nodeFillMap, nodeSizeMap} from "@/lib/siteUtil";
 import {ExtendedNode} from "@/app/page";
+import {NodeTypes} from "@/utils/types";
+import {nodeDisplayNameMap, nodeFillMap, nodeSizeMap} from "@/utils/consts";
 
 export interface getConnectedNodesInterface {
     connections: {
