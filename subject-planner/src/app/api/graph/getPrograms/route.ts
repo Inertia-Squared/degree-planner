@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { read } from "@/lib/neo4j";
 import {ExtendedNode, Program} from "@/app/page";
-import {nodeFillMap, nodeSizeMap} from "@/lib/siteUtil";
+
+import {nodeFillMap, nodeSizeMap} from "@/utils/consts";
 
 export interface getProgramsInterface {
     programs: ExtendedNode<Program>[]

@@ -1,8 +1,86 @@
-import { isChoiceNode } from "@/utils/funcs";
 import {LogicalPrerequisite} from "../../../../data-scraping/neo4j/upload-data-to-db";
-import {getAsLogicalPrerequisite, getParentsByType} from "@/lib/graph/graphUtil";
-import { ExtendedNode, Generic, Prerequisite, Subject } from "@/utils/types";
+import {
+    getAsLogicalPrerequisite,
+    getParentsByType,
+    isChoiceNode,
+    isPrerequisiteNode,
+    isSubjectNode
+} from "@/lib/graph/graphUtil";
+import {ExtendedNode, Generic, GraphColourProps, OfferStatus, Prerequisite, Subject} from "@/utils/types";
 import {GraphEdge} from "reagraph";
+import {colours, nodeFillMap} from "@/utils/consts";
+import {HEXRGBA} from "@/lib/RGBA";
+
+/**
+ * Runs several passes through visible nodes to colour-code them based on specific criteria
+ * Assumes that nodes have already been preprocessed and pruned by the filter process.
+ * @param colourProps
+ */
+export function applyGraphColours(
+    colourProps: GraphColourProps
+){
+    const {nodes, edges, adjacencyList, nodeMap, getCompletedSubjects, isOfferedInCurrentPeriod, hasTaken} = colourProps;
+
+    let newNodes = [...nodes];
+    let newEdges = [...edges]; // todo this stays in since we may highlight/colour-code edges soon
+
+    newNodes.forEach(n => {
+        if (!isSubjectNode(n)) return;
+        const parentPrereq = getParentsByType<Prerequisite>(
+            n,
+            newNodes,
+            adjacencyList,
+            nodeMap,
+            "Prerequisites"
+        ).filter(p => p.data.forSubject === n.data.code);
+
+        if (
+            isEligibleForSubject(parentPrereq, getCompletedSubjects()) &&
+            isOfferedInCurrentPeriod(n) !== OfferStatus.NO
+        ) {
+            n.fill = nodeFillMap["Subject"];
+        } else {
+            if (!hasTaken(n)) n.fill = colours.inaccessible;
+        }
+    });
+
+    newNodes.forEach(n => {
+        if (!isSubjectNode(n) || !n.fill) return;
+        const required = isRequiredByProgramOrSpecialisation(
+            n,
+            newNodes,
+            adjacencyList,
+            nodeMap,
+            edges
+        );
+        if (required !== RequiredType.REQUIRED) {
+            if (n.fill !== colours.inaccessible) {
+                if (required === RequiredType.NOT_REQUIRED) {
+                    n.fill = new HEXRGBA("#994499").toHex();
+                } else {
+                    if (!hasTaken(n)) n.fill = new HEXRGBA(n.fill).multiply(0.6).toHex();
+                }
+            }
+        }
+    });
+
+    newNodes.forEach(n => {
+        if (!isSubjectNode(n) || !n.fill) return;
+        if (!hasTaken(n)) {
+            if (n.fill !== colours.inaccessible)
+                n.fill = new HEXRGBA(n.fill).multiply(0.75).toHex();
+        }
+    });
+
+    newNodes.forEach(n => {
+        if (!isPrerequisiteNode(n)) return;
+        if (prerequisiteIsFulfilled(n, getCompletedSubjects())) {
+            n.fill = nodeFillMap["Prerequisites"];
+        } else {
+            n.fill = colours.inaccessible;
+        }
+    });
+}
 
 export function isEligibleForSubject(parentPrerequisites: ExtendedNode<Prerequisite>[], completedSubjects: ExtendedNode<Subject>[] | undefined){
     if (parentPrerequisites.length === 0) {

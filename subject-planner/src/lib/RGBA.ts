@@ -1,32 +1,3 @@
-export const nodeDisplayNameMap: Record<NodeTypes, string> = {
-    ['Program']: 'programName',
-    ['Subject']: 'code',
-    ['Major']: 'majorName',
-    ['Minor']: 'minorName',
-    ['Prerequisites']: 'course',
-    ['SubjectChoice']: 'choices'
-}
-
-export const nodeFillMap: Record<NodeTypes, string> = {
-    ['Program']: '#0C3C51',
-    ['Subject']: '#ffa5d6',
-    ['Major']: '#195db0',
-    ['Minor']: '#969bf9',
-    ['Prerequisites']: '#F79767',
-    ['SubjectChoice']: '#ffdc80'
-}
-
-export const nodeSizeMap: Record<NodeTypes, number> = {
-    ['Program']: 50,
-    ['Subject']: 20,
-    ['Major']: 40,
-    ['Minor']: 40,
-    ['Prerequisites']: 10,
-    ['SubjectChoice']: 10
-}
-
-export type NodeTypes = 'Program' | 'Subject' | 'Major' | 'Minor' | 'Prerequisites' | 'SubjectChoice';
-
 export interface RGBAType {
     red: number
     green: number
@@ -42,10 +13,6 @@ export class RGBA {
         this.rgba = {red: red, green: green, blue: blue, alpha: alpha} as RGBAType;
         return this;
     }
-
-    // A hacky way to skip having to put in each individual value, you must bind the parent value, or it will error.
-    // If your intellisense is good, it'll save you a bit of time, and guarantees you don't mess up the order.
-    // EXAMPLE: fgCircleColour.passToA(cr.setSourceRGBA.bind(cr));
     public passTo(func: (r: number, g: number, b: number)=>any) {
         return func(this.rgba.red, this.rgba.green, this.rgba.blue);
     }
@@ -117,7 +84,7 @@ export class RGBA {
     }
 }
 
-export class HEXGBA extends RGBA {
+export class HEXRGBA extends RGBA {
     constructor (hexstring: string) {
         if(hexstring[0]!=='#') throw "Incorrect format for hex string";
         let values = [0,0,0,1]
