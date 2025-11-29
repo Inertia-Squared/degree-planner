@@ -1,4 +1,4 @@
-import {ExtendedNode, Generic} from "@/app/page";
+import { ExtendedNode, Generic } from "@/utils/types";
 import {LogicalPrerequisite} from "../../../../data-scraping/neo4j/upload-data-to-db";
 import {NodeTypes} from "@/lib/siteUtil";
 

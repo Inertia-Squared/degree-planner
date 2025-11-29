@@ -1,7 +1,7 @@
 import React, {MouseEvent, useRef, useState} from "react";
 import {getProgramNamesInterface} from "@/app/api/info/getProgramNames/route";
 import {getMajorsInterface} from "@/app/api/graph/getMajors/route";
-import {ExtendedNode, Major, Minor} from "@/app/page";
+import {ExtendedNode, Major, Minor} from "@/utils/types";
 import {getMinorsInterface} from "@/app/api/graph/getMinors/route";
 
 interface LineupSelectorProps {

@@ -1,6 +1,6 @@
 import { GraphNode } from "reagraph";
-import { SpecialisationType } from "../../data-scraping/majors-minors/major-minor-scraper";
-import { NodeTypes } from "./lib/siteUtil";
+import { SpecialisationType } from "../../../data-scraping/majors-minors/major-minor-scraper";
+import { NodeTypes } from "@/lib/siteUtil";
 
 export type StudyPeriod = 'autumn' | 'spring' | 'unknown';
 
