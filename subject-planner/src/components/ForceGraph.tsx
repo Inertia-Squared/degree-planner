@@ -16,7 +16,7 @@ interface ForceGraphProps {
 }
 
 const ForceGraph = ({nodes, edges, className, doubleClickNodeAction, clusterBy, clickAction, clickCanvas, layoutMode, collapsedNodeIds}: ForceGraphProps) => {
-    const classN = className ?? `w-[300px] h-full relative`;
+    const classN = className ?? `w-[300px] h-screen relative`;
     const graphRef = useRef<GraphCanvasRef | null >(null);
     useEffect(() => {
         if (nodes.length > 0) {
