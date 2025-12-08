@@ -1,7 +1,7 @@
 "use client";
 import dynamic from "next/dynamic";
-import {useCallback, useEffect, useState} from "react";
-import {GraphEdge} from "reagraph";
+import {RefObject, useCallback, useEffect, useState} from "react";
+import {GraphCanvasRef, GraphEdge} from "reagraph";
 import InfoPanel from "@/components/InfoPanel";
 import {CourseTimeline} from "@/components/CourseTimeline";
 import {
@@ -68,6 +68,8 @@ export default function Home() {
     const [showHelp, setShowHelp] = useState<boolean>(false);
     const [firstShowHelp, setFirstShowHelp] = useState<boolean>(true);
 
+    const [graphRef, setGraphRef] = useState<RefObject<GraphCanvasRef | null>>();
+
     const getNodeFromId = useCallback(
             (id: string) => {
                 return nodes.find((n) => n.id === id);
@@ -83,7 +85,8 @@ export default function Home() {
         setNodeMap,
         setAdjacencyList,
         setAddedNodes,
-        getNodeFromId
+        getNodeFromId,
+        graphRef
     })
     const {searchProgram} = useProgram({nodes, setNodes, setSelectedProgram, setSelectedProgramSequence})
     const {
@@ -176,6 +179,7 @@ export default function Home() {
                         className={`grow w-full h-full absolute top-0 left-0 z-10`}
                         edges={displayedEdges}
                         nodes={displayedNodes}
+                        setGraphRef={setGraphRef}
                 />
                 <ProgramWindow
                         searchProgram={searchProgram}

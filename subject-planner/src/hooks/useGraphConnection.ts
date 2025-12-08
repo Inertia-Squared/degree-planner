@@ -1,7 +1,7 @@
 import { getConnectedNodesInterface } from "@/app/api/graph/getConnected/route";
 import { ExtendedNode, Generic } from "@/utils/types";
-import { Dispatch, SetStateAction, useCallback } from "react";
-import { GraphEdge } from "reagraph";
+import {Dispatch, RefObject, SetStateAction, useCallback} from "react";
+import {GraphCanvasRef, GraphEdge} from "reagraph";
 import {chooseNode} from "@/lib/graph/graphUtil";
 
 
@@ -15,6 +15,7 @@ export function useGraphConnection({
   setAdjacencyList,
   setAddedNodes,
   getNodeFromId,
+  graphRef,
 }: {
   nodes: ExtendedNode<Generic>[];
   edges: GraphEdge[];
@@ -24,6 +25,7 @@ export function useGraphConnection({
   setAdjacencyList: Dispatch<SetStateAction<Map<string, string[]>>>;
   setAddedNodes: Dispatch<SetStateAction<ExtendedNode<Generic>[]>>;
   getNodeFromId: (id: string) => ExtendedNode<Generic> | undefined;
+  graphRef: RefObject<GraphCanvasRef | null> | undefined;
 }) {
   const getConnected = useCallback(
     async (id: string | string[]) => {
@@ -124,6 +126,11 @@ export function useGraphConnection({
       setAdjacencyList(adjacency);
       setNodes(newNodes);
       setEdges(newEdges);
+      if (newNodes.length > 0) {
+          setTimeout(()=>{
+                  if(graphRef && graphRef.current) graphRef.current.fitNodesInView();
+              },250)
+      }
     },
     [edges, getConnected, getNodeFromId, nodes, setAdjacencyList, setEdges, setNodeMap, setNodes]
   );
@@ -138,7 +145,6 @@ export function useGraphConnection({
       const connections = await getConnected(idsToAdd);
       connectionsToAdd.newNodes.push(...connections.newNodes);
       connectionsToAdd.newEdges.push(...connections.newEdges);
-
       await addConnected({ manualAdd: connectionsToAdd });
     },
     [addConnected, getConnected]
