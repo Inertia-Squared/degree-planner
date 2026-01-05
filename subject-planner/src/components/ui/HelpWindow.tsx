@@ -18,7 +18,7 @@ const HelpWindow = ({
                 
             {showHelp && (
                 <div
-                    className={`relative top-60 border rounded-bl-lg p-4 max-w-[430px] w-full min-w-[250px] overflow-y-scroll bg-white`}
+                    className={`relative top-60 rounded-bl-lg p-4 max-w-[430px] w-full min-w-[250px] overflow-y-scroll bg-white shadow-lg`}
                 >
                     <div className="w-full h-5 flex justify-between items-center py-4 border-b-[0.5px] border-black" >
                         <div>Welcome to <strong>MyDegree.help!</strong></div>
