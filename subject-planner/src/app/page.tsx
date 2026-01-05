@@ -22,6 +22,7 @@ import {useGraphConnection} from "@/hooks/useGraphConnection";
 import {useProgram} from "@/hooks/useProgram";
 import {useSubjectCriteria} from "@/hooks/useSubjectCriteria";
 import {applyGraphColours} from "@/lib/graph/graphColours";
+import Header from "@/components/ui/layout/Header";
 
 // todo fix failure-case for Ba. of Arts, Ma. 0026 & Mi. 0024
 
@@ -155,13 +156,9 @@ export default function Home() {
     }, [addedNodes, adjacencyList, edges, expandConnected, getCompletedSubjects, hasTaken, isOfferedInCurrentPeriod, nodeMap, nodes, selectedProgram, selectedProgramSequence, showPotentialElectives]);
 
     return (
-            <main className={`h-[100vh] flex flex-col ${showLineup ? "p-2" : "pb-2 px-2"}`}>
-                <HelpWindow
-                        showHelp={showHelp}
-                        firstShowHelp={firstShowHelp}
-                        onSetShowHelp={setShowHelp}
-                        onSetFirstShowHelp={setFirstShowHelp}
-                />
+        <>
+            <Header showHelp={showHelp} firstShowHelp={firstShowHelp} onSetShowHelp={setShowHelp} />
+            <main className={`h-[100vh] py-16 flex flex-col ${showLineup ? "p-2" : "pb-2 px-2"}`}>
                 <NodeReference
                         setShowKey={setShowKey}
                         showKey={showKey}
@@ -215,5 +212,7 @@ export default function Home() {
                 />
                 {/*<a href={'https://github.com/Inertia-Squared/degree-planner'} target={'_blank'} className={`fixed top-0 right-0 w-8 h-8 z-40 m-3`}><BsGithub size={32}/></a>*/}
             </main>
+        </>
+
     );
 }
