@@ -1,8 +1,8 @@
-import {ExtendedNode} from "@/app/page";
 import {GraphEdge} from "reagraph";
 import {BsArrowRightShort} from "react-icons/bs";
 import {useState} from "react";
 import {BiBook} from "react-icons/bi";
+import { ExtendedNode } from "@/utils/types";
 
 interface InfoPanelProps {
     item: ExtendedNode<any> | GraphEdge | undefined

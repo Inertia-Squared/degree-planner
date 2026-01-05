@@ -1,7 +1,7 @@
-import {StudyPeriodItem} from "@/app/page";
 import {useState} from "react";
 import {BsArrowLeftShort} from "react-icons/bs";
 import {BiTime} from "react-icons/bi";
+import { StudyPeriodItem } from "@/utils/types";
 
 interface TimelineProps {
     className?: string,
