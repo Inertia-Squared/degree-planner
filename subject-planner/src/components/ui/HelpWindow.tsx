@@ -10,7 +10,7 @@ const HelpWindow = ({
 }) => {
     return (
         <div>
-            <div className="text-lg cursor-pointer" onClick={() => {
+            <div className={`cursor-pointer text-lg font-bold ${showHelp && "text-blue-800"}`} onClick={() => {
                 onSetShowHelp(!showHelp);
             }}>
                 Help
@@ -18,7 +18,7 @@ const HelpWindow = ({
                 
             {showHelp && (
                 <div
-                    className={`relative top-60 rounded-bl-lg p-4 max-w-[430px] w-full min-w-[250px] overflow-y-scroll bg-white shadow-lg`}
+                    className={`absolute right-0 rounded-bl-lg p-4 max-w-[430px] w-full min-w-[250px] overflow-y-scroll bg-white shadow-lg`}
                 >
                     <div className="w-full h-5 flex justify-between items-center py-4 border-b-[0.5px] border-black" >
                         <div>Welcome to <strong>MyDegree.help!</strong></div>

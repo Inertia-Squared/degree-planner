@@ -12,17 +12,15 @@ import {
     StudyPeriodItem,
     Subject,
 } from "@/utils/types";
-import HelpWindow from "@/components/ui/HelpWindow";
 import {displayMode} from "@/utils/consts";
 import ProgramWindow from "@/components/ui/ProgramWindow";
-import NodeReference from "@/components/ui/NodeReferrence";
-import LineupWindow from "@/components/ui/LineupWindow";
 import {applyGraphFilters} from "@/lib/graph/graphFilters";
 import {useGraphConnection} from "@/hooks/useGraphConnection";
 import {useProgram} from "@/hooks/useProgram";
 import {useSubjectCriteria} from "@/hooks/useSubjectCriteria";
 import {applyGraphColours} from "@/lib/graph/graphColours";
 import Header from "@/components/ui/layout/Header";
+import NodeReferrence from "@/components/ui/NodeReferrence";
 
 // todo fix failure-case for Ba. of Arts, Ma. 0026 & Mi. 0024
 
@@ -64,8 +62,6 @@ export default function Home() {
     const [firstShowLineup, setFirstShowLineup] = useState<boolean>(true);
     const [updateToggle, setUpdateToggle] = useState<boolean>(false);
     const [showSequences, setShowSequences] = useState<boolean>(true);
-    const [showKey, setShowKey] = useState<boolean>(false);
-    const [firstShowKey, setFirstShowKey] = useState<boolean>(true);
     const [showHelp, setShowHelp] = useState<boolean>(false);
     const [firstShowHelp, setFirstShowHelp] = useState<boolean>(true);
 
@@ -122,7 +118,7 @@ export default function Home() {
 
     function resetSelectedElement() {
         setSelectedElement(undefined);
-        setClusterOptions(["select a node to see cluster options"]);
+        setClusterOptions(["Select a node to see cluster options"]);
         setClusterBy(undefined);
     }
 
@@ -157,16 +153,11 @@ export default function Home() {
 
     return (
         <>
-            <Header showHelp={showHelp} firstShowHelp={firstShowHelp} onSetShowHelp={setShowHelp} />
-            <main className={`h-[100vh] py-16 flex flex-col ${showLineup ? "p-2" : "pb-2 px-2"}`}>
-                <NodeReference
-                        setShowKey={setShowKey}
-                        showKey={showKey}
+            <Header showHelp={showHelp} firstShowHelp={firstShowHelp} onSetShowHelp={setShowHelp} showLineup={showLineup}
                         firstShowLineup={firstShowLineup}
-                        setFirstShowKey={setFirstShowKey}
-                        firstShowKey={firstShowKey}
-                        nodes={nodes}
-                />
+                        setShowLineup={setShowLineup} />
+            <main onClick={() => setShowHelp(false)} className={`h-[100vh] py-16 flex flex-col ${showLineup ? "p-2" : "pb-2 px-2"}`}>
+                <NodeReferrence />
                 <ForceGraph
                         layoutMode={displayMode}
                         clickAction={selectElement}
@@ -183,6 +174,7 @@ export default function Home() {
                         forceAddSpecialisation={forceAddSpecialisation}
                         startExploring={startExploring}
                         showLineup={showLineup}
+                        setShowLineup={setShowLineup}
                         setClusterBy={setClusterBy}
                         clusterOptions={clusterOptions}
                         setShowPotentialElectives={setShowPotentialElectives}
@@ -193,12 +185,6 @@ export default function Home() {
                         selectedProgram={selectedProgram}
                         completedPeriods={completedPeriods}
                         currentPeriod={currentPeriod}
-                />
-                <LineupWindow
-                        showLineup={showLineup}
-                        firstShowLineup={firstShowLineup}
-                        firstShowHelp={firstShowHelp}
-                        setShowLineup={setShowLineup}
                 />
                 <CourseTimeline
                         className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute left-1 bottom-0 my-auto`}
