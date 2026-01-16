@@ -6,7 +6,7 @@ import InfoPanel from "@/components/InfoPanel";
 import {CourseTimeline} from "@/components/CourseTimeline";
 import {
     ExtendedNode,
-    Generic, GraphColourProps, GraphCommonProps, GraphFilterProps,
+    Generic, GraphColourProps, GraphCommonProps, GraphFilterProps, GraphPruningProps,
     Program,
     StudyPeriod,
     StudyPeriodItem,
@@ -14,13 +14,14 @@ import {
 } from "@/utils/types";
 import {displayMode} from "@/utils/consts";
 import ProgramWindow from "@/components/ui/ProgramWindow";
-import {applyGraphFilters} from "@/lib/graph/graphFilters";
+import {applyClassificationFilters, applyGraphFilters} from "@/lib/graph/graphFilters";
 import {useGraphConnection} from "@/hooks/useGraphConnection";
 import {useProgram} from "@/hooks/useProgram";
 import {useSubjectCriteria} from "@/hooks/useSubjectCriteria";
 import {applyGraphColours} from "@/lib/graph/graphColours";
 import Header from "@/components/ui/layout/Header";
-import NodeReferrence from "@/components/ui/NodeReferrence";
+import {applyGraphLabels} from "@/lib/graph/graphLabels";
+import ShowIneligible from "@/components/ShowIneligible";
 
 // todo fix failure-case for Ba. of Arts, Ma. 0026 & Mi. 0024
 
@@ -66,6 +67,8 @@ export default function Home() {
     const [firstShowHelp, setFirstShowHelp] = useState<boolean>(true);
 
     const [graphRef, setGraphRef] = useState<RefObject<GraphCanvasRef | null>>();
+
+    const [showAllIneligible, setShowAllIneligible] = useState(false);
 
     const getNodeFromId = useCallback(
             (id: string) => {
@@ -122,6 +125,10 @@ export default function Home() {
         setClusterBy(undefined);
     }
 
+    function onToggleShowIneligible(shouldShow: boolean){
+        setShowAllIneligible(shouldShow);
+    }
+
     useEffect(() => {
         const commonProps: GraphCommonProps = {
             adjacencyList: adjacencyList,
@@ -136,20 +143,31 @@ export default function Home() {
             showPotentialElectives: showPotentialElectives,
             ...commonProps
         }
-        const {newNodes, newEdges} = applyGraphFilters(filterProps);
-
         const colourProps: GraphColourProps = {
             getCompletedSubjects: getCompletedSubjects,
             hasTaken: hasTaken,
             isOfferedInCurrentPeriod: isOfferedInCurrentPeriod,
             ...commonProps
         }
+
+        let {newNodes, newEdges} = applyGraphFilters(filterProps);
         applyGraphColours(colourProps);
+        const pruningProps: GraphPruningProps = {
+            newNodes: newNodes,
+            newEdges: newEdges,
+            adjacencyList: adjacencyList,
+            showAllIneligible: showAllIneligible,
+        }
+        const newValues = applyClassificationFilters(pruningProps);
+        newNodes = newValues.newNodes;
+        newEdges = newValues.newEdges;
+
+        applyGraphLabels(newNodes);
 
         setDisplayedNodes(newNodes);
         setDisplayedEdges(newEdges);
         if (addedNodes.length > 0) expandConnected(addedNodes);
-    }, [addedNodes, adjacencyList, edges, expandConnected, getCompletedSubjects, hasTaken, isOfferedInCurrentPeriod, nodeMap, nodes, selectedProgram, selectedProgramSequence, showPotentialElectives]);
+    }, [addedNodes, adjacencyList, edges, expandConnected, getCompletedSubjects, hasTaken, isOfferedInCurrentPeriod, nodeMap, nodes, selectedProgram, selectedProgramSequence, showPotentialElectives, showAllIneligible]);
 
     return (
         <>
@@ -157,7 +175,6 @@ export default function Home() {
                         firstShowLineup={firstShowLineup}
                         setShowLineup={setShowLineup} />
             <main onClick={() => setShowHelp(false)} className={`h-[100vh] py-16 flex flex-col ${showLineup ? "p-2" : "pb-2 px-2"}`}>
-                <NodeReferrence />
                 <ForceGraph
                         layoutMode={displayMode}
                         clickAction={selectElement}
@@ -195,6 +212,10 @@ export default function Home() {
                 <InfoPanel
                         className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute right-1 bottom-0 my-auto`}
                         item={selectedElement}
+                />
+                <ShowIneligible
+                        className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute right-1 bottom-0 my-auto`}
+                        onToggle={onToggleShowIneligible}
                 />
                 {/*<a href={'https://github.com/Inertia-Squared/degree-planner'} target={'_blank'} className={`fixed top-0 right-0 w-8 h-8 z-40 m-3`}><BsGithub size={32}/></a>*/}
             </main>

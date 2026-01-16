@@ -2,7 +2,7 @@ import { getConnectedNodesInterface } from "@/app/api/graph/getConnected/route";
 import { ExtendedNode, Generic } from "@/utils/types";
 import {Dispatch, RefObject, SetStateAction, useCallback} from "react";
 import {GraphCanvasRef, GraphEdge} from "reagraph";
-import {chooseNode} from "@/lib/graph/graphUtil";
+import {chooseNode, isChoiceNode} from "@/lib/graph/graphUtil";
 
 
 
@@ -53,6 +53,9 @@ export function useGraphConnection({
         if (!nodeAlreadyExists) {
           const newNode = connection.connectedNode;
           newNode.id = connection.connectedNode.id;
+          if (isChoiceNode(newNode)){
+              newNode.label = `Choose ${newNode.label}`
+          }
           newNodes.push(newNode);
         }
         if (!edgeAlreadyExists) {
