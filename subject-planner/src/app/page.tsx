@@ -57,7 +57,7 @@ export default function Home() {
     });
     const [subjectsTaken, setSubjectsTaken] = useState<ExtendedNode<Subject>[]>([]);
 
-
+    const [showKey, setShowKey] = useState<boolean>(true);
     const [showLineup, setShowLineup] = useState<boolean>(false);
     const [firstShowLineup, setFirstShowLineup] = useState<boolean>(true);
     const [updateToggle, setUpdateToggle] = useState<boolean>(false);
@@ -113,7 +113,8 @@ export default function Home() {
         setSubjectsTaken,
         setCurrentPeriod,
         setCompletedPeriods,
-        startPeriod
+        startPeriod,
+        setShowKey
     })
 
     function resetSelectedElement() {
@@ -156,8 +157,8 @@ export default function Home() {
             <Header showHelp={showHelp} firstShowHelp={firstShowHelp} onSetShowHelp={setShowHelp} showLineup={showLineup}
                         firstShowLineup={firstShowLineup}
                         setShowLineup={setShowLineup} />
-            <main onClick={() => setShowHelp(false)} className={`h-[100vh] py-16 flex flex-col ${showLineup ? "p-2" : "pb-2 px-2"}`}>
-                <NodeReferrence />
+            <main className={`h-[100vh] py-16 flex flex-col ${showLineup ? "p-2" : "pb-2 px-2"}`}>
+                <NodeReferrence showKey={showKey} />
                 <ForceGraph
                         layoutMode={displayMode}
                         clickAction={selectElement}
@@ -193,8 +194,10 @@ export default function Home() {
                         onSkipPeriod={moveToNewPeriod}
                 />
                 <InfoPanel
-                        className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute right-1 bottom-0 my-auto`}
+                        className={`bg-gray-50 min-w-[400px] w-fit z-20 max-h-[45vw] max-w-1/5 shadow-lg p-4 absolute top-20 right-2`}
                         item={selectedElement}
+                        showKey={showKey}
+                        setShowKey={setShowKey}
                 />
                 {/*<a href={'https://github.com/Inertia-Squared/degree-planner'} target={'_blank'} className={`fixed top-0 right-0 w-8 h-8 z-40 m-3`}><BsGithub size={32}/></a>*/}
             </main>

@@ -2,7 +2,7 @@ import { displayMode } from "@/utils/consts";
 import { ExtendedNode, Major, Minor, Program, StudyPeriod, StudyPeriodItem } from "@/utils/types";
 import React, { Dispatch, SetStateAction } from "react";
 import LineupSelector from "../LineupSelector";
-import { RxCross1 } from "react-icons/rx";
+import { RxCross1, RxCross2 } from "react-icons/rx";
 
 const ProgramWindow = ({
     searchProgram,
@@ -39,13 +39,13 @@ const ProgramWindow = ({
 }) => {
     return (
         <div
-            className={`container mx-auto shadow-lg flex flex-col overflow-x-scroll w-fit p-4 max-w-full h-fit relative z-20 bg-white ${
+            className={`container mx-auto lg:absolute lg:right-48 shadow-lg flex flex-col overflow-x-scroll w-fit p-4 max-w-full h-fit z-20 bg-white ${
                 showLineup ? "block" : "hidden"
             }`}
         >
-            <div className="flex items-center justify-between py-4">
+            <div className="flex items-center justify-between py-4 space-x-4">
                 <h1>Please Search for a Program to Begin</h1>
-                <RxCross1 className="cursor-pointe" onClick={() => setShowLineup(false)} />
+                <RxCross2 className="cursor-pointer" onClick={() => setShowLineup(false)} />
             </div>
             <div className="flex">
                 <div>
@@ -60,7 +60,7 @@ const ProgramWindow = ({
                     <div className="flex h-fit">
                         <div className={`mx-2 hidden md:block`}></div>
                         <div className={`flex-3 flex`}>
-                            <div className={"flex flex-col"}>
+                            <div className={"flex flex-col space-y-4"}>
                                 <h2 className={`font-bold`}>Filters</h2>
                                 <div>
                                     {displayMode === "forceDirected2d" && (
@@ -73,7 +73,7 @@ const ProgramWindow = ({
                                                 {clusterOptions.map((c) => {
                                                     return (
                                                         <option key={c} value={c}>
-                                                            {c}
+                                                            {c.charAt(0).toUpperCase() + c.slice(1)}
                                                         </option>
                                                     );
                                                 })}
