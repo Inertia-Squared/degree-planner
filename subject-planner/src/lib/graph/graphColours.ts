@@ -6,7 +6,15 @@ import {
     isPrerequisiteNode,
     isSubjectNode
 } from "@/lib/graph/graphUtil";
-import {ExtendedNode, Generic, GraphColourProps, OfferStatus, Prerequisite, Subject} from "@/utils/types";
+import {
+    ExtendedNode,
+    Generic,
+    GraphColourProps,
+    NodeStatus,
+    OfferStatus,
+    Prerequisite,
+    Subject
+} from "@/utils/types";
 import {GraphEdge} from "reagraph";
 import {colours, nodeFillMap} from "@/utils/consts";
 import {HEXRGBA} from "@/lib/RGBA";
@@ -24,6 +32,7 @@ export function applyGraphColours(
     let newNodes = [...nodes];
     let newEdges = [...edges]; // todo this stays in since we may highlight/colour-code edges soon
 
+    // Colour subject node based on if the student is eligible or not
     newNodes.forEach(n => {
         if (!isSubjectNode(n)) return;
         const parentPrereq = getParentsByType<Prerequisite>(
@@ -39,11 +48,14 @@ export function applyGraphColours(
             isOfferedInCurrentPeriod(n) !== OfferStatus.NO
         ) {
             n.fill = nodeFillMap["Subject"];
-        } else {
-            if (!hasTaken(n)) n.fill = colours.inaccessible;
+            n.data.status = NodeStatus.NONE;
+        } else if (!hasTaken(n)) {
+             n.fill = colours.inaccessible;
+             n.data.status = NodeStatus.INELIGIBLE;
         }
     });
 
+    // If subject node is accessible, colour the subject based on if it is a generic elective, or a prerequisite of a required subject (but not required itself)
     newNodes.forEach(n => {
         if (!isSubjectNode(n) || !n.fill) return;
         const required = isRequiredByProgramOrSpecialisation(
@@ -57,30 +69,50 @@ export function applyGraphColours(
             if (n.fill !== colours.inaccessible) {
                 if (required === RequiredType.NOT_REQUIRED) {
                     n.fill = new HEXRGBA("#994499").toHex();
-                } else {
-                    if (!hasTaken(n)) n.fill = new HEXRGBA(n.fill).multiply(0.6).toHex();
+                    n.data.status = NodeStatus.ELECTIVE;
+                } else if (!hasTaken(n)) {
+                     n.fill = new HEXRGBA(n.fill).multiply(0.6).toHex();
+                     n.data.status = NodeStatus.PREREQUISITE;
                 }
             }
         }
     });
 
+    // If subject not yet selected, but accessible, make the node colour faded
     newNodes.forEach(n => {
         if (!isSubjectNode(n) || !n.fill) return;
         if (!hasTaken(n)) {
-            if (n.fill !== colours.inaccessible)
+            if (n.fill !== colours.inaccessible) {
                 n.fill = new HEXRGBA(n.fill).multiply(0.75).toHex();
+                n.data.status = n.data.status === NodeStatus.NONE ? NodeStatus.REQUIRED : NodeStatus.PREREQUISITE;
+            }
         }
     });
 
+    // colour prerequisite node based on if student is eligible
     newNodes.forEach(n => {
         if (!isPrerequisiteNode(n)) return;
         if (prerequisiteIsFulfilled(n, getCompletedSubjects())) {
             n.fill = nodeFillMap["Prerequisites"];
+            n.data.status = NodeStatus.NONE;
         } else {
             n.fill = colours.inaccessible;
+            n.data.status = NodeStatus.INELIGIBLE;
         }
     });
+
+    // fade edges that have an ineligible node attached
+    newEdges.forEach(e=>{
+        const sourceNode = nodeMap.get(e.source);
+        const targetNode = nodeMap.get(e.target);
+        if (!sourceNode || !targetNode) return;
+        if (sourceNode.data.status === NodeStatus.INELIGIBLE && targetNode.data.status === NodeStatus.INELIGIBLE) {
+            e.dashed = true;
+        }
+    })
 }
+
+
 
 export function isEligibleForSubject(parentPrerequisites: ExtendedNode<Prerequisite>[], completedSubjects: ExtendedNode<Subject>[] | undefined){
     if (parentPrerequisites.length === 0) {

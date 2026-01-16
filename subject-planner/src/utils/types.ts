@@ -18,6 +18,14 @@ export enum OfferStatus {
     UNKNOWN
 }
 
+export enum NodeStatus {
+    NONE,
+    REQUIRED,
+    PREREQUISITE,
+    ELECTIVE,
+    INELIGIBLE
+}
+
 export enum FilteredReasons {
     SUBJECT_NOT_IN_SEQUENCE,
     PREREQUISITE_NOT_IN_COURSE,
@@ -78,6 +86,7 @@ export type NodeTypes = 'Program' | 'Subject' | 'Major' | 'Minor' | 'Prerequisit
 export interface Generic {
     type: NodeTypes
     filtered?: FilteredReasons
+    status: NodeStatus
 }
 
 export interface GraphCommonProps {
@@ -97,4 +106,11 @@ export interface GraphColourProps extends GraphCommonProps {
     getCompletedSubjects: () => ExtendedNode<Subject>[],
     isOfferedInCurrentPeriod: (node: ExtendedNode<Subject>) => OfferStatus,
     hasTaken: (node: ExtendedNode<Generic>) => boolean
+}
+
+export interface GraphPruningProps {
+    newNodes: ExtendedNode<Generic>[],
+    newEdges: GraphEdge[],
+    adjacencyList: Map<string, string[]>,
+    showAllIneligible: boolean
 }

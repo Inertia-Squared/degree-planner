@@ -1,15 +1,11 @@
+import {isRequiredByProgramOrSpecialisation, prerequisiteIsFulfilled, RequiredType} from "@/lib/graph/graphColours";
 import {
-  isRequiredByProgramOrSpecialisation,
-  prerequisiteIsFulfilled,
-  RequiredType
-} from "@/lib/graph/graphColours";
-import {
-  ExtendedNode,
-  FilteredReasons,
-  Generic,
-  GraphFilterProps,
-  Prerequisite,
-  Subject
+    ExtendedNode,
+    FilteredReasons,
+    Generic,
+    GraphFilterProps, GraphPruningProps, NodeStatus,
+    Prerequisite,
+    Subject
 } from "@/utils/types";
 import {fromNodesById, getCourseCode, getParentsByType, isPrerequisiteNode, isSubjectNode} from "@/lib/graph/graphUtil";
 import {GraphEdge} from "reagraph";
@@ -161,4 +157,36 @@ export function applyGraphFilters(
   });
 
   return { newNodes, newEdges };
+}
+
+export function applyClassificationFilters(pruningProps: GraphPruningProps
+): {newNodes: ExtendedNode<Generic>[], newEdges: GraphEdge[]} {
+    let {newNodes, newEdges, adjacencyList, showAllIneligible} = pruningProps;
+    if (!showAllIneligible) {
+        newNodes = newNodes.filter(n=>{
+            if (isSubjectNode(n) && n.data.status === NodeStatus.INELIGIBLE) return false;
+
+            if (isPrerequisiteNode(n)) {
+                if (n.data.status === NodeStatus.INELIGIBLE){
+                    const adjacentNodes = adjacencyList.get(n.id);
+                    if (!adjacentNodes) return false;
+                    for (let id of adjacentNodes){
+                        const node = fromNodesById(id, newNodes);
+                        if (!node) return false;
+                        if (isSubjectNode(node) && node.data.status !== NodeStatus.INELIGIBLE) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                return true;
+            }
+
+            return true;
+        });
+
+        // Filter edges for removed nodes (2nd pass)
+        newEdges = newEdges.filter(e => filterDisconnectedEdges(e, newNodes));
+    }
+    return {newNodes, newEdges};
 }
