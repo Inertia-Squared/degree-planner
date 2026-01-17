@@ -101,9 +101,7 @@ export function useSubjectCriteria({
         const newEdges = [...edges.filter((e) => newNodes.find((n) => n.id === e.target)), newEdge];
         setEdges(newEdges);
     };
-    const newEdges = [...edges.filter((e) => newNodes.find((n) => n.id === e.target)), newEdge];
-    setEdges(newEdges);
-  };
+
 
   const isOfferedInCurrentPeriod = useCallback(
     (node: ExtendedNode<Subject>): OfferStatus => {
