@@ -141,20 +141,6 @@ export function useSubjectCriteria({
       );
     }
 
-    function selectElement(id: string, isNode: boolean = true) {
-        const element = isNode ? nodes.find((n) => n.id === id) : edges.find((e) => e.id === id);
-        setSelectedElement(element);
-        if (isNode) {
-            if (element && isProgramNode(element)) {
-                setSelectedProgram(element);
-                const sequences = element.data["programSequences"];
-                if (sequences.length > 0) setSelectedProgramSequence(sequences[0]);
-            }
-            setClusterOptions(
-                Object.keys(element?.data).filter((key) => !badClusterOptions.find((o) => o == key))
-            );
-        }
-    }
     const getCompletedSubjects = useCallback(() => {
         return completedPeriods.map((p) => p.subjectsTaken).flat();
     }, [completedPeriods]);
