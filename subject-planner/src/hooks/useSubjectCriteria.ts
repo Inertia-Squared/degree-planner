@@ -140,6 +140,7 @@ export function useSubjectCriteria({
         Object.keys(element?.data).filter((key) => !badClusterOptions.find((o) => o == key))
       );
     }
+  }
 
     const getCompletedSubjects = useCallback(() => {
         return completedPeriods.map((p) => p.subjectsTaken).flat();
