@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { read } from "@/lib/neo4j";
-import {ExtendedNode, Major} from "@/app/page";
+import {ExtendedNode, Major} from "@/utils/types";
 
 import {nodeFillMap, nodeSizeMap} from "@/utils/consts";
 
