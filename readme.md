@@ -22,7 +22,7 @@
 - Run ```npx tsx Automation/buildDataFromSubset.ts```
 
 ### Using a Snapshot (Skips LLM Inference)
-- Copy the contents from ```data-scraping/Snapshots/[Snapshot]``` to ```data-scraping/Automation/Data``` (you may need to create the Data folder manually)
+- Copy the contents from ```data-scraping/Snapshots/[Snapshot]``` to ```data-scraping/Automation/data``` (you may need to create the Data folder manually)
 - Ensure your working directory is in ```[Project Root]/data-scraping```
 - Run ```npx tsx neo4j/upload-data-to-db.ts```
 
