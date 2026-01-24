@@ -48,7 +48,7 @@ export function useSubjectCriteria({
   setCurrentPeriod,
   setCompletedPeriods,
   startPeriod,
-  setShowKey
+  setHideInfo
 }: {
   nodes: ExtendedNode<Generic>[];
   selectedProgram: ExtendedNode<Program> | undefined;
@@ -74,7 +74,7 @@ export function useSubjectCriteria({
   setCurrentPeriod: Dispatch<SetStateAction<StudyPeriodItem>>;
   setCompletedPeriods: Dispatch<SetStateAction<StudyPeriodItem[]>>;
   startPeriod: StudyPeriod;
-  setShowKey: Dispatch<SetStateAction<boolean>>;
+  setHideInfo: Dispatch<SetStateAction<boolean>>;
 }) {
     const recentlyAdded = useRef<Set<string>>(new Set());
 
@@ -129,7 +129,7 @@ export function useSubjectCriteria({
   function selectElement(id: string, isNode: boolean = true) {
     const element = isNode ? nodes.find((n) => n.id === id) : edges.find((e) => e.id === id);
     setSelectedElement(element);
-    setShowKey(false);
+    setHideInfo(false);
     if (isNode) {
       if (element && isProgramNode(element)) {
         setSelectedProgram(element);
