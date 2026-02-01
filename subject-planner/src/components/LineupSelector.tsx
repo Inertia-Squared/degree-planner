@@ -108,7 +108,7 @@ const LineupSelector = ({ onSearchEvent, onMajorEvent, onMinorEvent, onStartExpl
                         {showProgramDropdown && (
                             <select
                                 id="course"
-                                defaultValue={"Please Select a Degree"}
+                                value={program || "Please Select a Degree"}
                                 className={`flex flex-col max-h-[110px] max-w-[600px] overflow-y-scroll`}
                                 onChange={async (e) => {
                                     const stripped = e.currentTarget.value;
