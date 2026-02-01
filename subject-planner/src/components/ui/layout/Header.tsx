@@ -24,7 +24,7 @@ const Header = ({
                 <div className="font-extrabold text-2xl">
                     <Link href={"/"}>DegreePlanner</Link>
                 </div>
-                <div className="h-full flex items-center space-x-4 ">
+                <div className="h-full flex items-center space-x-8">
                     <LineupWindow
                         showLineup={showLineup}
                         setShowLineup={setShowLineup}

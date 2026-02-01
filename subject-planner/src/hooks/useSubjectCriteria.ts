@@ -24,55 +24,57 @@ import {
 import { isEligibleForSubject } from "@/lib/graph/graphColours";
 
 export function useSubjectCriteria({
-                                       nodes,
-                                       selectedProgram,
-                                       setNodes,
-                                       edges,
-                                       setEdges,
-                                       currentPeriod,
-                                       setFirstShowLineup,
-                                       setShowLineup,
-                                       expandConnected,
-                                       setSelectedElement,
-                                       setSelectedProgram,
-                                       setSelectedProgramSequence,
-                                       setClusterOptions,
-                                       completedPeriods,
-                                       subjectsTaken,
-                                       setUpdateToggle,
-                                       updateToggle,
-                                       adjacencyList,
-                                       nodeMap,
-                                       setShowSequences,
-                                       setSubjectsTaken,
-                                       setCurrentPeriod,
-                                       setCompletedPeriods,
-                                       startPeriod,
-                                   }: {
-    nodes: ExtendedNode<Generic>[];
-    selectedProgram: ExtendedNode<Program> | undefined;
-    setNodes: Dispatch<SetStateAction<ExtendedNode<Generic>[]>>;
-    edges: GraphEdge[];
-    setEdges: Dispatch<SetStateAction<GraphEdge[]>>;
-    currentPeriod: StudyPeriodItem;
-    setFirstShowLineup: Dispatch<SetStateAction<boolean>>;
-    setShowLineup: Dispatch<SetStateAction<boolean>>;
-    expandConnected: (nodesToExpand: ExtendedNode<Generic>[]) => Promise<void>;
-    setSelectedElement: Dispatch<SetStateAction<ExtendedNode<Generic> | GraphEdge | undefined>>;
-    setSelectedProgram: Dispatch<SetStateAction<ExtendedNode<Program> | undefined>>;
-    setSelectedProgramSequence: Dispatch<SetStateAction<string | undefined>>;
-    setClusterOptions: Dispatch<SetStateAction<string[]>>;
-    completedPeriods: StudyPeriodItem[];
-    subjectsTaken: ExtendedNode<Subject>[];
-    setUpdateToggle: Dispatch<SetStateAction<boolean>>;
-    updateToggle: boolean;
-    adjacencyList: Map<string, string[]>;
-    nodeMap: Map<string, ExtendedNode<Generic>>;
-    setShowSequences: Dispatch<SetStateAction<boolean>>;
-    setSubjectsTaken: Dispatch<SetStateAction<ExtendedNode<Subject>[]>>;
-    setCurrentPeriod: Dispatch<SetStateAction<StudyPeriodItem>>;
-    setCompletedPeriods: Dispatch<SetStateAction<StudyPeriodItem[]>>;
-    startPeriod: StudyPeriod;
+  nodes,
+  selectedProgram,
+  setNodes,
+  edges,
+  setEdges,
+  currentPeriod,
+  setFirstShowLineup,
+  setShowLineup,
+  expandConnected,
+  setSelectedElement,
+  setSelectedProgram,
+  setSelectedProgramSequence,
+  setClusterOptions,
+  completedPeriods,
+  subjectsTaken,
+  setUpdateToggle,
+  updateToggle,
+  adjacencyList,
+  nodeMap,
+  setShowSequences,
+  setSubjectsTaken,
+  setCurrentPeriod,
+  setCompletedPeriods,
+  startPeriod,
+  setHideInfo
+}: {
+  nodes: ExtendedNode<Generic>[];
+  selectedProgram: ExtendedNode<Program> | undefined;
+  setNodes: Dispatch<SetStateAction<ExtendedNode<Generic>[]>>;
+  edges: GraphEdge[];
+  setEdges: Dispatch<SetStateAction<GraphEdge[]>>;
+  currentPeriod: StudyPeriodItem;
+  setFirstShowLineup: Dispatch<SetStateAction<boolean>>;
+  setShowLineup: Dispatch<SetStateAction<boolean>>;
+  expandConnected: (nodesToExpand: ExtendedNode<Generic>[]) => Promise<void>;
+  setSelectedElement: Dispatch<SetStateAction<ExtendedNode<Generic> | GraphEdge | undefined>>;
+  setSelectedProgram: Dispatch<SetStateAction<ExtendedNode<Program> | undefined>>;
+  setSelectedProgramSequence: Dispatch<SetStateAction<string | undefined>>;
+  setClusterOptions: Dispatch<SetStateAction<string[]>>;
+  completedPeriods: StudyPeriodItem[];
+  subjectsTaken: ExtendedNode<Subject>[];
+  setUpdateToggle: Dispatch<SetStateAction<boolean>>;
+  updateToggle: boolean;
+  adjacencyList: Map<string, string[]>;
+  nodeMap: Map<string, ExtendedNode<Generic>>;
+  setShowSequences: Dispatch<SetStateAction<boolean>>;
+  setSubjectsTaken: Dispatch<SetStateAction<ExtendedNode<Subject>[]>>;
+  setCurrentPeriod: Dispatch<SetStateAction<StudyPeriodItem>>;
+  setCompletedPeriods: Dispatch<SetStateAction<StudyPeriodItem[]>>;
+  startPeriod: StudyPeriod;
+  setHideInfo: Dispatch<SetStateAction<boolean>>;
 }) {
     const recentlyAdded = useRef<Set<string>>(new Set());
 
@@ -100,43 +102,46 @@ export function useSubjectCriteria({
         setEdges(newEdges);
     };
 
-    const isOfferedInCurrentPeriod = useCallback(
-        (node: ExtendedNode<Subject>): OfferStatus => {
-            if (!node.data.teachingPeriods || node.data.teachingPeriods.length < 1)
-                return OfferStatus.UNKNOWN;
-            let offerStatus: OfferStatus = OfferStatus.NO;
-            node.data.teachingPeriods.map((p) => {
-                if (offerStatus === OfferStatus.NO && asStudyPeriod(p) === "unknown")
-                    offerStatus = OfferStatus.UNKNOWN;
-                if (asStudyPeriod(p) === currentPeriod.period) offerStatus = OfferStatus.YES;
-            });
-            return offerStatus;
-        },
-        [currentPeriod.period]
-    );
 
-    async function startExploring() {
-        const newNodes = nodes.filter((n) => isProgramNode(n) || isMinorNode(n) || isMajorNode(n));
-        setNodes(newNodes);
-        setFirstShowLineup(false);
-        setShowLineup(false);
-        expandConnected(newNodes);
-    }
+  const isOfferedInCurrentPeriod = useCallback(
+    (node: ExtendedNode<Subject>): OfferStatus => {
+      if (!node.data.teachingPeriods || node.data.teachingPeriods.length < 1)
+        return OfferStatus.UNKNOWN;
+      let offerStatus: OfferStatus = OfferStatus.NO;
+      node.data.teachingPeriods.map((p) => {
+        if (offerStatus === OfferStatus.NO && asStudyPeriod(p) === "unknown")
+          offerStatus = OfferStatus.UNKNOWN;
+        if (asStudyPeriod(p) === currentPeriod.period) offerStatus = OfferStatus.YES;
+      });
+      return offerStatus;
+    },
+    [currentPeriod.period]
+  );
 
-    function selectElement(id: string, isNode: boolean = true) {
-        const element = isNode ? nodes.find((n) => n.id === id) : edges.find((e) => e.id === id);
-        setSelectedElement(element);
-        if (isNode) {
-            if (element && isProgramNode(element)) {
-                setSelectedProgram(element);
-                const sequences = element.data["programSequences"];
-                if (sequences.length > 0) setSelectedProgramSequence(sequences[0]);
-            }
-            setClusterOptions(
-                Object.keys(element?.data).filter((key) => !badClusterOptions.find((o) => o == key))
-            );
-        }
+  async function startExploring() {
+    const newNodes = nodes.filter((n) => isProgramNode(n) || isMinorNode(n) || isMajorNode(n));
+    setNodes(newNodes);
+    setFirstShowLineup(false);
+    setShowLineup(false);
+    expandConnected(newNodes);
+  }
+
+  function selectElement(id: string, isNode: boolean = true) {
+    const element = isNode ? nodes.find((n) => n.id === id) : edges.find((e) => e.id === id);
+    setSelectedElement(element);
+    setHideInfo(false);
+    if (isNode) {
+      if (element && isProgramNode(element)) {
+        setSelectedProgram(element);
+        const sequences = element.data["programSequences"];
+        if (sequences.length > 0) setSelectedProgramSequence(sequences[0]);
+      }
+      setClusterOptions(
+        Object.keys(element?.data).filter((key) => !badClusterOptions.find((o) => o == key))
+      );
     }
+  }
+
     const getCompletedSubjects = useCallback(() => {
         return completedPeriods.map((p) => p.subjectsTaken).flat();
     }, [completedPeriods]);
