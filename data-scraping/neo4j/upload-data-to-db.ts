@@ -21,6 +21,7 @@ enum SpecialisationType {
 
 const CONFIG = {
     inputPath: 'Automation/data/',
+    disableDBCommit: false,
     // inputPath: '../Snapshots/Full\ Handbook\ 1/',
 }
 
@@ -32,77 +33,12 @@ export interface LogicalPrerequisite {
     }[]
 }
 
-export const keyOf = {
-    ['program']: 'Program {programName: $programName}',
-    ['major']: 'Major {majorName: $majorName}',
-    ['minor']: 'Minor {minorName: $minorName}',
-    ['subject']: 'Subject {code: $code}',
-    ['choice']: 'SubjectChoice {choiceName: $choiceName, choices: $choices, parent: $parent}',
-    ['prerequisites']: 'Prerequisites {subjects: $subjects, course: $course, forSubject: $forSubject}',
-}
-
-/**
- * Inserts a string into another string, after each parameter placeholder.
- * @param value The original string.
- * @param addition The string to insert.
- * @returns The modified string.
- */
-function insertString(value: string, addition: string){
-    return value.replace(/\$[A-z0-9_]*/g, `$&${addition}`);
-}
-
-// todo create a function that automatically converts available parameters to the structure below
-//  will allow for optional properties, and be easier to maintain
-export const propsOf = {
-    ['program']: 'Program {\n' +
-        'programName: $programName,\n' +
-        'programLink: $programLink,\n' +
-        'programSequences: $programSequences' +
-        '}',
-    ['major']: 'Major {\n' +
-        'majorName: $majorName,\n' +
-        'majorType: $majorType,\n' +
-        'majorLocations: $majorLocations,\n' +
-        'majorLink: $majorLink\n' +
-        '}',
-    ['minor']: 'Minor {\n' +
-        'minorName: $minorName,\n' +
-        'minorType: $minorType,\n' +
-        'minorLocations: $minorLocations,\n' +
-        'minorLink: $minorLink\n' +
-        '}',
-    ['subject']: 'Subject {\n' +
-        'code: $code, \n' +
-        'subjectName: $subjectName, \n' +
-        'prerequisites: $prerequisites, \n' +
-        'creditPoints: $creditPoints, \n' +
-        'coordinator: $coordinator, \n' +
-        'description: $description, \n' +
-        'school: $school, \n' +
-        'discipline: $discipline, \n' +
-        'subjectLink: $subjectLink,\n' +
-        'subjectSequences: $subjectSequences,\n' +
-        'teachingPeriods: $teachingPeriods' +
-        '}',
-    ['choice']: 'SubjectChoice {\n' +
-        'choiceName: $choiceName, \n' +
-        'choices: $choices, \n' +
-        'parent: $parent,\n' +
-        'choiceSequences: $choiceSequences' +
-        '}',
-    ['prerequisites']: 'Prerequisites {\n' +
-        'course: $course,\n' +
-        'forSubject: $forSubject,\n' +
-        'subjects: $subjects\n' +
-        '}'
-}
-
 const globals = {
     subjects: [] as SubjectData[]
 }
 
 export interface nodeProperties {
-    program: {
+    Program: {
         keyProps: {
             programName: string
         }
@@ -111,7 +47,7 @@ export interface nodeProperties {
             programSequences: string[]
         }
     }
-    major: {
+    Major: {
         keyProps: {
             majorName: string
         }
@@ -121,7 +57,7 @@ export interface nodeProperties {
             majorLink: string
         }
     }
-    minor: {
+    Minor: {
         keyProps: {
             minorName: string
         }
@@ -131,7 +67,7 @@ export interface nodeProperties {
             minorLink: string
         }
     }
-    subject: {
+    Subject: {
         keyProps: {
             code: string // code
         }
@@ -148,18 +84,18 @@ export interface nodeProperties {
             teachingPeriods: string[]
         }
     }
-    choice: {
+    SubjectChoice: {
         // these nodes are abstractions of metadata, unfortunately there is no simple way to match on them
         keyProps: {
             choiceName: string // name
             choices: number
-            parent?: string // fk also acts as secondary key
+            parent: string // fk also acts as secondary key
         }
         dataProps?: {
             choiceSequences: string[]
         }
     }
-    prerequisites: {
+    Prerequisites: {
         keyProps: {
             subjects: string // JSON
             course: string
@@ -174,6 +110,65 @@ export type PropsKey = keyof nodeProperties;
 export interface Node<T extends PropsKey> {
     type: T
     props: nodeProperties[T]
+}
+
+
+type serialisedProps = {[key: string]: string};
+
+let keyOf: serialisedProps = {}
+
+/**
+ * Wrapper function of generateSerialisedInterface for cleaner inline code.
+ * @param node The node to serialise.
+ * @returns The serialised key string.
+ */
+function serialiseKey(node: Node<PropsKey>): string {
+    return generateSerialisedInterface(node, keyOf);
+}
+
+let dataOf: serialisedProps = {}
+
+/**
+ * Wrapper function of generateSerialisedInterface for cleaner inline code.
+ * @param node The node to serialise.
+ * @returns The serialised data string.
+ */
+function serialiseProps(node: Node<PropsKey>): string {
+    return generateSerialisedInterface(node, dataOf, true);
+}
+
+/**
+ * Serialises data portion of nodeProperties into Neo4J-friendly syntax during runtime.
+ *
+ * This method of serialisation forces that all (or none of the) possible fields be present in whatever object is being serialised,
+ * the datastructure was already like this naturally, but is now an active constraint.
+ * @param node The node to serialise
+ * @param cache The variable to cache the serialised string into.
+ * @param serialiseAll Serialise all props or just key (i.e. 'match on') props.
+ */
+function generateSerialisedInterface(node: Node<PropsKey>, cache: serialisedProps, serialiseAll = false): string {
+    const type = node.type.toString();
+    if (cache[type]) return cache[type];
+
+    const keyProps = Object.keys(node.props.keyProps);
+    const dataProps: string[] = serialiseAll ? Object.keys(node.props.dataProps ?? []) : [];
+    const props = [...keyProps, ...dataProps];
+
+    if (props && props.length > 0) {
+        const serialisedResult = `${type} {${props.map(d=>`${d}: $${d}`).join(', ')}}`;
+        cache[type] = serialisedResult;
+        return serialisedResult;
+    } else throw ("Attempted to serialise node with no keys or data, this should never happen.");
+}
+
+/**
+ * Inserts a string into another string, after each parameter placeholder.
+ * @param value The original string.
+ * @param addition The string to insert.
+ * @returns The modified string.
+ */
+function insertString(value: string, addition: string){
+    return value.replace(/\$[A-z0-9_]*/g, `$&${addition}`);
 }
 
 /**
@@ -204,7 +199,7 @@ function uniqueNodeDataPair(nodeA: Node<PropsKey>, nodeB: Node<PropsKey>){
  */
 function uniqueKeyOf(subjectNode: Node<PropsKey>, comparatorNode: Node<PropsKey>){
                                                                         // electric boogaloo
-    return subjectNode.type === comparatorNode.type ? insertString(keyOf[subjectNode.type],'2') : keyOf[subjectNode.type];
+    return subjectNode.type === comparatorNode.type ? insertString(serialiseKey(subjectNode),'2') : serialiseKey(subjectNode);
 }
 
 /**
@@ -228,7 +223,7 @@ function uniqueKeyArgumentsOf(subjectNode: Node<PropsKey>, comparatorNode: Node<
  */
 function uniqueDataOf(subjectNode: Node<PropsKey>, comparatorNode: Node<PropsKey>){
     // electric boogaloo
-    return subjectNode.type === comparatorNode.type ? insertString(propsOf[subjectNode.type],'2') : propsOf[subjectNode.type];
+    return subjectNode.type === comparatorNode.type ? insertString(serialiseProps(subjectNode),'2') : serialiseProps(subjectNode);
 }
 
 /**
@@ -259,7 +254,7 @@ function getSubjectFromSummary(subject: SubjectSummary): SubjectData {
  * @param node The node to add.
  */
 async function addNode<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>){
-    const addNode = `MERGE (n:${propsOf[node.type]})`
+    const addNode = `MERGE (n:${serialiseProps(node)})`
     await tx.run(addNode, {
         ...node.props.keyProps,
         ...node.props.dataProps
@@ -274,7 +269,7 @@ async function addNode<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>
  * @param append Whether to append the value if the property already exists.
  */
 async function addProperty<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>, property: {name: string, value: string}, append: boolean = true){
-    const addProp = `MATCH (n:${keyOf[node.type]}) SET n.${property.name} =${append ? ` n.${property.name} +` : ''} '${property.value.replace(/['"]/g,'\\$&')}'`; // escape quotes, this should be done everywhere but I can't be bothered right now
+    const addProp = `MATCH (n:${serialiseKey(node)}) SET n.${property.name} =${append ? ` n.${property.name} +` : ''} '${property.value.replace(/['"]/g,'\\$&')}'`; // escape quotes, this should be done everywhere but I can't be bothered right now
     await tx.run(addProp, {
         ...node.props.keyProps
     })
@@ -289,7 +284,7 @@ async function addProperty<T extends PropsKey>(tx: ManagedTransaction, node: Nod
  */
 async function linkNodes<T extends PropsKey>(tx: ManagedTransaction, nodeA: Node<T>, relation: string,  nodeB: Node<T>){
     const linkNodes = "MATCH " +
-        `(a:${keyOf[nodeA.type]}),` +
+        `(a:${serialiseKey(nodeA)}),` +
         `(b:${uniqueKeyOf(nodeB, nodeA)})` +
         `MERGE (a)-[r:${relation}]->(b)`;
     await tx.run(linkNodes, {
@@ -307,7 +302,7 @@ async function linkNodes<T extends PropsKey>(tx: ManagedTransaction, nodeA: Node
  */
 async function linkNodeToId<T extends PropsKey>(tx: ManagedTransaction, node: Node<T>, relation: string, id: string){
     const linkNodes = "MATCH " +
-        `(a:${keyOf[node.type]}),` +
+        `(a:${serialiseKey(node)}),` +
         `(b) WHERE ID(b) = ${id} ` +
         `MERGE (a)-[r:${relation}]->(b)`;
     await tx.run(linkNodes, {
@@ -323,7 +318,7 @@ async function linkNodeToId<T extends PropsKey>(tx: ManagedTransaction, node: No
  * @param relationship The relationship type.
  * @param otherNode The other node to link from.
  */
-async function prerequisiteAwareLinkNodes<T extends PropsKey>(tx: ManagedTransaction, subject: SubjectSummary, subjectNode: Node<'subject'>, relationship: string, otherNode: Node<T>){
+async function prerequisiteAwareLinkNodes<T extends PropsKey>(tx: ManagedTransaction, subject: SubjectSummary, subjectNode: Node<'Subject'>, relationship: string, otherNode: Node<T>){
     let shouldLinkDirectlyToProgram;
     let prerequisiteNodeIds;
     const subjectData = getSubjectFromSummary(subject);
@@ -332,7 +327,7 @@ async function prerequisiteAwareLinkNodes<T extends PropsKey>(tx: ManagedTransac
         // todo should detect and prune these earlier? Or maybe leave them in as dummy nodes for students to decide
         //  what to do with, but they don't have any data attached so not sure how helpful it'll be :/
         subjectNode = {
-            type: "subject",
+            type: "Subject",
             props: {
                 keyProps: {
                     code: normaliseSubjectCode(subject.code)
@@ -375,8 +370,8 @@ async function prerequisiteAwareLinkNodes<T extends PropsKey>(tx: ManagedTransac
  * @param endNode The node at the end of the existing chain.
  */
 async function prependNode<T extends PropsKey>(tx: ManagedTransaction, startNode: Node<T>, relation: string, endNode: Node<T>){
-    const prependQuery = `MATCH (b)-[${relation}]->(c:${keyOf[endNode.type]})
-                          MERGE (a:${keyOf[startNode.type]})
+    const prependQuery = `MATCH (b)-[${relation}]->(c:${serialiseKey(endNode)})
+                          MERGE (a:${serialiseKey(startNode)})
                           MERGE (a)-[:${relation}]->(b)`;
     await tx.run(prependQuery,{
         ...startNode.props.keyProps,
@@ -392,7 +387,7 @@ async function prependNode<T extends PropsKey>(tx: ManagedTransaction, startNode
  * @returns True if a connection exists, false otherwise.
  */
 async function connectionExists(tx: ManagedTransaction, startNode: Node<PropsKey>, endNode: Node<PropsKey>) {
-    const matchQuery = `MATCH (a:${keyOf[startNode.type]})-[r]-(b:${uniqueKeyOf(endNode, startNode)}) RETURN r`;
+    const matchQuery = `MATCH (a:${serialiseKey(startNode)})-[r]-(b:${uniqueKeyOf(endNode, startNode)}) RETURN r`;
     const queryResult = await tx.run(
         matchQuery,
         uniqueNodeKeyPair(startNode,endNode)
@@ -409,7 +404,7 @@ async function connectionExists(tx: ManagedTransaction, startNode: Node<PropsKey
  * @returns True if the relationship exists, false otherwise.
  */
 async function relationExists(tx: ManagedTransaction, startNode: Node<PropsKey>, relation: string, endNode?: Node<PropsKey>) {
-    const matchQuery = `MATCH (a:${keyOf[startNode.type]})-[r:${relation}]-(b${endNode ? ':' + uniqueKeyOf(endNode, startNode) : ''}) RETURN r`;
+    const matchQuery = `MATCH (a:${serialiseKey(startNode)})-[r:${relation}]-(b${endNode ? ':' + uniqueKeyOf(endNode, startNode) : ''}) RETURN r`;
     const queryResult = await tx.run(
         matchQuery,
         endNode ? uniqueNodeKeyPair(startNode, endNode) : {...startNode.props.keyProps}
@@ -424,7 +419,7 @@ async function relationExists(tx: ManagedTransaction, startNode: Node<PropsKey>,
  * @param endNode The ending node.
  */
 async function removeConnection(tx: ManagedTransaction, startNode: Node<PropsKey>, endNode: Node<PropsKey>){
-    const removeQuery = `MATCH (a:${keyOf[startNode.type]})-[r]-(b:${uniqueKeyOf(endNode, startNode)}) DELETE r`;
+    const removeQuery = `MATCH (a:${serialiseKey(startNode)})-[r]-(b:${uniqueKeyOf(endNode, startNode)}) DELETE r`;
     await tx.run(
         removeQuery,
         uniqueKeyArgumentsOf(endNode, startNode)
@@ -442,8 +437,8 @@ async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: Subjec
     const choiceDescription = JSON.stringify(choiceData.choices,null,2);
     const parentKey = Object.values(parentNode.props.keyProps)[0] as string; // hacky as fuck, assumes choice can never be a parent
 
-    const choiceNode: Node<'choice'> = {
-        type: 'choice',
+    const choiceNode: Node<'SubjectChoice'> = {
+        type: 'SubjectChoice',
         props: {
             keyProps: {
                 choiceName: choiceDescription,
@@ -468,8 +463,8 @@ async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: Subjec
                 continue;
                 //throw 'FATAL: COULD NOT FIND SUBJECT FROM MASTER LIST, SOMETHING HAS GONE HORRIBLY WRONG!';
             }
-            const subjectNode: Node<'subject'> = {
-                type: 'subject',
+            const subjectNode: Node<'Subject'> = {
+                type: 'Subject',
                 props: {
                     keyProps: { code: normaliseSubjectCode(subjectData.code) },
                     dataProps: {
@@ -498,10 +493,10 @@ async function mergeAndLinkChoiceNode(tx: ManagedTransaction, choiceData: Subjec
  * @param type The type of specialisation ('major' or 'minor').
  * @param parentProgram The parent program node.
  */
-async function addSpecialisation(tx: ManagedTransaction, specialisation: Major | Minor, type: PropsKey, parentProgram: Node<'program'>){
+async function addSpecialisation(tx: ManagedTransaction, specialisation: Major | Minor, type: PropsKey, parentProgram: Node<'Program'>){
     const specialisationNode: Node<typeof type> = {
         type: type,
-        props: type === 'major' ?
+        props: type === 'Major' ?
             {
                 keyProps: { majorName: specialisation.name },
                 dataProps: {
@@ -522,8 +517,8 @@ async function addSpecialisation(tx: ManagedTransaction, specialisation: Major |
     await addNode(tx, specialisationNode);
     for (const subject of specialisation.subjects){
         if ('code' in subject){
-            const subjectNode: Node<'subject'> = {
-                type: 'subject',
+            const subjectNode: Node<'Subject'> = {
+                type: 'Subject',
                 props: {
                     keyProps: { code: normaliseSubjectCode(subject.code) }
                 }
@@ -546,11 +541,11 @@ async function addSpecialisation(tx: ManagedTransaction, specialisation: Major |
  * @param subjectNode The subject node.
  * @param logicalPrerequisites The logical prerequisite data.
  */
-async function nodePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: Node<"subject">, logicalPrerequisites: LogicalPrerequisite[]){
+async function nodePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: Node<"Subject">, logicalPrerequisites: LogicalPrerequisite[]){
     const prerequisiteNodes = []
     for(let prerequisite of logicalPrerequisites){
-        const prerequisiteNode: Node<'prerequisites'> = {
-            type: 'prerequisites',
+        const prerequisiteNode: Node<'Prerequisites'> = {
+            type: 'Prerequisites',
             props: {
                 keyProps: {
                     course: prerequisite.course,
@@ -563,8 +558,8 @@ async function nodePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: No
         prerequisiteNodes.push(prerequisiteNode);
         await addNode(tx, prerequisiteNode);
         for (const subjectCode of prerequisite.AND.map(p=>p.OR).flat()) {
-            const prerequisiteSubjectNode: Node<'subject'> = {
-                type: 'subject',
+            const prerequisiteSubjectNode: Node<'Subject'> = {
+                type: 'Subject',
                 props: { keyProps: {code: normaliseSubjectCode(subjectCode)} }
             }
             await linkNodes(tx, prerequisiteSubjectNode, 'PREREQUISITE_FOR', prerequisiteNode);
@@ -579,8 +574,8 @@ async function nodePrerequisiteGenerator(tx: ManagedTransaction, subjectNode: No
  * @param subjectNode The subject node.
  * @returns An array of prerequisite node IDs.
  */
-async function getSubjectPrerequisiteNodeIds(tx: ManagedTransaction, subjectNode: Node<'subject'>){
-    const prerequisiteNodeQuery = `MATCH (a:${keyOf[subjectNode.type]})<--(b:Prerequisites) RETURN id(b) as ID`;
+async function getSubjectPrerequisiteNodeIds(tx: ManagedTransaction, subjectNode: Node<'Subject'>){
+    const prerequisiteNodeQuery = `MATCH (a:${serialiseKey(subjectNode)})<--(b:Prerequisites) RETURN id(b) as ID`;
     return (await tx.run(prerequisiteNodeQuery, {...subjectNode.props.keyProps})).records.map(record=>record.get('ID').low);
 }
 
@@ -590,14 +585,14 @@ async function getSubjectPrerequisiteNodeIds(tx: ManagedTransaction, subjectNode
  * @param programNode The program node.
  * @param subject The subject or subject choice.
  */
-async function linkProgramToSubject(tx: ManagedTransaction, programNode: Node<"program">, subject: SubjectChoice | SubjectSummary) {
+async function linkProgramToSubject(tx: ManagedTransaction, programNode: Node<"Program">, subject: SubjectChoice | SubjectSummary) {
     if('code' in subject){
         const subjectNode = {
-            type: 'subject',
+            type: 'Subject',
             props: {
                 keyProps: { code: normaliseSubjectCode(subject.code) }
             }
-        } as Node<'subject'>
+        } as Node<'Subject'>
         await prerequisiteAwareLinkNodes(tx, subject, subjectNode, 'REQUIRES_SUBJECT', programNode)
     } else {
         await mergeAndLinkChoiceNode(tx, subject, programNode);
@@ -654,8 +649,8 @@ async function main(){
                         }
                     }).filter(Boolean)
                 }
-                const subjectNode: Node<'subject'> = {
-                    type: 'subject',
+                const subjectNode: Node<'Subject'> = {
+                    type: 'Subject',
                     props: {
                         keyProps: { code: normaliseSubjectCode(subject.code)},
                         dataProps: {
@@ -691,8 +686,8 @@ async function main(){
                         }
                     }).filter(Boolean)
                 }
-                const subjectNode: Node<'subject'> = {
-                    type: 'subject',
+                const subjectNode: Node<'Subject'> = {
+                    type: 'Subject',
                     props: {keyProps: { code: normaliseSubjectCode(subject.code) }}
                 }
                 if(logicalPrerequisites.length > 0) await nodePrerequisiteGenerator(tx, subjectNode, logicalPrerequisites);
@@ -708,8 +703,8 @@ async function main(){
                     console.warn(`Skipping program ${program.name.replace(/[\n\t]/g,'')} due to no sequence data`)
                     continue;
                 }
-                const programNode: Node<'program'> = {
-                    type: 'program',
+                const programNode: Node<'Program'> = {
+                    type: 'Program',
                     props: {
                         keyProps: { programName: program.name },
                         dataProps: {
@@ -722,12 +717,12 @@ async function main(){
 
                 if(program.majors){
                     for (const major of program.majors){
-                        await addSpecialisation(tx, major, 'major', programNode);
+                        await addSpecialisation(tx, major, 'Major', programNode);
                     }
                 }
                 if(program.minors){
                     for (const minor of program.minors){
-                        await addSpecialisation(tx, minor, 'minor', programNode);
+                        await addSpecialisation(tx, minor, 'Minor', programNode);
                     }
                 }
 
@@ -744,15 +739,15 @@ async function main(){
                     for (const subject of subjectSequencePair.subjects){
                         if('code' in subject){
                             const subjectNode = {
-                                type: 'subject',
+                                type: 'Subject',
                                 props: {
                                     keyProps: { code: normaliseSubjectCode(subject.code) }
                                 }
-                            } as Node<'subject'>
+                            } as Node<'Subject'>
                             await addProperty(tx, subjectNode, {name: 'subjectSequences', value: `${program.name}:${subjectSequencePair.sequence}`})
                         } else {
                             const choiceNode = {
-                                type: 'choice',
+                                type: 'SubjectChoice',
                                 props: {
                                     keyProps: {
                                         choiceName: subject.choices,
@@ -760,7 +755,7 @@ async function main(){
                                         parent: program.name
                                     }
                                 }
-                            } as Node<'choice'>
+                            } as Node<'SubjectChoice'>
                             await addProperty(tx, choiceNode, {name: 'choiceSequences', value: `${program.name}:${subjectSequencePair.sequence}`})
                         }
                         await linkProgramToSubject(tx, programNode, subject);
@@ -770,6 +765,7 @@ async function main(){
                 pt.progress++;
             }
             stopTrackingProgress(pt);
+            if(CONFIG.disableDBCommit) throw("Cancelling for testing"); // don't commit changes to local db
         })
     } catch (e) {
         console.log('Transaction failed!\n'+e);
