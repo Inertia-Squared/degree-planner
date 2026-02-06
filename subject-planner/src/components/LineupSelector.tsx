@@ -212,7 +212,7 @@ const LineupSelector = ({ onSearchEvent, onMajorEvent, onMinorEvent, onStartExpl
             <div>
                 <button
                     disabled={program === ""}
-                    className={`border-none ${program !== "" ? "bg-green-500 cursor-pointer" : "bg-gray-400 cursor-not-allowed"} ${
+                    className={`border-none ${program !== "" ? "bg-[#7CB342] cursor-pointer" : "bg-gray-400 cursor-not-allowed"} ${
                         program && !needsReset ? "animate-pulse" : "animate-none"
                     }`}
                     onClick={(e) => startExploring(e)}

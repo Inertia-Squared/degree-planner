@@ -1,52 +1,62 @@
-import {useState} from "react";
-import {BsArrowLeftShort} from "react-icons/bs";
-import {BiTime} from "react-icons/bi";
-import { StudyPeriodItem } from "@/utils/types";
+import { TimelineProps } from "@/utils/types";
+import { RxCross2 } from "react-icons/rx";
 
-interface TimelineProps {
-    className?: string,
-    completedPeriods: StudyPeriodItem[],
-    currentPeriod: StudyPeriodItem,
-    onSkipPeriod: (oldPeriod: StudyPeriodItem) => void,
-}
-
-export const CourseTimeline = ({className, completedPeriods, currentPeriod, onSkipPeriod}: TimelineProps) => {
-    const [show, setShow] = useState(false);
-
-    if (show) {
-        return (
-            <div className={`flex flex-col ${className}`}>
-                <div className={`flex flex-row font-bold text-center text-xl items-center mx-2`}>
-                    <div className={`grow`}></div>
-                    <div className={`grow`}>Degree Timeline</div>
-                    <div className={`flex hover:cursor-pointer grow`} onClick={()=>setShow(!show)}><div className={`grow`}/><BsArrowLeftShort size={24}/></div>
-                </div>
-                <div className={`text-xs`}>This panel shows all your chosen subjects. Changing selections is in the next update.</div>
-                <hr/>
-                <hr/>
-                <hr/>
-                <div className={'flex flex-col overflow-y-scroll'}>
-                    {completedPeriods.map((period, index) => {
-                        return (<div className={`flex flex-col`} key={index}>
-                            <div className={`mx-auto font-bold`}>{period.period.toUpperCase()}</div>
-                            <hr/>
-                            {period.subjectsTaken.map(s=>{
-                                return (<div className={`flex flex-col`} key={s.id}>{s.data.code}</div>)
-                            })}
-                        </div>)
-                    })}
-                    <div className={`flex flex-col`}>
-                        <div className={`mx-auto font-bold`}>{currentPeriod.period.toUpperCase()}</div>
-                        <hr/>
-                        {currentPeriod.subjectsTaken.map(s=>{
-                            return (<div className={`flex flex-col`} key={s.id}>{s.data.code}</div>)
+export const CourseTimeline = ({
+    className,
+    completedPeriods,
+    currentPeriod,
+    onSkipPeriod,
+    showTimeLine,
+    setShowTimeLine,
+}: TimelineProps) => {
+    return (
+        <>
+            {showTimeLine && (
+                <div className={`w-full flex flex-col ${className}`}>
+                    <div className={`w-full flex font-bold text-xl justify-between items-center`}>
+                        <div>Degree Timeline</div>
+                        <div className='cursor-pointer' onClick={() => setShowTimeLine(!showTimeLine)}>
+                            <RxCross2 size={24} />
+                        </div>
+                    </div>
+                    <div>This panel shows all your chosen subjects. Changing selections is in the next update.</div>
+                    <div className={"flex flex-col"}>
+                        {completedPeriods.map((period, index) => {
+                            return (
+                                <div className={`flex flex-col py-2`} key={index}>
+                                    <div className={`font-bold`}>{period.period.toUpperCase()}</div>
+                                    {period.subjectsTaken.map((s) => {
+                                        return (
+                                            <div className={"px-2"} key={s.id}>
+                                                {s.data.code}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            );
                         })}
-                        <div className={`text-xs text-center border bg-green-400 w-2/3 mx-auto mt-1 rounded-sm`} onClick={()=>onSkipPeriod(currentPeriod)}>Skip This Semester<br/>(Take {currentPeriod.subjectsTaken.length} subject{currentPeriod.subjectsTaken.length!==1 ? 's' : ''})</div>
+                        <div>
+                            <div className={`font-bold`}>{currentPeriod.period.toUpperCase()}</div>
+                            <div>Double-tap on a node to add subject</div>
+                            {currentPeriod.subjectsTaken.map((s) => {
+                                return (
+                                    <div className={`flex flex-col px-2`} key={s.id}>
+                                        {s.data.code}
+                                    </div>
+                                );
+                            })}
+                            <div
+                                className={`text-center bg-[#7CB342] text-white border-none px-4 py-2 mt-8 rounded-lg font-bold cursor-pointer transition-all duration-200 hover:opacity-80`}
+                                onClick={() => onSkipPeriod(currentPeriod)}
+                            >
+                                <p>Skip This Semester</p>
+                                (Take {currentPeriod.subjectsTaken.length} subject
+                                {currentPeriod.subjectsTaken.length !== 1 ? "s" : ""})
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>)
-    } else {
-        return (<div className={`hover:cursor-pointer absolute z-20 left-0 top-4/5 bottom-1/5 border-2 rounded-r-md w-8 h-8 bg-white `} onClick={()=>setShow(!show)}><BiTime className={'z-30'} size={28}/></div>);
-    }
-}
-
+            )}
+        </>
+    );
+};

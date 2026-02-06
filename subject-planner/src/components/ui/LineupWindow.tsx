@@ -1,24 +1,22 @@
-import React, { Dispatch, SetStateAction } from 'react'
-import { BiSearch } from 'react-icons/bi';
-import { BsArrowUpShort } from 'react-icons/bs';
+import React, { Dispatch, SetStateAction } from "react";
 
 const LineupWindow = ({
     showLineup,
-    setShowLineup
+    setShowLineup,
 }: {
-    showLineup: boolean
-    setShowLineup: (value: SetStateAction<boolean>) => void
+    showLineup: boolean;
+    setShowLineup: (value: SetStateAction<boolean>) => void;
 }) => {
-  return (
-    <div
-        onClick={() => {
-          setShowLineup(!showLineup);
-        }}
-        className='cursor-pointer text-lg font-bold'
-      >
-        <span className={`${showLineup && "text-blue-800"}`}>Search</span>
-      </div>
-  )
-}
+    return (
+        <div
+            onClick={() => {
+                setShowLineup(!showLineup);
+            }}
+            className="cursor-pointer text-lg font-bold"
+        >
+            <span className={`${showLineup && "text-[#7CB342]"}`}>Search</span>
+        </div>
+    );
+};
 
-export default LineupWindow
+export default LineupWindow;

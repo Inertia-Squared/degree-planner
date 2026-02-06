@@ -30,7 +30,6 @@ export function useSubjectCriteria({
   edges,
   setEdges,
   currentPeriod,
-  setFirstShowLineup,
   setShowLineup,
   expandConnected,
   setSelectedElement,
@@ -56,7 +55,6 @@ export function useSubjectCriteria({
   edges: GraphEdge[];
   setEdges: Dispatch<SetStateAction<GraphEdge[]>>;
   currentPeriod: StudyPeriodItem;
-  setFirstShowLineup: Dispatch<SetStateAction<boolean>>;
   setShowLineup: Dispatch<SetStateAction<boolean>>;
   expandConnected: (nodesToExpand: ExtendedNode<Generic>[]) => Promise<void>;
   setSelectedElement: Dispatch<SetStateAction<ExtendedNode<Generic> | GraphEdge | undefined>>;
@@ -121,7 +119,6 @@ export function useSubjectCriteria({
   async function startExploring() {
     const newNodes = nodes.filter((n) => isProgramNode(n) || isMinorNode(n) || isMajorNode(n));
     setNodes(newNodes);
-    setFirstShowLineup(false);
     setShowLineup(false);
     expandConnected(newNodes);
   }
