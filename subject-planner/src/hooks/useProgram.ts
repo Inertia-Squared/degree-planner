@@ -6,14 +6,17 @@ export function useProgram({
     nodes,
     setNodes,
     setSelectedProgram,
-    setSelectedProgramSequence
+    setSelectedProgramSequence,
+    setNodesHot
 }: {
     nodes: ExtendedNode<Generic>[]
     setNodes: Dispatch<SetStateAction<ExtendedNode<Generic>[]>>
     setSelectedProgram: Dispatch<SetStateAction<ExtendedNode<Program> | undefined>>
     setSelectedProgramSequence: Dispatch<SetStateAction<string | undefined>>
+    setNodesHot: Dispatch<SetStateAction<boolean>>
 }) {
       const searchProgram = async (searchString: string) => {
+          setNodesHot(true);
         const response = await fetch(`/api/graph/getPrograms?programName=${searchString}`);
         if (!response.ok) {
           throw new Error(
