@@ -1,9 +1,9 @@
 "use client";
 import dynamic from "next/dynamic";
-import { RefObject, useCallback, useEffect, useState } from "react";
-import { GraphCanvasRef, GraphEdge } from "reagraph";
-import InfoPanel from "@/components/InfoPanel";
-import { CourseTimeline } from "@/components/CourseTimeline";
+import {RefObject, useCallback, useEffect, useState} from "react";
+import {GraphCanvasRef, GraphEdge} from "reagraph";
+import InfoWindow from "@/components/ui/layout/Windows/InfoWindow";
+import {TimelineWindow} from "@/components/ui/layout/Windows/TimelineWindow";
 import {
     ExtendedNode,
     Generic,
@@ -16,16 +16,18 @@ import {
     StudyPeriodItem,
     Subject,
 } from "@/utils/types";
-import { displayMode } from "@/utils/consts";
-import ProgramWindow from "@/components/ui/ProgramWindow";
-import { applyClassificationFilters, applyGraphFilters } from "@/lib/graph/graphFilters";
-import { useGraphConnection } from "@/hooks/useGraphConnection";
-import { useProgram } from "@/hooks/useProgram";
-import { useSubjectCriteria } from "@/hooks/useSubjectCriteria";
-import { applyGraphColours } from "@/lib/graph/graphColours";
-import Header from "@/components/ui/layout/Header";
-import { applyGraphLabels } from "@/lib/graph/graphLabels";
+import {displayMode} from "@/utils/consts";
+import ViewWindow from "@/components/ui/layout/Windows/ViewWindow";
+import {applyClassificationFilters, applyGraphFilters} from "@/lib/graph/graphFilters";
+import {useGraphConnection} from "@/hooks/useGraphConnection";
+import {useProgram} from "@/hooks/useProgram";
+import {useSubjectCriteria} from "@/hooks/useSubjectCriteria";
+import {applyGraphColours} from "@/lib/graph/graphColours";
+import HeaderBar, {HeaderItem} from "@/components/ui/layout/Containers/HeaderBar";
+import {applyGraphLabels} from "@/lib/graph/graphLabels";
 import ShowIneligible from "@/components/ShowIneligible";
+import SearchWindow from "@/components/ui/layout/Windows/SearchWindow";
+import HelpWindow from "@/components/ui/layout/Windows/HelpWindow";
 
 // todo fix failure-case for Ba. of Arts, Ma. 0026 & Mi. 0024
 
@@ -56,15 +58,18 @@ export default function Home() {
     });
     const [subjectsTaken, setSubjectsTaken] = useState<ExtendedNode<Subject>[]>([]);
 
-    const [hideInfo, setHideInfo] = useState<boolean>(true);
-    const [showLineup, setShowLineup] = useState<boolean>(false);
+    const [showInfo, setShowInfo] = useState<boolean>(false);
     const [updateToggle, setUpdateToggle] = useState<boolean>(false);
     const [showSequences, setShowSequences] = useState<boolean>(true);
-    const [showHelp, setShowHelp] = useState<boolean>(false);
-    const [showTimeLine, setShowTimeLine] = useState(false);
     const [graphRef, setGraphRef] = useState<RefObject<GraphCanvasRef | null>>();
 
+    const [selectedHeaderItem, setSelectedHeaderItem] = useState<HeaderItem>(HeaderItem.NONE); //todo if we want to allow multiple windows open simultanously, turn this into an array and check for contains, but for now we keep it simple
+
     const [showAllIneligible, setShowAllIneligible] = useState(false);
+
+    const [exploringStarted, setExploringStarted] = useState(false);
+
+    const [nodesHot, setNodesHot] = useState(false);
 
     const getNodeFromId = useCallback(
         (id: string) => {
@@ -84,7 +89,7 @@ export default function Home() {
         getNodeFromId,
         graphRef,
     });
-    const { searchProgram } = useProgram({ nodes, setNodes, setSelectedProgram, setSelectedProgramSequence });
+    const { searchProgram } = useProgram({ nodes, setNodes, setSelectedProgram, setSelectedProgramSequence, setNodesHot });
     const {
         forceAddSpecialisation,
         startExploring,
@@ -101,7 +106,7 @@ export default function Home() {
         edges,
         setEdges,
         currentPeriod,
-        setShowLineup,
+        setSelectedHeaderItem,
         expandConnected,
         setSelectedElement,
         setSelectedProgram,
@@ -118,14 +123,20 @@ export default function Home() {
         setCurrentPeriod,
         setCompletedPeriods,
         startPeriod,
-        setHideInfo,
+        setShowInfo: setShowInfo,
+        setExploringStarted,
     });
 
-    function resetSelectedElement() {
+    function onCanvasClicked() {
+        if (selectedHeaderItem !== HeaderItem.NONE) setSelectedHeaderItem(HeaderItem.NONE)
+        else resetSelectedElement();
+    }
+
+    function resetSelectedElement(){
         setSelectedElement(undefined);
         setClusterOptions(["Select a node to see cluster options"]);
         setClusterBy(undefined);
-        setHideInfo(true);
+        setShowInfo(false);
     }
 
     function onToggleShowIneligible(shouldShow: boolean) {
@@ -186,22 +197,23 @@ export default function Home() {
         showAllIneligible,
     ]);
 
+    useEffect(()=>{
+        setTimeout(()=>setNodesHot(false), 1000);
+    }, [nodesHot])
+
+    useEffect(()=>{
+        setNodesHot(true);
+    }, [nodes])
+
     return (
         <>
-            <Header
-                showHelp={showHelp}
-                onSetShowHelp={setShowHelp}
-                showLineup={showLineup}
-                setShowLineup={setShowLineup}
-                showTimeLine={showTimeLine}
-                setShowTimeLine={setShowTimeLine}
-            />
+            <HeaderBar exploringStarted={exploringStarted} selectedHeaderItem={selectedHeaderItem} setSelectedHeaderItem={setSelectedHeaderItem} />
 
-            <main className={`h-[100vh] py-16 flex flex-col ${showLineup ? "p-2" : "pb-2 px-2"}`}>
+            <main className={`h-[100vh] py-16 flex flex-col ${selectedHeaderItem === HeaderItem.SEARCH ? "p-2" : "pb-2 px-2"}`}>
                 <ForceGraph
                     layoutMode={displayMode}
                     clickAction={selectElement}
-                    clickCanvas={resetSelectedElement}
+                    clickCanvas={onCanvasClicked}
                     clusterBy={clusterBy}
                     doubleClickNodeAction={onNodeDoubleClicked}
                     className={`grow w-full h-full absolute top-0 left-0 z-10`}
@@ -209,37 +221,50 @@ export default function Home() {
                     nodes={displayedNodes}
                     setGraphRef={setGraphRef}
                 />
-                <ProgramWindow
-                    searchProgram={searchProgram}
-                    forceAddSpecialisation={forceAddSpecialisation}
-                    startExploring={startExploring}
-                    showLineup={showLineup}
-                    setShowLineup={setShowLineup}
+                <ViewWindow
+                        className={`header-window-top-right z-20`}
                     setClusterBy={setClusterBy}
                     clusterOptions={clusterOptions}
                     setShowPotentialElectives={setShowPotentialElectives}
-                    showSequences={showSequences}
-                    setSelectedProgramSequence={setSelectedProgramSequence}
-                    setStartPeriod={setStartPeriod}
-                    setCurrentPeriod={setCurrentPeriod}
-                    selectedProgram={selectedProgram}
-                    completedPeriods={completedPeriods}
-                    currentPeriod={currentPeriod}
+                    selectedHeaderItem={selectedHeaderItem}
+                    setSelectedHeaderItem={setSelectedHeaderItem}
                 />
-                <CourseTimeline
-                    className={`bg-gray-50 h-fit min-h-[70vh] z-20 max-w-1/5 absolute top-20 left-2 border-none shadow-lg p-4`}
+
+                <SearchWindow
+                        className={`header-window-top-right z-20`}
+                        onSearchEvent={searchProgram}
+                        onMajorEvent={forceAddSpecialisation}
+                        onMinorEvent={forceAddSpecialisation}
+                        onStartExploring={startExploring}
+                        showSequences={showSequences}
+                        setSelectedProgramSequence={setSelectedProgramSequence}
+                        setStartPeriod={setStartPeriod}
+                        setCurrentPeriod={setCurrentPeriod}
+                        completedPeriods={completedPeriods}
+                        currentPeriod={currentPeriod}
+                        selectedProgram={selectedProgram}
+                        selectedHeaderItem={selectedHeaderItem}
+                        setSelectedHeaderItem={setSelectedHeaderItem}
+                        nodesHot={nodesHot}
+                />
+
+                <TimelineWindow
+                    className={`header-window-top-right z-20`}
                     completedPeriods={completedPeriods}
                     currentPeriod={currentPeriod}
                     onSkipPeriod={moveToNewPeriod}
-                    showTimeLine={showTimeLine}
-                    setShowTimeLine={setShowTimeLine}
+                    selectedHeaderItem={selectedHeaderItem}
+                    setSelectedHeaderItem={setSelectedHeaderItem}
                 />
-                <InfoPanel
-                    className={`bg-gray-50 min-w-[400px] w-fit z-20 max-h-[45vw] max-w-1/5 shadow-lg p-4 absolute top-20 right-2`}
+                <InfoWindow
+                    className={`header-window header-window-top-right z-15`}
                     item={selectedElement}
-                    showKey={hideInfo}
-                    setShowKey={setHideInfo}
+                    showInfo={showInfo}
+                    setShowInfo={setShowInfo}
                 />
+                
+                <HelpWindow className={`header-window-top-right z-20`} selectedHeaderItem={selectedHeaderItem} setSelectedHeaderItem={setSelectedHeaderItem}/>
+                
                 <ShowIneligible
                     className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute right-1 bottom-0 my-auto`}
                     onToggle={onToggleShowIneligible}

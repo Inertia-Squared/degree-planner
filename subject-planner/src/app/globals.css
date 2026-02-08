@@ -89,3 +89,35 @@ form {
         }
     }
 }
+
+.header-button {
+    @apply cursor-pointer text-lg font-bold select-none px-2
+}
+
+.header-button-selected {
+    @apply text-[#7CB342] underline
+}
+
+.header-window {
+    @apply bg-gray-50 h-fit max-h-[80vh] min-h-[80vh] max-w-[400px] absolute border-2 rounded-md shadow-lg px-4
+}
+
+.header-window-top-right {
+    @apply top-20 right-2
+}
+
+.header-window-top-left {
+    @apply top-20 left-2
+}
+
+.header-window-bottom-right {
+    @apply bottom-2 right-2
+}
+
+.header-window-bottom-left {
+    @apply bottom-2 left-2
+}
+
+.header-window-center {
+    @apply top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+}

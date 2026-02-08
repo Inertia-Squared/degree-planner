@@ -1,4 +1,4 @@
-import { GraphEdge } from "reagraph";
+import {GraphEdge} from "reagraph";
 import {
     ExtendedNode,
     Generic,
@@ -11,8 +11,8 @@ import {
     StudyPeriodItem,
     Subject,
 } from "@/utils/types";
-import { Dispatch, SetStateAction, useCallback, useRef } from "react";
-import { badClusterOptions } from "@/utils/consts";
+import {Dispatch, SetStateAction, useCallback, useRef} from "react";
+import {badClusterOptions} from "@/utils/consts";
 import {
     asStudyPeriod,
     getParentsByType,
@@ -21,7 +21,8 @@ import {
     isProgramNode,
     isSubjectNode
 } from "@/lib/graph/graphUtil";
-import { isEligibleForSubject } from "@/lib/graph/graphColours";
+import {isEligibleForSubject} from "@/lib/graph/graphColours";
+import {HeaderItem} from "@/components/ui/layout/Containers/HeaderBar";
 
 export function useSubjectCriteria({
   nodes,
@@ -30,7 +31,7 @@ export function useSubjectCriteria({
   edges,
   setEdges,
   currentPeriod,
-  setShowLineup,
+  setSelectedHeaderItem,
   expandConnected,
   setSelectedElement,
   setSelectedProgram,
@@ -47,7 +48,8 @@ export function useSubjectCriteria({
   setCurrentPeriod,
   setCompletedPeriods,
   startPeriod,
-  setHideInfo
+  setShowInfo,
+    setExploringStarted
 }: {
   nodes: ExtendedNode<Generic>[];
   selectedProgram: ExtendedNode<Program> | undefined;
@@ -55,7 +57,7 @@ export function useSubjectCriteria({
   edges: GraphEdge[];
   setEdges: Dispatch<SetStateAction<GraphEdge[]>>;
   currentPeriod: StudyPeriodItem;
-  setShowLineup: Dispatch<SetStateAction<boolean>>;
+  setSelectedHeaderItem: Dispatch<SetStateAction<HeaderItem>>;
   expandConnected: (nodesToExpand: ExtendedNode<Generic>[]) => Promise<void>;
   setSelectedElement: Dispatch<SetStateAction<ExtendedNode<Generic> | GraphEdge | undefined>>;
   setSelectedProgram: Dispatch<SetStateAction<ExtendedNode<Program> | undefined>>;
@@ -72,7 +74,8 @@ export function useSubjectCriteria({
   setCurrentPeriod: Dispatch<SetStateAction<StudyPeriodItem>>;
   setCompletedPeriods: Dispatch<SetStateAction<StudyPeriodItem[]>>;
   startPeriod: StudyPeriod;
-  setHideInfo: Dispatch<SetStateAction<boolean>>;
+  setShowInfo: Dispatch<SetStateAction<boolean>>;
+  setExploringStarted: Dispatch<SetStateAction<boolean>>;
 }) {
     const recentlyAdded = useRef<Set<string>>(new Set());
 
@@ -119,14 +122,15 @@ export function useSubjectCriteria({
   async function startExploring() {
     const newNodes = nodes.filter((n) => isProgramNode(n) || isMinorNode(n) || isMajorNode(n));
     setNodes(newNodes);
-    setShowLineup(false);
+    setSelectedHeaderItem(HeaderItem.NONE);
+    setExploringStarted(true);
     expandConnected(newNodes);
   }
 
   function selectElement(id: string, isNode: boolean = true) {
     const element = isNode ? nodes.find((n) => n.id === id) : edges.find((e) => e.id === id);
     setSelectedElement(element);
-    setHideInfo(false);
+    setShowInfo(true);
     if (isNode) {
       if (element && isProgramNode(element)) {
         setSelectedProgram(element);

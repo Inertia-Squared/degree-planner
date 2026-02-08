@@ -1,6 +1,5 @@
 import {GraphEdge, GraphNode} from "reagraph";
 import {SpecialisationType} from "../../../data-scraping/majors-minors/major-minor-scraper";
-import { Dispatch, SetStateAction } from 'react';
 
 export type StudyPeriod = 'autumn' | 'spring' | 'unknown';
 
@@ -114,13 +113,4 @@ export interface GraphPruningProps {
     newEdges: GraphEdge[],
     adjacencyList: Map<string, string[]>,
     showAllIneligible: boolean
-}
-
-export interface TimelineProps {
-    className?: string;
-    completedPeriods: StudyPeriodItem[];
-    currentPeriod: StudyPeriodItem;
-    onSkipPeriod: (oldPeriod: StudyPeriodItem) => void;
-    showTimeLine: boolean;
-    setShowTimeLine: Dispatch<SetStateAction<boolean>>;
 }

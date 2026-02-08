@@ -17,6 +17,8 @@ export const badClusterOptions = [
     'creditPoints',
     'subjectName',
     'teachingPeriods',
+    'type',
+    'filtered'
 ]
 
 export const displayMode: LayoutTypes = 'forceDirected2d';
