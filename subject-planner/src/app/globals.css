@@ -99,11 +99,11 @@ form {
 }
 
 .header-window {
-    @apply bg-gray-50 h-fit max-h-[80vh] min-h-[80vh] max-w-[400px] absolute border-2 rounded-md shadow-lg px-4
+    @apply backdrop-blur-lg md:h-fit md:max-h-[80vh] md:min-h-[80vh] w-full px-2 md:max-w-[400px] absolute bottom-0 border-2 rounded-md shadow-lg md:px-4
 }
 
 .header-window-top-right {
-    @apply top-20 right-2
+    @apply right-0 md:top-20 md:right-2
 }
 
 .header-window-top-left {
@@ -120,4 +120,75 @@ form {
 
 .header-window-center {
     @apply top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+}
+
+
+.hamburger {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  margin-right: 15px;
+  transition: all 0.5s;
+  z-index: 30;
+}
+
+.hamburger-top,
+.hamburger-middle,
+.hamburger-bottom {
+  position: absolute;
+  display: block;
+  width: 24px;
+  height: 2.5px;
+  transition: all 0.25s;
+}
+
+
+.hamburger-middle {
+  transform: translateY(10px);
+}
+
+.hamburger-bottom {
+  transform: translateY(20px);
+}
+
+.open {
+  transform: rotate(90deg);
+}
+
+.open .hamburger-top {
+  transform: rotate(45deg) translateX(6px) translateY(6px);
+}
+
+.open .hamburger-middle {
+  display: none;
+}
+
+.open .hamburger-bottom {
+  transform: rotate(-45deg) translateX(-6px) translateY(6px);
+}
+
+/* For browsers that support :focus-visible */
+.splide__arrow:focus-visible {
+  outline: 3px solid black;
+}
+
+/* For other browsers */
+.splide.is-focus-in .splide_arrow:focus {
+  outline: 3px solid black;
+}
+
+.perspective {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }

@@ -209,7 +209,7 @@ export default function Home() {
         <>
             <HeaderBar exploringStarted={exploringStarted} selectedHeaderItem={selectedHeaderItem} setSelectedHeaderItem={setSelectedHeaderItem} />
 
-            <main className={`h-[100vh] py-16 flex flex-col ${selectedHeaderItem === HeaderItem.SEARCH ? "p-2" : "pb-2 px-2"}`}>
+            <main className={`h-[100vh] py-16 flex flex-col overflow-hidden ${selectedHeaderItem === HeaderItem.SEARCH ? "p-2" : "pb-2 px-2"}`}>
                 <ForceGraph
                     layoutMode={displayMode}
                     clickAction={selectElement}
@@ -222,7 +222,7 @@ export default function Home() {
                     setGraphRef={setGraphRef}
                 />
                 <ViewWindow
-                        className={`header-window-top-right z-20`}
+                    className={`header-window-top-right z-20`}
                     setClusterBy={setClusterBy}
                     clusterOptions={clusterOptions}
                     setShowPotentialElectives={setShowPotentialElectives}
@@ -231,21 +231,21 @@ export default function Home() {
                 />
 
                 <SearchWindow
-                        className={`header-window-top-right z-20`}
-                        onSearchEvent={searchProgram}
-                        onMajorEvent={forceAddSpecialisation}
-                        onMinorEvent={forceAddSpecialisation}
-                        onStartExploring={startExploring}
-                        showSequences={showSequences}
-                        setSelectedProgramSequence={setSelectedProgramSequence}
-                        setStartPeriod={setStartPeriod}
-                        setCurrentPeriod={setCurrentPeriod}
-                        completedPeriods={completedPeriods}
-                        currentPeriod={currentPeriod}
-                        selectedProgram={selectedProgram}
-                        selectedHeaderItem={selectedHeaderItem}
-                        setSelectedHeaderItem={setSelectedHeaderItem}
-                        nodesHot={nodesHot}
+                    className={`header-window-top-right z-20`}
+                    onSearchEvent={searchProgram}
+                    onMajorEvent={forceAddSpecialisation}
+                    onMinorEvent={forceAddSpecialisation}
+                    onStartExploring={startExploring}
+                    showSequences={showSequences}
+                    setSelectedProgramSequence={setSelectedProgramSequence}
+                    setStartPeriod={setStartPeriod}
+                    setCurrentPeriod={setCurrentPeriod}
+                    completedPeriods={completedPeriods}
+                    currentPeriod={currentPeriod}
+                    selectedProgram={selectedProgram}
+                    selectedHeaderItem={selectedHeaderItem}
+                    setSelectedHeaderItem={setSelectedHeaderItem}
+                    nodesHot={nodesHot}
                 />
 
                 <TimelineWindow
@@ -257,7 +257,7 @@ export default function Home() {
                     setSelectedHeaderItem={setSelectedHeaderItem}
                 />
                 <InfoWindow
-                    className={`header-window header-window-top-right z-15`}
+                    className={`header-window header-window-top-right fixed top-128 z-15 overflow-auto`}
                     item={selectedElement}
                     showInfo={showInfo}
                     setShowInfo={setShowInfo}
