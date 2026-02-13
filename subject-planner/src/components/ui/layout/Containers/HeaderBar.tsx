@@ -72,7 +72,7 @@ const HeaderBar = ({
                     <Hamburger openStatus={openStatus} isOpen={isOpen} clickHandler={clickHandler} />
 
                     {isOpen && (
-                        <div className="absolute flex flex-col space-y-6 right-0 bg-white w-48 rounded-md z-32 shadow-xl">
+                        <div className="absolute flex flex-col space-y-6 right-0 bg-white w-fit p-6 rounded-l-lg z-32 shadow-xl">
                             {!exploringStarted && <SearchHeader exploringStarted={exploringStarted} {...genericArgs} />}
                             {exploringStarted && <ViewHeader {...genericArgs} />}
                             <TimelineHeader {...genericArgs} />
