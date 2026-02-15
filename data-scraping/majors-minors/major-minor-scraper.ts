@@ -1,10 +1,24 @@
 import {Browser} from "playwright";
 import fs from "fs/promises";
 import {
-    constructStringRule, extractTableData,
-    extractTableDataStructured, getElementBySimilarId, getTablesBySimilarId, initSearch, scrape, setConfig,
+    constructStringRule,
+    extractTableData,
+    extractTableDataStructured,
+    getElementBySimilarId,
+    getTablesBySimilarId,
+    initSearch,
+    scrape,
+    setConfig,
     TimerObjectType
 } from "../util";
+
+export enum SpecialisationType {
+    testamurMajor = 0,
+    major,
+    minor,
+    concentration,
+    other
+}
 
 /*  UNFIXABLE MAJORS/MINORS DUE TO MAJOR ERRORS:
     - Culture and Society, Major (0264) -- incorrect tab headings set, placeholders used for major content -- uniquely identifiable, can be manually dealt with, but not ideal
@@ -18,14 +32,6 @@ const CONFIG = {
     outputFile: './data/majors-minors-unrefined.json',
     // desiredTerms: ['Credit Points','Coordinator','Description','School','Discipline','Pre-requisite(s)'],
     concurrentPages: 15,
-}
-
-export enum SpecialisationType {
-    testamurMajor = 0,
-    major,
-    minor,
-    concentration,
-    other
 }
 
 export interface MajorMinorData {

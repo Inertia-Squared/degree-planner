@@ -1,5 +1,4 @@
 import {GraphEdge, GraphNode} from "reagraph";
-import {SpecialisationType} from "../../../data-scraping/majors-minors/major-minor-scraper";
 
 export type StudyPeriod = 'autumn' | 'spring' | 'unknown';
 
@@ -40,6 +39,14 @@ export interface Choice extends Generic {
     type: 'SubjectChoice'
     choiceName: string
     parent: string
+}
+
+export enum SpecialisationType {
+    testamurMajor = 0,
+    major,
+    minor,
+    concentration,
+    other
 }
 
 export interface Minor extends Generic {
