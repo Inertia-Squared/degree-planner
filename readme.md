@@ -51,3 +51,4 @@ While generally speaking chain-of-thought models produce better results, the sma
 If you can't run a sufficient local model, you can also plug in a Gemini API key and ensure the subject-refiner.ts config has online set to true.
 
 The subject-scraper.ts file uses LM Studio to process the data locally. You can input any model you have downloaded, it's pretty plug-and-play!
+
