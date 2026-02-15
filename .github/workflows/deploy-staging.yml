@@ -1,0 +1,20 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute Deployment Script via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          port: 22
+          # This runs the script we created in Step 2
+          script: ~/deploy-staging.sh
