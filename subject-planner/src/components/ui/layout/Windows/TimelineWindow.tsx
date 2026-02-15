@@ -41,7 +41,7 @@ export const TimelineWindow = ({
                             );
                         })}
                         <div>
-                            <div className={`font-bold`}>{currentPeriod.period.toUpperCase()}</div>
+                            <div className={`font-bold `}>{currentPeriod.period.toUpperCase()}</div>
                             {currentPeriod.subjectsTaken.map((s) => {
                                 return (
                                         <div className={`flex flex-col px-2`} key={s.id}>

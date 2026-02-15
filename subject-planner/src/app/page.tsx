@@ -257,7 +257,7 @@ export default function Home() {
                     setSelectedHeaderItem={setSelectedHeaderItem}
                 />
                 <InfoWindow
-                    className={`header-window header-window-top-right fixed top-128 z-15 overflow-auto`}
+                    className={`header-window header-window-top-right z-15 overflow-auto`}
                     item={selectedElement}
                     showInfo={showInfo}
                     setShowInfo={setShowInfo}
