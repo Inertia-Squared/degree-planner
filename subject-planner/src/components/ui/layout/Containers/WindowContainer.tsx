@@ -18,7 +18,7 @@ export const WindowContainer =
              userClosable?: boolean
          })=>{
     return(
-            <div className={`header-window w-full flex flex-col py-2 ${className}`}>
+            <div className={`header-window md:flex flex-col py-2 ${className}`}>
                 <div className={`w-full flex font-bold text-xl justify-between items-center`}>
                     <div>{title}</div>
                     {userClosable && <div className='cursor-pointer' onClick={() => {if(onClose) onClose()}}>
@@ -27,7 +27,9 @@ export const WindowContainer =
                 </div>
                 {description && <div className={'text-xs'}>{description}</div>}
                 <hr className={`my-1`}/>
-                {childElement}
+                <div className={`overflow-y-scroll h-[80%]`}>
+                    {childElement}
+                </div>
             </div>
     )
 }
