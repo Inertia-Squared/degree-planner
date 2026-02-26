@@ -1,8 +1,8 @@
 import { GraphEdge } from "reagraph";
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { ExtendedNode } from "@/utils/types";
-import { WindowContainer } from "@/components/ui/layout/Containers/WindowContainer";
-import { isSubjectNode } from "@/lib/graph/graphUtil";
+import {Dispatch, SetStateAction, useEffect} from "react";
+import {ExtendedNode} from "@/utils/types";
+import {WindowContainer} from "@/components/ui/layout/Containers/WindowContainer";
+import {isSubjectNode} from "@/lib/graph/graphUtil";
 
 interface InfoPanelProps {
     item: ExtendedNode<any> | GraphEdge | undefined;
@@ -24,15 +24,15 @@ const InfoWindow = ({ item, className, showInfo, setShowInfo }: InfoPanelProps) 
     });
 
     useEffect(() => {
-        if (entries.length > 0) setShowInfo(true);
+        if(entries.length > 0) setShowInfo(true);
         else setShowInfo(false);
-    }, [entries, setShowInfo]);
+    }, [entries, setShowInfo])
 
-    function getTitle() {
+    function getTitle(){
         return (entries[0][1] as string).toString();
     }
 
-    function getShortTitle() {
+    function getShortTitle(){
         if (!item) return undefined;
         // in future, we can maybe give shortened version of other items
         switch (true) {

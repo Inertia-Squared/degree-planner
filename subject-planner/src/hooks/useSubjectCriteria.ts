@@ -190,6 +190,7 @@ export function useSubjectCriteria({
             setShowSequences(false);
             setSelectedHeaderItem(HeaderItem.TIMELINE)
 
+
             let newCurrentPeriod = { ...currentPeriod };
             newCurrentPeriod.subjectsTaken = [...newCurrentPeriod.subjectsTaken, node];
             setSubjectsTaken([...subjectsTaken, node]);

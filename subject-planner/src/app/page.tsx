@@ -1,9 +1,9 @@
 "use client";
 import dynamic from "next/dynamic";
-import { RefObject, useCallback, useEffect, useState } from "react";
-import { GraphCanvasRef, GraphEdge } from "reagraph";
+import {RefObject, useCallback, useEffect, useState} from "react";
+import {GraphCanvasRef, GraphEdge} from "reagraph";
 import InfoWindow from "@/components/ui/layout/Windows/InfoWindow";
-import { TimelineWindow } from "@/components/ui/layout/Windows/TimelineWindow";
+import {TimelineWindow} from "@/components/ui/layout/Windows/TimelineWindow";
 import {
     ExtendedNode,
     Generic,
@@ -16,15 +16,15 @@ import {
     StudyPeriodItem,
     Subject,
 } from "@/utils/types";
-import { displayMode } from "@/utils/consts";
+import {displayMode} from "@/utils/consts";
 import ViewWindow from "@/components/ui/layout/Windows/ViewWindow";
-import { applyClassificationFilters, applyGraphFilters } from "@/lib/graph/graphFilters";
-import { useGraphConnection } from "@/hooks/useGraphConnection";
-import { useProgram } from "@/hooks/useProgram";
-import { useSubjectCriteria } from "@/hooks/useSubjectCriteria";
-import { applyGraphColours } from "@/lib/graph/graphColours";
-import HeaderBar, { HeaderItem } from "@/components/ui/layout/Containers/HeaderBar";
-import { applyGraphLabels } from "@/lib/graph/graphLabels";
+import {applyClassificationFilters, applyGraphFilters} from "@/lib/graph/graphFilters";
+import {useGraphConnection} from "@/hooks/useGraphConnection";
+import {useProgram} from "@/hooks/useProgram";
+import {useSubjectCriteria} from "@/hooks/useSubjectCriteria";
+import {applyGraphColours} from "@/lib/graph/graphColours";
+import HeaderBar, {HeaderItem} from "@/components/ui/layout/Containers/HeaderBar";
+import {applyGraphLabels} from "@/lib/graph/graphLabels";
 import ShowIneligible from "@/components/ShowIneligible";
 import SearchWindow from "@/components/ui/layout/Windows/SearchWindow";
 import HelpWindow from "@/components/ui/layout/Windows/HelpWindow";
@@ -89,13 +89,7 @@ export default function Home() {
         getNodeFromId,
         graphRef,
     });
-    const { searchProgram } = useProgram({
-        nodes,
-        setNodes,
-        setSelectedProgram,
-        setSelectedProgramSequence,
-        setNodesHot,
-    });
+    const { searchProgram } = useProgram({ nodes, setNodes, setSelectedProgram, setSelectedProgramSequence, setNodesHot });
     const {
         forceAddSpecialisation,
         startExploring,
@@ -134,11 +128,11 @@ export default function Home() {
     });
 
     function onCanvasClicked() {
-        if (selectedHeaderItem !== HeaderItem.NONE) setSelectedHeaderItem(HeaderItem.NONE);
+        if (selectedHeaderItem !== HeaderItem.NONE) setSelectedHeaderItem(HeaderItem.NONE)
         else resetSelectedElement();
     }
 
-    function resetSelectedElement() {
+    function resetSelectedElement(){
         setSelectedElement(undefined);
         setClusterOptions(["Select a node to see cluster options"]);
         setClusterBy(undefined);
@@ -203,25 +197,19 @@ export default function Home() {
         showAllIneligible,
     ]);
 
-    useEffect(() => {
-        setTimeout(() => setNodesHot(false), 1000);
-    }, [nodesHot]);
+    useEffect(()=>{
+        setTimeout(()=>setNodesHot(false), 1000);
+    }, [nodesHot])
 
-    useEffect(() => {
+    useEffect(()=>{
         setNodesHot(true);
-    }, [nodes]);
+    }, [nodes])
 
     return (
         <>
-            <HeaderBar
-                exploringStarted={exploringStarted}
-                selectedHeaderItem={selectedHeaderItem}
-                setSelectedHeaderItem={setSelectedHeaderItem}
-            />
+            <HeaderBar exploringStarted={exploringStarted} selectedHeaderItem={selectedHeaderItem} setSelectedHeaderItem={setSelectedHeaderItem} />
 
-            <main
-                className={`h-[100vh] py-16 flex flex-col overflow-hidden ${selectedHeaderItem === HeaderItem.SEARCH ? "p-2" : "pb-2 px-2"}`}
-            >
+            <main className={`h-[100vh] py-16 flex flex-col overflow-hidden ${selectedHeaderItem === HeaderItem.SEARCH ? "p-2" : "pb-2 px-2"}`}>
                 <ForceGraph
                     layoutMode={displayMode}
                     clickAction={selectElement}
@@ -269,16 +257,14 @@ export default function Home() {
                     setSelectedHeaderItem={setSelectedHeaderItem}
                 />
                 <InfoWindow
-                    className={`header-window header-window-top-right fixed top-128 z-15 overflow-auto`}
+                    className={`header-window header-window-top-right z-15 overflow-auto`}
                     item={selectedElement}
                     showInfo={showInfo}
                     setShowInfo={setShowInfo}
                 />
-                <HelpWindow
-                    className={`header-window-top-right z-20`}
-                    selectedHeaderItem={selectedHeaderItem}
-                    setSelectedHeaderItem={setSelectedHeaderItem}
-                />
+                
+                <HelpWindow className={`header-window-top-right z-20`} selectedHeaderItem={selectedHeaderItem} setSelectedHeaderItem={setSelectedHeaderItem}/>
+                
                 <ShowIneligible
                     className={`bg-gray-50 min-w-[250px] min-h-[400px] w-fit h-fit z-20 max-h-1/2 max-w-1/5 border-2 absolute right-1 bottom-0 my-auto`}
                     onToggle={onToggleShowIneligible}
