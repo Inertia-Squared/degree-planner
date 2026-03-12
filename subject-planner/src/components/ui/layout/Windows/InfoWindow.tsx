@@ -46,7 +46,11 @@ const InfoWindow = ({ item, className, showInfo, setShowInfo }: InfoPanelProps) 
     return (
         <>
             {showInfo && (
-                    <WindowContainer userClosable={false} className={`flex flex-col ${className}`} title={getTitle()} childElement={
+                <WindowContainer
+                    userClosable={false}
+                    className={`flex flex-col ${className}`}
+                    title={getTitle()}
+                    childElement={
                         <div className={`flex flex-col overflow-y-scroll pb-4`}>
                             {entries.map((e, i) => {
                                 let shouldTerminate = false;
@@ -57,35 +61,64 @@ const InfoWindow = ({ item, className, showInfo, setShowInfo }: InfoPanelProps) 
 
                                 if (e[0].includes("Link")) {
                                     return (
-                                            <li key={e[0]} className={`overflow-x-clip`}>
-                                                <strong>Link: </strong>
-                                                <a
-                                                        target={"_blank"}
-                                                        className={`underline text-blue-500`}
-                                                        key={e[0]}
-                                                        href={e[1] as string}
-                                                >
-                                                    {getShortTitle()}
-                                                </a>
-                                            </li>
+                                        <li key={e[0]} className={`overflow-x-clip`}>
+                                            <strong>Link: </strong>
+                                            <a
+                                                target={"_blank"}
+                                                className={`underline text-blue-500`}
+                                                key={e[0]}
+                                                href={e[1] as string}
+                                            >
+                                                {getShortTitle()}
+                                            </a>
+                                        </li>
                                     );
                                 } else {
                                     return (
-                                            <div key={i}>
-                                                {i == 0 ? (
-                                                        <></>
-                                                ) : (
-                                                        <li className={`overflow-x-clip pb-4`}>
-                                                            <strong>{e[0].charAt(0).toUpperCase() + e[0].slice(1)}</strong>:{" "}
-                                                            <p className="px-4 py-1">{(e[1] as string).toString() == "[]" ? "No Prerequisites" : (e[1] as string).toString()}</p>
-                                                        </li>
-                                                )}
-                                            </div>
+                                        <div key={i}>
+                                            {i == 0 ? (
+                                                <></>
+                                            ) : (
+                                                <li className={`overflow-x-clip pb-4`}>
+                                                    <strong>{e[0].charAt(0).toUpperCase() + e[0].slice(1)}</strong>:{" "}
+                                                    {e[0] == "subjectSequences" ? (
+                                                        <ol className="px-4 py-1 space-y-2 list-disc">
+                                                            {(e[1] as string[]).map((s: string, index: number) => (
+                                                                <li key={index}>{s}</li>
+                                                            ))}
+                                                        </ol>
+                                                    ) : e[0] == "teachingPeriods" ? (
+                                                        <div className="px-4 py-1 space-y-2">
+                                                            {(e[1] as any).map((tp: any, index: number) => (
+                                                                <ol key={index} className='list-disc'>
+                                                                    <li>
+                                                                        {JSON.parse(tp)["period"]} at{" "}
+                                                                        {JSON.parse(tp)["locations"].map(
+                                                                            (l: string, index: number) => (
+                                                                                <p key={index}>{l} Campus</p>
+                                                                            ),
+                                                                        )}
+                                                                    </li>
+                                                                </ol>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <p className="px-4 py-1">
+                                                            {(e[1] as string).toString() == "[]" &&
+                                                            e[1] == "prerequisites"
+                                                                ? "No Prerequisites"
+                                                                : (e[1] as string).toString()}
+                                                        </p>
+                                                    )}
+                                                </li>
+                                            )}
+                                        </div>
                                     );
                                 }
                             })}
                         </div>
-                    }/>
+                    }
+                />
             )}
         </>
     );
