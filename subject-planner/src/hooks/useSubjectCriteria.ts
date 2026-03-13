@@ -124,6 +124,7 @@ export function useSubjectCriteria({
     setNodes(newNodes);
     setSelectedHeaderItem(HeaderItem.NONE);
     setExploringStarted(true);
+    setCurrentPeriod({period: startPeriod, subjectsTaken: subjectsTaken});
     expandConnected(newNodes);
   }
 
@@ -204,20 +205,11 @@ export function useSubjectCriteria({
 
     function moveToNewPeriod(oldCurrentPeriod: StudyPeriodItem) {
         const newCompletedPeriods = [...(completedPeriods ?? []), oldCurrentPeriod];
-
-        if ((completedPeriods?.length ?? 0) % 2 === 0 && completedPeriods.length !== 0) {
-            setCompletedPeriods(newCompletedPeriods);
-            setCurrentPeriod({
-                period: startPeriod,
-                subjectsTaken: [],
-            });
-        } else {
-            setCompletedPeriods(newCompletedPeriods);
-            setCurrentPeriod({
-                period: startPeriod === "autumn" ? "spring" : "autumn",
-                subjectsTaken: [],
-            });
-        }
+        setCurrentPeriod({
+            period: currentPeriod.period === "autumn" ? "spring" : "autumn",
+            subjectsTaken: [],
+        });
+        setCompletedPeriods(newCompletedPeriods);
     }
 
     return {
