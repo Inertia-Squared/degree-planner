@@ -16,9 +16,11 @@ interface ForceGraphProps {
     className?: string,
 }
 
+const graphRef = useRef<GraphCanvasRef | null >(null);
+
 const ForceGraph = ({nodes, edges, className, doubleClickNodeAction, clusterBy, clickAction, clickCanvas, layoutMode, collapsedNodeIds, setGraphRef}: ForceGraphProps) => {
     const classN = className ?? `w-[300px] h-screen relative`;
-    const graphRef = useRef<GraphCanvasRef | null >(null);
+
     useEffect(() => {
         if (graphRef.current) setGraphRef(graphRef);
     }, [nodes, edges, clusterBy, collapsedNodeIds, layoutMode]);
@@ -30,5 +32,9 @@ const ForceGraph = ({nodes, edges, className, doubleClickNodeAction, clusterBy, 
         </div>
     );
 };
+
+export function fitGraphCamera(){
+    if(graphRef && graphRef.current) graphRef.current.fitNodesInView();
+}
 
 export default ForceGraph;

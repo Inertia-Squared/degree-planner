@@ -25,83 +25,23 @@ import {isEligibleForSubject} from "@/lib/graph/graphColours";
 import {HeaderItem} from "@/components/ui/layout/Containers/HeaderBar";
 
 export function useSubjectCriteria({
-  nodes,
-  selectedProgram,
-  setNodes,
-  edges,
-  setEdges,
-  currentPeriod,
   setSelectedHeaderItem,
-  expandConnected,
   setSelectedElement,
-  setSelectedProgram,
-  setSelectedProgramSequence,
   setClusterOptions,
-  completedPeriods,
-  subjectsTaken,
   setUpdateToggle,
   updateToggle,
-  adjacencyList,
-  nodeMap,
   setShowSequences,
-  setSubjectsTaken,
-  setCurrentPeriod,
-  setCompletedPeriods,
-  startPeriod,
   setShowInfo,
-    setExploringStarted
 }: {
-  nodes: ExtendedNode<Generic>[];
-  selectedProgram: ExtendedNode<Program> | undefined;
-  setNodes: Dispatch<SetStateAction<ExtendedNode<Generic>[]>>;
-  edges: GraphEdge[];
-  setEdges: Dispatch<SetStateAction<GraphEdge[]>>;
-  currentPeriod: StudyPeriodItem;
   setSelectedHeaderItem: Dispatch<SetStateAction<HeaderItem>>;
-  expandConnected: (nodesToExpand: ExtendedNode<Generic>[]) => Promise<void>;
   setSelectedElement: Dispatch<SetStateAction<ExtendedNode<Generic> | GraphEdge | undefined>>;
-  setSelectedProgram: Dispatch<SetStateAction<ExtendedNode<Program> | undefined>>;
-  setSelectedProgramSequence: Dispatch<SetStateAction<string | undefined>>;
   setClusterOptions: Dispatch<SetStateAction<string[]>>;
-  completedPeriods: StudyPeriodItem[];
-  subjectsTaken: ExtendedNode<Subject>[];
   setUpdateToggle: Dispatch<SetStateAction<boolean>>;
   updateToggle: boolean;
-  adjacencyList: Map<string, string[]>;
-  nodeMap: Map<string, ExtendedNode<Generic>>;
   setShowSequences: Dispatch<SetStateAction<boolean>>;
-  setSubjectsTaken: Dispatch<SetStateAction<ExtendedNode<Subject>[]>>;
-  setCurrentPeriod: Dispatch<SetStateAction<StudyPeriodItem>>;
-  setCompletedPeriods: Dispatch<SetStateAction<StudyPeriodItem[]>>;
-  startPeriod: StudyPeriod;
   setShowInfo: Dispatch<SetStateAction<boolean>>;
-  setExploringStarted: Dispatch<SetStateAction<boolean>>;
 }) {
-    const recentlyAdded = useRef<Set<string>>(new Set());
 
-    const getNodeFromId = useCallback(
-        (id: string) => {
-            return nodes.find((n) => n.id === id);
-        },
-        [nodes]
-    );
-
-    const forceAddSpecialisation = (node: ExtendedNode<Major | Minor>) => {
-        if (!node.data.programConnectionId || !selectedProgram) return;
-        if (nodes.includes(node)) return;
-        node.size = 40;
-        const newNodes = [...nodes.filter((n) => n.data.type !== node.data.type), node];
-        setNodes(newNodes);
-        const newEdgeId = node.data.programConnectionId + ":" + selectedProgram.id + node.id;
-        const newEdge: GraphEdge = {
-            id: newEdgeId,
-            source: selectedProgram.id,
-            target: node.id,
-            label: "HAS_SPECIALISATION",
-        };
-        const newEdges = [...edges.filter((e) => newNodes.find((n) => n.id === e.target)), newEdge];
-        setEdges(newEdges);
-    };
 
 
   const isOfferedInCurrentPeriod = useCallback(
@@ -144,64 +84,7 @@ export function useSubjectCriteria({
     }
   }
 
-    const getCompletedSubjects = useCallback(() => {
-        return completedPeriods.map((p) => p.subjectsTaken).flat();
-    }, [completedPeriods]);
 
-    const hasTaken = useCallback(
-        (node: ExtendedNode<Generic>) => {
-            return subjectsTaken.some((n) => n.id === node.id);
-        },
-        [subjectsTaken]
-    );
-
-    function onNodeDoubleClicked(id: string) {
-        if (recentlyAdded.current.has(id)) return;
-
-        // console.log('Checking node...')
-        setUpdateToggle(!updateToggle);
-
-        const node = getNodeFromId(id);
-        if (node && isSubjectNode(node)) {
-            if (hasTaken(node)) {
-                return;
-            }
-            const parentPrerequisites = getParentsByType<Prerequisite>(
-                node,
-                nodes,
-                adjacencyList,
-                nodeMap,
-                "Prerequisites"
-            ).filter((p) => p.data.forSubject === node.data.code);
-            if (
-                !isEligibleForSubject(parentPrerequisites, getCompletedSubjects()) ||
-                isOfferedInCurrentPeriod(node) === OfferStatus.NO
-            ) {
-                return;
-            }
-
-            // Double check if already in current period
-            if (currentPeriod.subjectsTaken.some(n => n.id === node.id)) return;
-
-            recentlyAdded.current.add(id);
-            setTimeout(() => {
-                recentlyAdded.current.delete(id);
-            }, 1000);
-
-            setShowSequences(false);
-            setSelectedHeaderItem(HeaderItem.TIMELINE)
-
-
-            let newCurrentPeriod = { ...currentPeriod };
-            newCurrentPeriod.subjectsTaken = [...newCurrentPeriod.subjectsTaken, node];
-            setSubjectsTaken([...subjectsTaken, node]);
-            if (newCurrentPeriod.subjectsTaken.length % 4 === 0) {
-                moveToNewPeriod(newCurrentPeriod);
-            } else {
-                setCurrentPeriod(newCurrentPeriod);
-            }
-        }
-    }
 
     function moveToNewPeriod(oldCurrentPeriod: StudyPeriodItem) {
         const newCompletedPeriods = [...(completedPeriods ?? []), oldCurrentPeriod];

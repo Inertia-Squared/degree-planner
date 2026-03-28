@@ -37,59 +37,22 @@ const ForceGraph = dynamic(() => import("../components/ForceGraph"), {
 
 // Interfaces above
 export default function Home() {
-    const [nodes, setNodes] = useState<ExtendedNode<Generic>[]>([]);
+
     const [displayedNodes, setDisplayedNodes] = useState<ExtendedNode<Generic>[]>([]);
-    const [nodeMap, setNodeMap] = useState<Map<string, ExtendedNode<Generic>>>(new Map());
-    const [adjacencyList, setAdjacencyList] = useState<Map<string, string[]>>(new Map());
-    const [edges, setEdges] = useState<GraphEdge[]>([]);
     const [displayedEdges, setDisplayedEdges] = useState<GraphEdge[]>([]);
-    const [addedNodes, setAddedNodes] = useState<ExtendedNode<Generic>[]>([]);
     const [clusterOptions, setClusterOptions] = useState(["select a node to see cluster options"]);
     const [clusterBy, setClusterBy] = useState<string | undefined>(undefined);
     const [selectedElement, setSelectedElement] = useState<ExtendedNode<Generic> | GraphEdge | undefined>(undefined);
-    const [selectedProgram, setSelectedProgram] = useState<ExtendedNode<Program> | undefined>(undefined);
-    const [selectedProgramSequence, setSelectedProgramSequence] = useState<string | undefined>(undefined);
     const [showPotentialElectives, setShowPotentialElectives] = useState<boolean>(false);
-    const [startPeriod, setStartPeriod] = useState<StudyPeriod>("autumn");
-    const [completedPeriods, setCompletedPeriods] = useState<StudyPeriodItem[]>([]);
-    const [currentPeriod, setCurrentPeriod] = useState<StudyPeriodItem>({
-        period: startPeriod,
-        subjectsTaken: [],
-    });
-    const [subjectsTaken, setSubjectsTaken] = useState<ExtendedNode<Subject>[]>([]);
 
     const [showInfo, setShowInfo] = useState<boolean>(false);
     const [updateToggle, setUpdateToggle] = useState<boolean>(false);
     const [showSequences, setShowSequences] = useState<boolean>(true);
-    const [graphRef, setGraphRef] = useState<RefObject<GraphCanvasRef | null>>();
 
     const [selectedHeaderItem, setSelectedHeaderItem] = useState<HeaderItem>(HeaderItem.NONE); //todo if we want to allow multiple windows open simultanously, turn this into an array and check for contains, but for now we keep it simple
 
     const [showAllIneligible, setShowAllIneligible] = useState(false);
 
-    const [exploringStarted, setExploringStarted] = useState(false);
-
-    const [nodesHot, setNodesHot] = useState(false);
-
-    const getNodeFromId = useCallback(
-        (id: string) => {
-            return nodes.find((n) => n.id === id);
-        },
-        [nodes],
-    );
-
-    const { expandConnected } = useGraphConnection({
-        nodes,
-        edges,
-        setNodes,
-        setEdges,
-        setNodeMap,
-        setAdjacencyList,
-        setAddedNodes,
-        getNodeFromId,
-        graphRef,
-    });
-    const { searchProgram } = useProgram({ nodes, setNodes, setSelectedProgram, setSelectedProgramSequence, setNodesHot });
     const {
         forceAddSpecialisation,
         startExploring,
@@ -100,31 +63,13 @@ export default function Home() {
         isOfferedInCurrentPeriod,
         hasTaken,
     } = useSubjectCriteria({
-        nodes,
-        selectedProgram,
-        setNodes,
-        edges,
-        setEdges,
-        currentPeriod,
         setSelectedHeaderItem,
-        expandConnected,
         setSelectedElement,
-        setSelectedProgram,
-        setSelectedProgramSequence,
         setClusterOptions,
-        completedPeriods,
-        subjectsTaken,
         setUpdateToggle,
         updateToggle,
-        adjacencyList,
-        nodeMap,
         setShowSequences,
-        setSubjectsTaken,
-        setCurrentPeriod,
-        setCompletedPeriods,
-        startPeriod,
         setShowInfo: setShowInfo,
-        setExploringStarted,
     });
 
     function onCanvasClicked() {
