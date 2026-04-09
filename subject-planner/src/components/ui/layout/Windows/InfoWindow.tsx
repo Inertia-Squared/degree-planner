@@ -1,19 +1,19 @@
-import { GraphEdge } from "reagraph";
-import {Dispatch, SetStateAction, useEffect} from "react";
-import {ExtendedNode} from "@/utils/types";
-import {WindowContainer} from "@/components/ui/layout/Containers/WindowContainer";
-import {isSubjectNode} from "@/lib/graph/graphUtil";
+import { useEffect } from "react";
+import { WindowContainer } from "@/components/ui/layout/Containers/WindowContainer";
+import { isSubjectNode } from "@/lib/graph/graphUtil";
+import { useGraphRenderStore, useGraphUIStore } from "@/app/store/graphStore";
 
 interface InfoPanelProps {
-    item: ExtendedNode<any> | GraphEdge | undefined;
     className?: string;
-    showInfo: boolean;
-    setShowInfo: Dispatch<SetStateAction<boolean>>;
 }
 
-const hiddenTerms = [/*'subjectSequences', */ "code"];
+const hiddenTerms = ["code"];
 
-const InfoWindow = ({ item, className, showInfo, setShowInfo }: InfoPanelProps) => {
+const InfoWindow = ({ className }: InfoPanelProps) => {
+
+    const item = useGraphRenderStore((state) => state.selectedElement);
+    const showInfo = useGraphUIStore((state) => state.showInfo);
+
     const entries = Object.entries(item?.data ?? item ?? []).sort((a, b) => {
         if (a[0].includes("Name")) return -10;
         if (b[0].includes("Name")) return 10;
@@ -24,17 +24,16 @@ const InfoWindow = ({ item, className, showInfo, setShowInfo }: InfoPanelProps) 
     });
 
     useEffect(() => {
-        if(entries.length > 0) setShowInfo(true);
-        else setShowInfo(false);
-    }, [entries, setShowInfo])
+        if (entries.length > 0) useGraphUIStore.setState({ showInfo: true });
+        else useGraphUIStore.setState({ showInfo: false });
+    }, [entries]);
 
-    function getTitle(){
-        return (entries[0][1] as string).toString();
+    function getTitle() {
+        return (entries[0]?.[1] as string)?.toString();
     }
 
-    function getShortTitle(){
+    function getShortTitle() {
         if (!item) return undefined;
-        // in future, we can maybe give shortened version of other items
         switch (true) {
             case isSubjectNode(item):
                 return item.data.code;
@@ -55,9 +54,9 @@ const InfoWindow = ({ item, className, showInfo, setShowInfo }: InfoPanelProps) 
                             {entries.map((e, i) => {
                                 let shouldTerminate = false;
                                 hiddenTerms.forEach((t) => {
-                                    if (t == e[0]) shouldTerminate = true;
+                                    if (t === e[0]) shouldTerminate = true;
                                 });
-                                if (shouldTerminate) return;
+                                if (shouldTerminate) return null;
 
                                 if (e[0].includes("Link")) {
                                     return (
@@ -76,18 +75,18 @@ const InfoWindow = ({ item, className, showInfo, setShowInfo }: InfoPanelProps) 
                                 } else {
                                     return (
                                         <div key={i}>
-                                            {i == 0 ? (
+                                            {i === 0 ? (
                                                 <></>
                                             ) : (
                                                 <li className={`overflow-x-clip pb-4`}>
                                                     <strong>{e[0].charAt(0).toUpperCase() + e[0].slice(1)}</strong>:{" "}
-                                                    {e[0] == "subjectSequences" ? (
+                                                    {e[0] === "subjectSequences" ? (
                                                         <ol className="px-4 py-1 space-y-2 list-disc">
                                                             {(e[1] as string[]).map((s: string, index: number) => (
                                                                 <li key={index}>{s}</li>
                                                             ))}
                                                         </ol>
-                                                    ) : e[0] == "teachingPeriods" ? (
+                                                    ) : e[0] === "teachingPeriods" ? (
                                                         <div className="px-4 py-1 space-y-2">
                                                             {(e[1] as any).map((tp: any, index: number) => (
                                                                 <ol key={index} className='list-disc'>
@@ -104,8 +103,7 @@ const InfoWindow = ({ item, className, showInfo, setShowInfo }: InfoPanelProps) 
                                                         </div>
                                                     ) : (
                                                         <p className="px-4 py-1">
-                                                            {(e[1] as string).toString() == "[]" &&
-                                                            e[1] == "prerequisites"
+                                                            {(e[1] as string).toString() === "[]" && e[1] === "prerequisites"
                                                                 ? "No Prerequisites"
                                                                 : (e[1] as string).toString()}
                                                         </p>

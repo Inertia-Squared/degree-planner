@@ -1,10 +1,11 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import SearchHeader from "../Headers/SearchHeader";
 import TimelineHeader from "../Headers/TimelineHeader";
 import ViewHeader from "@/components/ui/layout/Headers/ViewHeader";
 import HelpHeader from "@/components/ui/layout/Headers/HelpHeader";
 import Hamburger from "../../HamburgerButton";
+import { useGraphDataStore, useGraphUIStore } from "@/app/store/graphStore";
 
 export enum HeaderItem {
     NONE,
@@ -23,21 +24,19 @@ export function shouldShowItem(selectedHeaderItem: HeaderItem, testItem: HeaderI
     return selectedHeaderItem === testItem;
 }
 
-const HeaderBar = ({
-    selectedHeaderItem,
-    setSelectedHeaderItem,
-    exploringStarted,
-}: {
-    selectedHeaderItem: HeaderItem;
-    setSelectedHeaderItem: Dispatch<SetStateAction<HeaderItem>>;
-    exploringStarted: boolean;
-}) => {
+const HeaderBar = () => {
     const [isOpen, setIsOpen] = useState(false);
+
+    const exploringStarted = useGraphDataStore((state) => state.exploringStarted);
+    const selectedHeaderItem = useGraphUIStore((state) => state.selectedHeaderItem);
 
     function headerItemClicked(selectedItem: HeaderItem) {
         setIsOpen(false);
-        if (selectedHeaderItem === selectedItem) setSelectedHeaderItem(HeaderItem.NONE);
-        else setSelectedHeaderItem(selectedItem);
+        if (selectedHeaderItem === selectedItem) {
+            useGraphUIStore.setState({ selectedHeaderItem: HeaderItem.NONE });
+        } else {
+            useGraphUIStore.setState({ selectedHeaderItem: selectedItem });
+        }
     }
 
     let openStatus: string = "";

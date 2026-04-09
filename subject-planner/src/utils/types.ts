@@ -96,28 +96,7 @@ export interface Generic {
     status: NodeStatus
 }
 
-export interface GraphCommonProps {
-    nodes: ExtendedNode<Generic>[],
-    edges: GraphEdge[],
-    adjacencyList: Map<string, string[]>,
-    nodeMap: Map<string, ExtendedNode<Generic>>,
-}
-
-export interface GraphFilterProps extends GraphCommonProps {
-    selectedProgram: ExtendedNode<Program> | undefined,
-    selectedProgramSequence: string | undefined,
-    showPotentialElectives: boolean
-}
-
-export interface GraphColourProps extends GraphCommonProps {
-    getCompletedSubjects: () => ExtendedNode<Subject>[],
-    isOfferedInCurrentPeriod: (node: ExtendedNode<Subject>) => OfferStatus,
-    hasTaken: (node: ExtendedNode<Generic>) => boolean
-}
-
 export interface GraphPruningProps {
     newNodes: ExtendedNode<Generic>[],
     newEdges: GraphEdge[],
-    adjacencyList: Map<string, string[]>,
-    showAllIneligible: boolean
 }
