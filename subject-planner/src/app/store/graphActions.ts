@@ -283,3 +283,30 @@ export function selectElement(id: string, isNode: boolean = true) {
         useGraphRenderStore.setState({clusterOptions: options});
     }
 }
+
+export function exportToJSON(){
+    const { displayedNodes, displayedEdges } = useGraphRenderStore.getState();
+
+    const createJsonAndDownload = (fileName: string, json: string) => {
+        if (!json) return;
+        const blob = new Blob([json], { type: 'text/json;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', fileName);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    // Nodes Json
+    if (displayedNodes.length > 0) {
+        createJsonAndDownload('nodes.json', JSON.stringify(displayedNodes, null, 2));
+    }
+
+    // Edges Json
+    if (displayedNodes.length > 0) {
+        createJsonAndDownload('edges.json', JSON.stringify(displayedEdges, null, 2));
+    }
+}

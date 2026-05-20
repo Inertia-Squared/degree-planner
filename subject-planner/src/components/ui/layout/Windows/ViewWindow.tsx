@@ -3,13 +3,12 @@ import React from "react";
 import { HeaderItem, shouldShowItem } from "@/components/ui/layout/Containers/HeaderBar";
 import { WindowContainer } from "@/components/ui/layout/Containers/WindowContainer";
 import { useGraphUIStore, useGraphRenderStore } from "@/app/store/graphStore";
-import {updateGraphVisualisation} from "@/app/store/graphActions";
+import {exportToJSON, updateGraphVisualisation} from "@/app/store/graphActions";
 
 const ViewWindow = ({ className }: { className?: string; }) => {
     // Zustand Hooks
     const selectedHeaderItem = useGraphUIStore((state) => state.selectedHeaderItem);
     const clusterOptions = useGraphRenderStore((state) => state.clusterOptions);
-    const exportToCsv = useGraphRenderStore((state) => state.exportToCsv);
 
     const itemIdentifier = HeaderItem.VIEW;
 
@@ -62,9 +61,9 @@ const ViewWindow = ({ className }: { className?: string; }) => {
                                     <div className="pt-4 border-t border-gray-200">
                                         <button
                                             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-                                            onClick={() => exportToCsv()}
+                                            onClick={() => exportToJSON()}
                                         >
-                                            Export to CSV
+                                            Export to JSON
                                         </button>
                                     </div>
                                 </div>
