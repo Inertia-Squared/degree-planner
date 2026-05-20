@@ -91,6 +91,7 @@ export interface GraphRenderState {
     showAllIneligible: boolean
 
     updateToggle: boolean // todo: see if this can be removed - it is a variable to force updates but may be causing issues
+    exportToCsv: () => void;
 }
 
 /**
@@ -113,7 +114,7 @@ export interface GraphRenderState {
  * **State Management**:
  * updateToggle
  */
-export const useGraphRenderStore = create<GraphRenderState>()((set) => ({
+export const useGraphRenderStore = create<GraphRenderState>()((set, get) => ({
     displayedNodes: [],
     displayedEdges: [],
 
@@ -126,6 +127,63 @@ export const useGraphRenderStore = create<GraphRenderState>()((set) => ({
     showAllIneligible: false,
 
     updateToggle: false,
+    exportToCsv: () => {
+        const { displayedNodes, displayedEdges } = get();
+
+        const createCsvAndDownload = (fileName: string, rows: (string|number|undefined|boolean)[][], headers: string[]) => {
+            if (rows.length === 0) return;
+
+            const csvContent = [
+                headers.join(','),
+                ...rows.map(row =>
+                    row.map(value => {
+                        if (value === undefined || value === null) {
+                            return '';
+                        }
+                        if (typeof value === 'string') {
+                            // Enclose in quotes and escape existing quotes
+                            return `"${value.replace(/"/g, '""')}"`;
+                        }
+                        return String(value);
+                    }).join(',')
+                )
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', fileName);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        // Nodes CSV
+        if (displayedNodes.length > 0) {
+            const dataKeys = Array.from(new Set(displayedNodes.flatMap(n => n.data ? Object.keys(n.data) : [])));
+            const nodeHeaders = ['id', 'label', ...dataKeys];
+            const nodeRows = displayedNodes.map(node => [
+                node.id,
+                node.label,
+                ...dataKeys.map(key => node.data ? (node.data as any)[key] : undefined)
+            ]);
+            createCsvAndDownload('nodes.csv', nodeRows, nodeHeaders);
+        }
+
+        // Edges CSV
+        if (displayedEdges.length > 0) {
+            const edgeHeaders = ['source', 'target', 'id', 'label'];
+            const edgeRows = displayedEdges.map(edge => [
+                edge.source,
+                edge.target,
+                edge.id,
+                edge.label
+            ]);
+            createCsvAndDownload('edges.csv', edgeRows, edgeHeaders);
+        }
+    },
 }));
 
 export interface GraphUIState {
@@ -152,4 +210,3 @@ export const useGraphUIStore = create<GraphUIState>()((set) => ({
 
     selectedHeaderItem: HeaderItem.NONE,
 }));
-

@@ -9,6 +9,7 @@ const ViewWindow = ({ className }: { className?: string; }) => {
     // Zustand Hooks
     const selectedHeaderItem = useGraphUIStore((state) => state.selectedHeaderItem);
     const clusterOptions = useGraphRenderStore((state) => state.clusterOptions);
+    const exportToCsv = useGraphRenderStore((state) => state.exportToCsv);
 
     const itemIdentifier = HeaderItem.VIEW;
 
@@ -57,6 +58,14 @@ const ViewWindow = ({ className }: { className?: string; }) => {
                                                 />
                                             </div>
                                         </div>
+                                    </div>
+                                    <div className="pt-4 border-t border-gray-200">
+                                        <button
+                                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                                            onClick={() => exportToCsv()}
+                                        >
+                                            Export to CSV
+                                        </button>
                                     </div>
                                 </div>
                                 <div className={`grow`}></div>
