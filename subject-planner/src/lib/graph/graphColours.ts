@@ -9,7 +9,6 @@ import {
 import {
     ExtendedNode,
     Generic,
-    GraphColourProps,
     NodeStatus,
     OfferStatus,
     Prerequisite,
@@ -18,16 +17,15 @@ import {
 import {GraphEdge} from "reagraph";
 import {colours, nodeFillMap} from "@/utils/consts";
 import {HEXRGBA} from "@/lib/RGBA";
+import {useGraphDataStore} from "@/app/store/graphStore";
+import {getCompletedSubjects, hasTaken, isOfferedInCurrentPeriod} from "@/app/store/degreeActions";
 
 /**
  * Runs several passes through visible nodes to colour-code them based on specific criteria
  * Assumes that nodes have already been preprocessed and pruned by the filter process.
- * @param colourProps
  */
-export function applyGraphColours(
-    colourProps: GraphColourProps
-){
-    const {nodes, edges, adjacencyList, nodeMap, getCompletedSubjects, isOfferedInCurrentPeriod, hasTaken} = colourProps;
+export function applyGraphColours(){
+    const {nodes, edges, adjacencyList, nodeMap} = useGraphDataStore.getState();
 
     let newNodes = [...nodes];
     let newEdges = [...edges]; // todo this stays in since we may highlight/colour-code edges soon

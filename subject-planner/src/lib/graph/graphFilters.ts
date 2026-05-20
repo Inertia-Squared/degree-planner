@@ -3,12 +3,14 @@ import {
     ExtendedNode,
     FilteredReasons,
     Generic,
-    GraphFilterProps, GraphPruningProps, NodeStatus,
+    GraphPruningProps, NodeStatus,
     Prerequisite,
     Subject
 } from "@/utils/types";
 import {fromNodesById, getCourseCode, getParentsByType, isPrerequisiteNode, isSubjectNode} from "@/lib/graph/graphUtil";
 import {GraphEdge} from "reagraph";
+import {useGraphDataStore, useGraphRenderStore} from "@/app/store/graphStore";
+import {useDegreeStore} from "@/app/store/degreeStore";
 
 export function filterSubjectsNotInSequence(node: ExtendedNode<Subject>, selectedProgram: string, selectedSequence: string) {
   let isInSelectedSequence = false;
@@ -54,11 +56,10 @@ export function filterImpossiblePrerequisites(node: ExtendedNode<Prerequisite>, 
 }
 
 
-// These functions are utilised in useEffect of page.tsx file
-export function applyGraphFilters(
-    filterProps: GraphFilterProps,
-): {newNodes: ExtendedNode<Generic>[], newEdges: GraphEdge[]}  {
-  const {nodes, edges, adjacencyList, nodeMap, selectedProgram, selectedProgramSequence, showPotentialElectives} = filterProps;
+// These functions are utilised in graphActions.tsx and handle user-facing display logic
+export function applyGraphFilters(): {newNodes: ExtendedNode<Generic>[], newEdges: GraphEdge[]}  {
+  const {nodes, edges, adjacencyList, nodeMap, selectedProgram, selectedProgramSequence, showPotentialElectives}
+      = {...useGraphDataStore.getState(), ...useDegreeStore.getState(), ...useGraphRenderStore.getState()};
   let newNodes = [...nodes];
   let newEdges = [...edges];
 
@@ -161,7 +162,10 @@ export function applyGraphFilters(
 
 export function applyClassificationFilters(pruningProps: GraphPruningProps
 ): {newNodes: ExtendedNode<Generic>[], newEdges: GraphEdge[]} {
-    let {newNodes, newEdges, adjacencyList, showAllIneligible} = pruningProps;
+    let {newNodes, newEdges} = {...pruningProps};
+    const adjacencyList = useGraphDataStore.getState().adjacencyList;
+    const showAllIneligible = useGraphRenderStore.getState().showAllIneligible;
+
     if (!showAllIneligible) {
         newNodes = newNodes.filter(n=>{
             if (isSubjectNode(n) && n.data.status === NodeStatus.INELIGIBLE) return false;
