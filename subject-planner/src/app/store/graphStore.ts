@@ -66,7 +66,7 @@ export const useGraphDataStore = create<GraphDataState>()((set) => ({
     addedNodes: [],
     exploringStarted: false,
     nodesHot: false,
-    // hook into update of nodes specifically and do some additional logic without needing to duplicate each time
+    // todo this doesn't work, implement middleware like done in degreeStore.ts
     setState: (params: any) => {
         if('nodes' in params) {
             set({...params, nodesHot: true});

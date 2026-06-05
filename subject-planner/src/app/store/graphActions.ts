@@ -29,7 +29,7 @@ import {fitGraphCamera} from "@/components/ForceGraph";
 import {applyClassificationFilters, applyGraphFilters} from "@/lib/graph/graphFilters";
 import {applyGraphLabels} from "@/lib/graph/graphLabels";
 import {useGraphDataStore, useGraphRenderStore, useGraphUIStore} from "@/app/store/graphStore";
-import {getCompletedSubjects, hasTaken, isOfferedInCurrentPeriod, moveToNewPeriod} from "@/app/store/degreeActions";
+import {getSubjectsCompleted, hasTaken, isOfferedInCurrentPeriod, moveToNewPeriod} from "@/app/store/degreeActions";
 
 export function getNodeFromId(id: string) {
     return useGraphDataStore.getState().nodes.find((n) => n.id === id);
@@ -227,7 +227,7 @@ export function onNodeDoubleClicked(id: string) {
             "Prerequisites"
         ).filter((p) => p.data.forSubject === node.data.code);
         if (
-            !isEligibleForSubject(parentPrerequisites, getCompletedSubjects()) ||
+            !isEligibleForSubject(parentPrerequisites, getSubjectsCompleted()) ||
             isOfferedInCurrentPeriod(node) === OfferStatus.NO
         ) {
             return;
