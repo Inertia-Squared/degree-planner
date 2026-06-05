@@ -4,6 +4,7 @@ import { HeaderItem, shouldShowItem } from "@/components/ui/layout/Containers/He
 import { WindowContainer } from "@/components/ui/layout/Containers/WindowContainer";
 import { useGraphUIStore, useGraphRenderStore } from "@/app/store/graphStore";
 import {exportToJSON, updateGraphVisualisation} from "@/app/store/graphActions";
+import {solveDegree} from "@/app/store/degreeActions";
 
 const ViewWindow = ({ className }: { className?: string; }) => {
     // Zustand Hooks
@@ -64,6 +65,12 @@ const ViewWindow = ({ className }: { className?: string; }) => {
                                             onClick={() => exportToJSON()}
                                         >
                                             Export to JSON
+                                        </button>
+                                        <button
+                                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+                                                onClick={() => solveDegree()}
+                                        >
+                                            Auto-Solve Degree
                                         </button>
                                     </div>
                                 </div>

@@ -18,7 +18,7 @@ import {GraphEdge} from "reagraph";
 import {colours, nodeFillMap} from "@/utils/consts";
 import {HEXRGBA} from "@/lib/RGBA";
 import {useGraphDataStore} from "@/app/store/graphStore";
-import {getCompletedSubjects, hasTaken, isOfferedInCurrentPeriod} from "@/app/store/degreeActions";
+import {getSubjectsCompleted, hasTaken, isOfferedInCurrentPeriod} from "@/app/store/degreeActions";
 
 /**
  * Runs several passes through visible nodes to colour-code them based on specific criteria
@@ -42,7 +42,7 @@ export function applyGraphColours(){
         ).filter(p => p.data.forSubject === n.data.code);
 
         if (
-            isEligibleForSubject(parentPrereq, getCompletedSubjects()) &&
+            isEligibleForSubject(parentPrereq, getSubjectsCompleted()) &&
             isOfferedInCurrentPeriod(n) !== OfferStatus.NO
         ) {
             n.fill = nodeFillMap["Subject"];
@@ -90,7 +90,7 @@ export function applyGraphColours(){
     // colour prerequisite node based on if student is eligible
     newNodes.forEach(n => {
         if (!isPrerequisiteNode(n)) return;
-        if (prerequisiteIsFulfilled(n, getCompletedSubjects())) {
+        if (prerequisiteIsFulfilled(n, getSubjectsCompleted())) {
             n.fill = nodeFillMap["Prerequisites"];
             n.data.status = NodeStatus.NONE;
         } else {
