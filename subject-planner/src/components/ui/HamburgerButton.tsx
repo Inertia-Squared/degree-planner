@@ -2,16 +2,14 @@
 const Hamburger = ({
   isOpen,
   clickHandler,
-  openStatus,
 }: {
   isOpen: boolean;
   clickHandler(): void;
-  openStatus: string;
 }) => {
   return (
     <div className="flex md:hidden items-center justify-center space-x-4">
       <div
-        className={`hamburger ${openStatus} cursor-pointer md:hidden focus:outline-none`}
+        className={`hamburger ${isOpen && 'open'} cursor-pointer md:hidden focus:outline-none`}
         onClick={clickHandler}
       >
         <span className="hamburger-top bg-black"></span>

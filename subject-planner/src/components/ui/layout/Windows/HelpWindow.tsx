@@ -1,16 +1,16 @@
-import { HeaderItem, shouldShowItem } from "@/components/ui/layout/Containers/HeaderBar";
+import { HeaderItemType } from "@/components/ui/layout/Containers/HeaderBar";
 import { WindowContainer } from "@/components/ui/layout/Containers/WindowContainer";
 import { useGraphUIStore } from "@/app/store/graphStore";
 
 const HelpWindow = ({ className }: { className?: string }) => {
     const selectedHeaderItem = useGraphUIStore((state) => state.selectedHeaderItem);
-    const itemIdentifier = HeaderItem.HELP;
+    const itemIdentifier = HeaderItemType.HELP;
     
     return (
-        shouldShowItem(selectedHeaderItem, itemIdentifier) && (
+        selectedHeaderItem === itemIdentifier && (
             <WindowContainer
                 className={className}
-                onClose={() => useGraphUIStore.setState({ selectedHeaderItem: HeaderItem.NONE })}
+                onClose={() => useGraphUIStore.setState({ selectedHeaderItem: HeaderItemType.NONE })}
                 title={'Welcome to MyDegree.help!'}
                 childElement={
                     <div className="space-y-8 py-4">

@@ -1,12 +1,12 @@
-import React, { MouseEvent, useRef, useState } from "react";
-import { getProgramNamesInterface } from "@/app/api/info/getProgramNames/route";
-import { getMajorsInterface } from "@/app/api/graph/getMajors/route";
+import React, {MouseEvent, useRef, useState} from "react";
+import {getProgramNamesInterface} from "@/app/api/info/getProgramNames/route";
+import {getMajorsInterface} from "@/app/api/graph/getMajors/route";
 import {ExtendedNode, Major, Minor, StudyPeriod, StudyPeriodItem} from "@/utils/types";
-import { getMinorsInterface } from "@/app/api/graph/getMinors/route";
-import { HeaderItem, shouldShowItem } from "@/components/ui/layout/Containers/HeaderBar";
-import { WindowContainer } from "@/components/ui/layout/Containers/WindowContainer";
-import { useGraphDataStore, useGraphUIStore } from "@/app/store/graphStore";
-import { useDegreeStore } from "@/app/store/degreeStore";
+import {getMinorsInterface} from "@/app/api/graph/getMinors/route";
+import {HeaderItemType} from "@/components/ui/layout/Containers/HeaderBar";
+import {WindowContainer} from "@/components/ui/layout/Containers/WindowContainer";
+import {useGraphDataStore, useGraphUIStore} from "@/app/store/graphStore";
+import {useDegreeStore} from "@/app/store/degreeStore";
 import {forceAddSpecialisation, startExploring} from "@/app/store/graphActions";
 import {searchProgram} from "@/app/store/degreeActions";
 
@@ -76,20 +76,21 @@ const SearchWindow = ({ className }: LineupSelectorProps) => {
         if (!needsReset) {
             startExploring();
             setNeedsReset(true);
+            useGraphUIStore.setState({selectedHeaderItem: HeaderItemType.VIEW});
             e.preventDefault();
         } else {
             window.location.reload();
         }
     }
 
-    const itemIdentifier = HeaderItem.SEARCH;
+    const itemIdentifier = HeaderItemType.SEARCH;
 
     return (
-        shouldShowItem(selectedHeaderItem, itemIdentifier) && (
+        selectedHeaderItem === itemIdentifier && (
             <WindowContainer
                 title={'Program Search'}
                 className={className}
-                onClose={() => useGraphUIStore.setState({ selectedHeaderItem: HeaderItem.NONE })}
+                onClose={() => useGraphUIStore.setState({ selectedHeaderItem: HeaderItemType.NONE })}
                 childElement={
                     <div className={`w-full flex flex-col min-w-[200px] space-y-2 overflow-x-scroll`}>
                         <div className="flex flex-col md:flex-row">

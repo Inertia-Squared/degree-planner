@@ -1,7 +1,7 @@
 import {create} from 'zustand';
 import {ExtendedNode, Generic} from "@/utils/types";
 import {GraphEdge} from "reagraph";
-import {HeaderItem} from "@/components/ui/layout/Containers/HeaderBar";
+import {HeaderItemType} from "@/components/ui/layout/Containers/HeaderBar";
 
 // note: Zustand recommends using Immer to update nested states without messy destructuring
 
@@ -113,7 +113,7 @@ export interface GraphRenderState {
  * **State Management**:
  * updateToggle
  */
-export const useGraphRenderStore = create<GraphRenderState>()((set, get) => ({
+export const useGraphRenderStore = create<GraphRenderState>()(() => ({
     displayedNodes: [],
     displayedEdges: [],
 
@@ -134,7 +134,7 @@ export interface GraphUIState {
     // Is only passed to SearchWindow, and only set (to false) in onNodeDoubleClicked (useSubjectCriteria.ts) - maybe we create a custom event for this which components can listen to?
     showSequences: boolean
 
-    selectedHeaderItem: HeaderItem
+    selectedHeaderItem: HeaderItemType
 }
 
 /**
@@ -146,9 +146,9 @@ export interface GraphUIState {
  * **Menu State**:
  * selectedHeaderItem
  */
-export const useGraphUIStore = create<GraphUIState>()((set) => ({
+export const useGraphUIStore = create<GraphUIState>()(() => ({
     showInfo: false,
     showSequences: true,
 
-    selectedHeaderItem: HeaderItem.NONE,
+    selectedHeaderItem: HeaderItemType.NONE,
 }));

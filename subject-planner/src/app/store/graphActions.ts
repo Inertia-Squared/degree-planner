@@ -9,7 +9,7 @@ import {
     isSubjectNode
 } from "@/lib/graph/graphUtil";
 import {GraphEdge} from "reagraph";
-import {HeaderItem} from "@/components/ui/layout/Containers/HeaderBar";
+import {HeaderItemType} from "@/components/ui/layout/Containers/HeaderBar";
 import {
     useDegreeStore
 } from "@/app/store/degreeStore";
@@ -236,7 +236,7 @@ export function onNodeDoubleClicked(id: string) {
         // Double check if already in current period
         if (currentPeriod.subjectsTaken.some(n => n.id === node.id)) return;
 
-        useGraphUIStore.setState({showSequences: false, selectedHeaderItem: HeaderItem.TIMELINE});
+        useGraphUIStore.setState({showSequences: false, selectedHeaderItem: HeaderItemType.TIMELINE});
 
 
         let newCurrentPeriod = {...currentPeriod};
@@ -257,7 +257,7 @@ export function startExploring() {
     const newNodes = nodes.filter((n) => isProgramNode(n) || isMinorNode(n) || isMajorNode(n));
 
     useGraphDataStore.setState({nodes: newNodes, exploringStarted: true});
-    useGraphUIStore.setState({selectedHeaderItem: HeaderItem.SEARCH});
+    useGraphUIStore.setState({selectedHeaderItem: HeaderItemType.SEARCH});
 
     const startPeriod = useDegreeStore.getState().startPeriod;
     useDegreeStore.setState({currentPeriod: {period: startPeriod, subjectsTaken: []}})
