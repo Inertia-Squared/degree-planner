@@ -1,6 +1,6 @@
 import { displayMode } from "@/utils/consts";
 import React from "react";
-import { HeaderItem, shouldShowItem } from "@/components/ui/layout/Containers/HeaderBar";
+import { HeaderItemType } from "@/components/ui/layout/Containers/HeaderBar";
 import { WindowContainer } from "@/components/ui/layout/Containers/WindowContainer";
 import { useGraphUIStore, useGraphRenderStore } from "@/app/store/graphStore";
 import {exportToJSON, updateGraphVisualisation} from "@/app/store/graphActions";
@@ -11,13 +11,13 @@ const ViewWindow = ({ className }: { className?: string; }) => {
     const selectedHeaderItem = useGraphUIStore((state) => state.selectedHeaderItem);
     const clusterOptions = useGraphRenderStore((state) => state.clusterOptions);
 
-    const itemIdentifier = HeaderItem.VIEW;
+    const itemIdentifier = HeaderItemType.VIEW;
 
     return (
-        (shouldShowItem(selectedHeaderItem, itemIdentifier) && (
+        (selectedHeaderItem === itemIdentifier && (
             <WindowContainer
                 className={`${className}`}
-                onClose={() => useGraphUIStore.setState({ selectedHeaderItem: HeaderItem.NONE })}
+                onClose={() => useGraphUIStore.setState({ selectedHeaderItem: HeaderItemType.NONE })}
                 title={'View Settings'}
                 childElement={
                     <div className="flex">

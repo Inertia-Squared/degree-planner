@@ -5,7 +5,7 @@ import InfoWindow from "@/components/ui/layout/Windows/InfoWindow";
 import { TimelineWindow } from "@/components/ui/layout/Windows/TimelineWindow";
 import { displayMode } from "@/utils/consts";
 import ViewWindow from "@/components/ui/layout/Windows/ViewWindow";
-import HeaderBar, { HeaderItem } from "@/components/ui/layout/Containers/HeaderBar";
+import HeaderBar, { HeaderItemType } from "@/components/ui/layout/Containers/HeaderBar";
 import ShowIneligible from "@/components/ShowIneligible";
 import SearchWindow from "@/components/ui/layout/Windows/SearchWindow";
 import HelpWindow from "@/components/ui/layout/Windows/HelpWindow";
@@ -25,8 +25,8 @@ export default function Home() {
 
     function onCanvasClicked() {
         const { selectedHeaderItem } = useGraphUIStore.getState();
-        if (selectedHeaderItem !== HeaderItem.NONE) {
-            useGraphUIStore.setState({ selectedHeaderItem: HeaderItem.NONE });
+        if (selectedHeaderItem !== HeaderItemType.NONE) {
+            useGraphUIStore.setState({ selectedHeaderItem: HeaderItemType.NONE });
         } else {
             resetSelectedElement();
         }
@@ -73,8 +73,8 @@ export default function Home() {
 
     return (
         <>
-            <HeaderBar />
-            <main className={`h-[100vh] py-16 flex flex-col overflow-hidden ${selectedHeaderItem === HeaderItem.SEARCH ? "p-2" : "pb-2 px-2"}`}>
+            <HeaderBar/>
+            <main className={`h-[100vh] py-16 flex flex-col overflow-hidden ${selectedHeaderItem === HeaderItemType.SEARCH ? "p-2" : "pb-2 px-2"}`}>
                 <ForceGraph
                     layoutMode={displayMode}
                     clickCanvas={onCanvasClicked}

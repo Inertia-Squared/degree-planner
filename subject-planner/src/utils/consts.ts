@@ -50,3 +50,7 @@ export const nodeSizeMap: Record<NodeTypes, number> = {
     ['Prerequisites']: 10,
     ['SubjectChoice']: 10
 }
+
+export const CustomEvents = {
+    closeBurger: new CustomEvent('closeBurger')
+}

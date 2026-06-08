@@ -1,4 +1,4 @@
-import { HeaderItem, shouldShowItem } from "@/components/ui/layout/Containers/HeaderBar";
+import { HeaderItemType } from "@/components/ui/layout/Containers/HeaderBar";
 import { WindowContainer } from "@/components/ui/layout/Containers/WindowContainer";
 import { useDegreeStore } from "@/app/store/degreeStore";
 import { useGraphUIStore } from "@/app/store/graphStore";
@@ -13,16 +13,16 @@ export const TimelineWindow = ({ className }: TimelineProps) => {
     const { completedPeriods, currentPeriod } = useDegreeStore();
     const selectedHeaderItem = useGraphUIStore((state) => state.selectedHeaderItem);
 
-    const itemIdentifier = HeaderItem.TIMELINE;
+    const itemIdentifier = HeaderItemType.TIMELINE;
 
     return (
         <>
-            {shouldShowItem(selectedHeaderItem, itemIdentifier) && (
+            {selectedHeaderItem === itemIdentifier && (
                 <WindowContainer
                     title={'Degree Timeline'}
                     description={'This panel shows all your chosen subjects, grouped by semster.'}
                     className={className}
-                    onClose={() => useGraphUIStore.setState({ selectedHeaderItem: HeaderItem.NONE })}
+                    onClose={() => useGraphUIStore.setState({ selectedHeaderItem: HeaderItemType.NONE })}
                     childElement={
                         <div className={"flex flex-col"}>
                             {completedPeriods.map((period, index) => {
