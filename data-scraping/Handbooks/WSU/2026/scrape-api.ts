@@ -162,8 +162,8 @@ async function fetchHandbookData(payload: APIQuery): Promise<Response> {
 
 async function scrapeDatabase() {
     let offset = 0;
-    // Note: For some contentTypes, limits above 10 have been observed to cause server errors when sending the request
-    const limit = 10;
+    // Note: For some contentTypes, limits above 50 have been observed to cause server errors when sending the request
+    const limit = 50;
 
     const payload: SubjectQuery = {
         siteId: 'wsu-prod-pres',
