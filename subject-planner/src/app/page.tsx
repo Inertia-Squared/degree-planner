@@ -15,6 +15,7 @@ import {
     useGraphUIStore
 } from "@/app/store/graphStore";
 import {updateGraphVisualisation} from "@/app/store/graphActions";
+import GenerateWindow from "@/components/ui/layout/Windows/GenerateWindow";
 
 const ForceGraph = dynamic(() => import("../components/ForceGraph"), {
     ssr: false,
@@ -80,6 +81,7 @@ export default function Home() {
                     clickCanvas={onCanvasClicked}
                     className={`grow w-full h-full absolute top-0 left-0 z-10`}
                 />
+                <GenerateWindow className={`header-window-top-right z-20`}/>
                 <ViewWindow className={`header-window-top-right z-20`} />
                 <SearchWindow className={`header-window-top-right z-20`} />
                 <TimelineWindow className={`header-window-top-right z-20`} />

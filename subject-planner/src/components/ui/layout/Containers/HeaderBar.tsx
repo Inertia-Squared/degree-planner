@@ -8,6 +8,7 @@ import {FiSearch} from "react-icons/fi";
 import {MdGridView} from "react-icons/md";
 import {RiTimeLine} from "react-icons/ri";
 import {TbHelpHexagon} from "react-icons/tb";
+import {BsDatabaseGear} from "react-icons/bs";
 
 export enum HeaderItemType {
     NONE="NONE",
@@ -15,6 +16,7 @@ export enum HeaderItemType {
     HELP="HELP",
     TIMELINE="TIMELINE",
     VIEW="VIEW",
+    GENERATE="GENERATE",
 }
 
 export enum HeaderShowCondition {
@@ -73,7 +75,14 @@ const HeaderBar = () => {
         headerIcon: <TbHelpHexagon/>,
     }
 
+    const GenerateHeader: HeaderItemProps = {
+        itemIdentifier: HeaderItemType.GENERATE,
+        headerIcon: <BsDatabaseGear/>,
+        showMode: HeaderShowCondition.EXPLORING_GRAPH
+    }
+
     const HeaderItems = [
+            GenerateHeader,
             SearchHeader,
             ViewHeader,
             TimeLineHeader,
