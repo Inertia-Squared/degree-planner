@@ -1,5 +1,8 @@
-/data-scraping/.env
-
+.env*
+!.env.example
 */**/node_modules
-/data-scraping/Automation/
 /.idea/
+/data-scraping/handbooks/*/*/data/**
+!/data-scraping/handbooks/*/*/data/.gitkeep
+!/data-scraping/handbooks/*/*/data/snapshots
+!/data-scraping/handbooks/*/*/data/snapshots/**

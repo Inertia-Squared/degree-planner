@@ -1,0 +1,266 @@
+import 'dotenv/config';
+import {LLM, LMStudioClient} from "@lmstudio/sdk";
+import fs from "fs/promises";
+import {SubjectData} from "./subject-scraper";
+import {setConfig, startTrackingProgress, stopTrackingProgress, TimerObjectType} from "@/api/util";
+import {GoogleGenAI} from "@google/genai";
+import {dataDir} from "@/api/directories";
+
+
+// @ts-ignore
+let z;
+
+// todo revisit prompt, make much simpler, and simplify data in
+//  (e.g. don't feed source subject to AI, & filter against itself to prevent circular reference)
+//  simplify data structure by making AI just add brackets and then parse? Might be more consistent
+const CONFIG = {
+    dataFile: `${dataDir}/subjects-unrefined.json`,
+    outputFile: `${dataDir}/subjects-refined.json`,
+    modelName: 'qwen/qwq-32b',
+    onlineModelName: 'gemini-2.5-pro',
+    online: true,
+    manualErrorMsg: "MANUAL INTERVENTION REQUIRED",
+    maxTries: 10,
+    verbose: true,
+    systemPrompt:
+        'You are a data processor who reads in and outputs prerequisite information based on some simple rules. ' +
+        'Subject codes are formatted as "ABCD 1234", some examples below simplifies this to a single letter for succinctness, but the rules are applying to these expanded values. ' +
+        'Generalise all examples to any small or large number of subjects in any variation. ' +
+        'The rules are as follows:\n' +
+        'i. Subjects have the format "ABCD 1234 [sometimes some text on subject title or topic]".\n' +
+        '1. Every time you see "[ABCD 1234] OR" without a newline, group them together in the SAME array e.g. for "A OR B OR C" -> [{course: any, prerequisites:[[A,B,C]]}], if there is a line break after an OR, or an OR is by itself, create an extra course entry for starting from the right of the OR instead of grouping them e.g. "A OR\nB AND C" -> [{course: any, prerequisites:[[A]]},{course: any, prerequisites:[[B],[C]]}]\n' +
+        '2. Every time you see "[ABCD 1234] AND", put elements following in a new array e.g. "A AND B AND C" -> [{course: any, prerequisites:[[A],[B],[C]]}]. Do not apply the newline OR rules to AND.\n' +
+        '3. These values can be mixed to create complex arrays of string arrays e.g. "A AND B OR C" -> [{course: any, prerequisites:[[A],[B,C]]}], "A AND B OR\n C" -> [{course: any, prerequisites:[[A],[B]]},{course: any, prerequisites:[[C]]}]\n' +
+        '4. Some prerequisites specify a course requirement e.g. "A AND B OR for Course with this long name 1234 C" -> [{course: any, prerequisites:[[A],[B]]},{course: 1234, prerequisites: [[C]]}]\n' +
+        '5. For each OR with a line break directly after, create a new entry with the same course name starting from the right/after the OR. The subject with the OR is merged into the ORIGINAL array (see example 5a)\n' +
+        '5a. IMPORTANT EXAMPLE: A AND\n B AND\n C AND\n D OR\nE AND F -> [{course: any, prerequisites:[[A],[B],[C],[D]]},{course: any, prerequisites: [[E,F]]}]. Generalise this case as much as possible.\n' +
+        '6. Returned subject values must follow this format.\n' +
+        '7. Courses have the format "[Some long name and info] 1234". If you are not given a course code or a condition you cannot capture with a course code, fall back to "SPECIAL"\n' +
+        '8. Returned course values must always be in the course field, and may only be "any" or in the format "1234", where 1234 is replaced with the course\'s actual code.\n' +
+        '9. Do not include the subject title or description in your output.\n' +
+        '10. Ignore erroneous ORs and ANDs, only count operators which (ignoring newlines) have a subject code immediately before them e.g. "WELF 7008 This and That in Magic and Mystery\nOr\nWELF 6001 Witchcraft or Wizardry in Season" is ALWAYS equal to {course: any, prerequisites: [[WELF 7008, WELF 6001]]}\n' +
+        '11. Typically an AND or OR will be capitalised, but will not always, treat all terms equally regardless of capitalisation, so long as it follows rule 11.\n' +
+        '\nApply the rules above on the following data:\n'
+}
+
+if (CONFIG.online){
+    z = require('zod/v4');
+} else {
+    z = require('zod')
+}
+
+const requirementSchema = z.object({
+    course: z.string().refine((input: string)=>{
+        return /^any$|^\d{4}$|^SPECIAL$/.test(input ?? "");
+    }, "Should match pattern /^any$|^\\d{4}$|^SPECIAL$/"),
+    prerequisites: z.string().refine((input: string)=>{
+        return /^SPECIAL$|^[A-Z]{4} \d{4}$|^\d{4}$/.test(input ?? ""); // todo accept and automatically fix missing whitespace e.g. ABCD1234 instead of ABCD 1234
+    }, "Should match pattern /^SPECIAL$|^[A-Z]{4} \\d{4}$|^\\d{4}$/").array().array(),
+}).array();
+
+export interface EnrollRequirements {
+    course: string;
+    prerequisites?: string[][];
+}
+
+interface StateType {
+    subjectData: SubjectData[];
+    prunedSubjectData: SubjectData[];
+    progressTracker?: TimerObjectType;
+    model?: LLM | GoogleGenAI;
+    manualSubjects: SubjectData[];
+}
+
+const state = {
+    subjectData: [],
+    prunedSubjectData: [],
+    progressTracker: undefined,
+    model: undefined,
+    manualSubjects: [],
+} as StateType;
+
+/**
+ * Splits an array of objects into smaller, bucketed subsections.
+ *
+ * @param arr The array to be chunked.
+ * @param chunkSize The size of each chunk.
+ * @returns A new array containing the chunked arrays.
+ */
+function chunkArray<T>(arr: T[], chunkSize: number): T[][] {
+    const chunkedArray: T[][] = [];
+    for (let i = 0; i < arr.length; i += chunkSize) {
+        const chunk = arr.slice(i, i + chunkSize);
+        chunkedArray.push(chunk);
+    }
+    return chunkedArray;
+}
+
+/**
+ * Starts the language model, either online or local.
+ */
+async function startModel(){
+    if(CONFIG.online){
+        state.model = new GoogleGenAI({apiKey: process.env.GEMINI_API_KEY});
+    } else {
+        const client = new LMStudioClient();
+        state.model = await client.llm.model(CONFIG.modelName);
+        // await state.model.respond('test');
+        console.log('Model loaded!')
+    }
+}
+
+/**
+ * Queries the language model with a subject's prerequisite data.
+ * @param subject The subject data to query.
+ * @param attempts The number of attempts made so far.
+ * @returns The parsed response from the model.
+ */
+async function queryModel(subject: SubjectData, attempts: number = 0){
+    if(!CONFIG.online){
+        const query = CONFIG.systemPrompt + `
+        Prerequisites:\n${processQueryString(subject.prerequisites as string)}`;
+        try{ // @ts-ignore
+            return await state.model.respond(query, {structured: requirementSchema, temperature: Math.max(attempts/10,1)});}
+        catch(err){
+            if(CONFIG.verbose) console.log(`Received bad response\n\n${err}\n\n, retrying... (attempt number ${attempts+2}/${CONFIG.maxTries})`);
+            if(attempts >= CONFIG.maxTries + 2){
+                return {parsed: {program: CONFIG.manualErrorMsg, prerequisites: [[CONFIG.manualErrorMsg]]}, content: CONFIG.manualErrorMsg}
+            }
+            return await queryModel(subject, ++attempts);
+        }
+    } else if (state.model instanceof GoogleGenAI){
+        const query = CONFIG.systemPrompt + `
+        Prerequisites:\n${processQueryString(subject.prerequisites as string)}`;
+        try {
+            const result = await state.model.models.generateContent({
+                model: CONFIG.onlineModelName,
+                contents: query,
+                config: {
+                    // @ts-ignore
+                    responseJsonSchema: z.toJSONSchema(requirementSchema),
+                    thinkingConfig: {
+                        thinkingBudget: -1 // thinkingBudget: Math.min(Math.max((subject.prerequisites as string).length - 9, 5) * 40 + Math.max((subject.prerequisites as string).length - 50, 0) * 50, 5000)
+                    }
+                }
+            });
+            const text = result.text?.replace(/```json|```/g, '');
+            return {content: text, parsed: JSON.parse(text ?? '')}
+        } catch (e) {
+            // save output in case we're STUCK stuck
+            if(CONFIG.verbose) console.log('Failed to query: ', e);
+            await fs.writeFile(`${dataDir}/subjects-manual-required.json`, JSON.stringify(state.manualSubjects,null,2), {encoding: "utf-8"});
+            await fs.writeFile(`${dataDir}/subjects-refined-partial.json`, JSON.stringify(state.prunedSubjectData,null,2), {encoding: "utf-8"});
+            // assume API is temporarily busy, try again every 15 seconds
+            let result;
+            await new Promise((resolve) => {
+                console.log('There was an API error, retrying in 15 seconds,..,')
+                setTimeout(async () => {
+                    if(CONFIG.verbose) console.log('retrying...')
+                    result = await queryModel(subject, 0);
+                    resolve(()=>{});
+                }, 15000);
+            });
+            return result;
+        }
+    }
+    throw "No Model Loaded";
+}
+
+/**
+ * Processes a query string by removing special characters.
+ * @param query The string to process.
+ * @returns The processed string.
+ */
+function processQueryString(query: string){
+    return query.replace(/ /g, ' ').replace(/-/g,'');
+}
+
+/**
+ * Recombines the pruned subject data back into the main subject data array.
+ */
+function recombineSubjectData(){
+    let j = 0;
+    let subjectsAreMatching;
+    for (let i = 0; i < state.prunedSubjectData.length; i++) {
+        for (; !(subjectsAreMatching = (state.subjectData[j].subject === state.prunedSubjectData[i].subject)); j++) {}
+        if(subjectsAreMatching) state.subjectData[j].prerequisites = state.prunedSubjectData[i].prerequisites;
+    }
+}
+
+/**
+ * Main function for the subject refiner.
+ */
+async function main(){
+    const loadModelTask = startModel();
+
+    try {
+        state.subjectData = JSON.parse((await fs.readFile(CONFIG.dataFile, {encoding: "utf-8"})));
+    } catch(e) {
+        console.error(e, `\nCould not locate file '${CONFIG.dataFile}'. Please check input.`);
+        await exitProcedure();
+    }
+    state.prunedSubjectData = state.subjectData.filter((subject)=>{
+        return subject.prerequisites && subject.prerequisites.length > 6; // length check to prune 'NONE' and other variants of blank entries
+    }) as SubjectData[] ?? [];
+    await loadModelTask;
+    state.progressTracker = startTrackingProgress(0,state.prunedSubjectData.length);
+    const partitionedData = chunkArray<SubjectData>(state.prunedSubjectData, 75); // we need to chunk the API hits so that we don't hit the rate limit
+
+    for (const partition of partitionedData) {
+        await Promise.all(partition.map(async queryData=>{
+            if(CONFIG.verbose) console.log(`\nQuerying based on subject: ${queryData.subject}Prerequisites:\n${processQueryString(queryData.prerequisites as string)}`);
+            queryData.originalPrerequisites = queryData.prerequisites as string; // compatibility for old data, remove this
+            let queryResult = await queryModel(queryData);
+            while (!queryResult){
+                await queryModel(queryData);
+            }
+            queryData.prerequisites = queryResult.parsed as EnrollRequirements[];
+            if(CONFIG.verbose) console.log("Query Result: ",queryResult.content)
+            if(queryResult.content === CONFIG.manualErrorMsg){
+                state.subjectData = state.subjectData.filter((subject)=>{
+                    return subject !== queryData;
+                });
+                state.prunedSubjectData = state.prunedSubjectData.filter((subject)=>{
+                    return subject !== queryData;
+                });
+                state.manualSubjects.push(queryData);
+            }
+            if(state.progressTracker) state.progressTracker.progress++;
+            return true;
+        }))
+    }
+    stopTrackingProgress(state.progressTracker);
+}
+
+
+setConfig(CONFIG.dataFile).then((r)=> {
+    CONFIG.dataFile = r.inputFile;
+    if(r.outputFile) CONFIG.outputFile = r.outputFile;
+    main().then(async ()=>{
+        console.log('Subject refinement complete!');
+        console.log("Recombining data...");
+        recombineSubjectData();
+        console.log("Saving data...");
+        await fs.writeFile(`${dataDir}/subjects-manual-required.json`, JSON.stringify(state.manualSubjects,null,2), {encoding: "utf-8"});
+        await fs.writeFile(CONFIG.outputFile, JSON.stringify(state.subjectData,null,2), {encoding: "utf-8"});
+        await exitProcedure();
+    });
+});
+
+
+/**
+ * Gracefully exits the process, ensuring the language model is unloaded.
+ */
+async function exitProcedure(){
+    console.log("Shutting down...");
+    if (state.model && !CONFIG.online) {
+        if (!(state.model instanceof GoogleGenAI)) {
+            await state.model.unload();
+        }
+        console.log("Model unloaded successfully");
+    } else {
+        console.log("No model to unload, skipping...");
+    }
+    console.log("Process has terminated gracefully.");
+    process.exit(0);
+}

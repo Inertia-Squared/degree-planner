@@ -1,4 +1,3 @@
-import {LogicalPrerequisite} from "../../../../data-scraping/neo4j/upload-data-to-db";
 import {
     getAsLogicalPrerequisite,
     getParentsByType,
@@ -19,6 +18,7 @@ import {colours, nodeFillMap} from "@/utils/consts";
 import {HEXRGBA} from "@/lib/RGBA";
 import {useGraphDataStore} from "@/app/store/graphStore";
 import {getSubjectsCompleted, hasTaken, isOfferedInCurrentPeriod} from "@/app/store/degreeActions";
+import {LogicalPrerequisite} from "@/api/neo4j/DBUploader";
 
 /**
  * Runs several passes through visible nodes to colour-code them based on specific criteria

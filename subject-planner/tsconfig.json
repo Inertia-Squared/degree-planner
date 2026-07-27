@@ -24,8 +24,10 @@
     ],
     "paths": {
       "@/*": [
-        "./src/*"
-      ]
+        "./src/*",
+      ],
+      "@/api/*": ["../data-scraping/api/*"],
+      "@/handbooks/*": ["../data-scraping/handbooks/*"]
     }
   },
   "include": [
@@ -36,5 +38,5 @@
   ],
   "exclude": [
     "node_modules"
-  ]
+  ],
 }

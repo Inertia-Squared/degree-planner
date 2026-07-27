@@ -1,5 +1,5 @@
 import {Choice, ExtendedNode, Generic, Major, Minor, NodeTypes, Prerequisite, Program, Subject} from "@/utils/types";
-import {LogicalPrerequisite} from "../../../../data-scraping/neo4j/upload-data-to-db";
+import {LogicalPrerequisite} from "@/api/neo4j/DBUploader";
 import {studyPeriods} from "@/utils/consts";
 import {GraphEdge} from "reagraph";
 
