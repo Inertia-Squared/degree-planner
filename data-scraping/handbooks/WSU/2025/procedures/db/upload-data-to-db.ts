@@ -7,14 +7,6 @@ import {SubjectData} from "../extract/subjects/subject-scraper";
 import {DBUploader, LogicalPrerequisite, Node} from "@/api/neo4j/DBUploader";
 import {dataDir} from "@/api/directories";
 
-enum SpecialisationType {
-    testamurMajor = 0,
-    major,
-    minor,
-    concentration,
-    other
-}
-
 /**
  * todo Add teaching period nodes and connect them to subject
  *      Add assessment data nodes and connect them to subject

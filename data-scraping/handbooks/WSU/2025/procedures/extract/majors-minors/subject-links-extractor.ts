@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import {getLinkFromSubjectCode, setConfig} from "../../../../../../api/util";
+import {getLinkFromSubjectCode, setConfig} from "@/api/util";
 import {MajorMinorData} from "./major-minor-scraper";
 import {dataDir, linksDir} from "@/api/directories";
 

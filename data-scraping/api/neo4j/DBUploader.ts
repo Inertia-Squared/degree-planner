@@ -1,10 +1,13 @@
-import neo4j, {Driver, ManagedTransaction, Session, Transaction} from 'neo4j-driver';
+import neo4j, {Driver, Session, Transaction} from 'neo4j-driver';
 import 'dotenv/config';
-import fs from "fs/promises";
-import {Major, Minor, ProgramSummary, SubjectChoice, SubjectSummary} from "../../handbooks/WSU/2025/procedures/extract/programs/program-refiner";
-import {normaliseSubjectCode, setConfig, startTrackingProgress, stopTrackingProgress} from "../util";
-import {SubjectData} from "../../handbooks/WSU/2025/procedures/extract/subjects/subject-scraper";
-import {EnrollRequirements} from "../../handbooks/WSU/2025/procedures/extract/subjects/subject-refiner";
+import {normaliseSubjectCode} from "../util";
+
+// todo move these into their own top-level schema, or create a new interface and add some compatibility code to the
+//  old handbook to convert the old data structure to the new one.
+//  Shouldn't be too different from how it is now, mainly just more flexible, and better naming.
+import {Major, Minor, SubjectChoice, SubjectSummary} from "@/handbooks/WSU/2025/procedures/extract/programs/program-refiner";
+import {SubjectData} from "@/handbooks/WSU/2025/procedures/extract/subjects/subject-scraper";
+import {EnrollRequirements} from "@/handbooks/WSU/2025/procedures/extract/subjects/subject-refiner";
 
 enum SpecialisationType {
     testamurMajor = 0,
@@ -236,6 +239,9 @@ function getSubjectFromSummary(subject: SubjectSummary): SubjectData {
     return <SubjectData>globals.subjects.find(s => normaliseSubjectCode(s.code) === normaliseSubjectCode(subject.code));
 }
 
+
+// todo most of this should be plug-and-play, but some functions may need to be modified to be more generalised.
+
 export class DBUploader {
     private session: Session;
     private tx!: Transaction;
@@ -263,7 +269,6 @@ export class DBUploader {
 
     /**
      * Adds a node to the database.
-     * @param tx The transaction to use.
      * @param node The node to add.
      */
     public async addNode<T extends PropsKey>(node: Node<T>) {
@@ -276,7 +281,6 @@ export class DBUploader {
 
     /**
      * Adds or appends a property to a node.
-     * @param tx The transaction to use.
      * @param node The node to modify.
      * @param property The property to add or append.
      * @param append Whether to append the value if the property already exists.
@@ -293,7 +297,6 @@ export class DBUploader {
 
     /**
      * Links two nodes with a given relationship.
-     * @param tx The transaction to use.
      * @param nodeA The starting node.
      * @param relation The relationship type.
      * @param nodeB The ending node.
@@ -311,7 +314,6 @@ export class DBUploader {
 
     /**
      * Links a node to another node by its ID.
-     * @param tx The transaction to use.
      * @param node The starting node.
      * @param relation The relationship type.
      * @param id The ID of the ending node.
@@ -328,7 +330,6 @@ export class DBUploader {
 
     /**
      * Links a node to a subject, taking into account the subject's prerequisites.
-     * @param tx The transaction to use.
      * @param subject The subject summary.
      * @param subjectNode The subject node.
      * @param relationship The relationship type.
@@ -380,7 +381,6 @@ export class DBUploader {
 
     /**
      * Prepends a node to an existing relationship chain.
-     * @param tx The transaction to use.
      * @param startNode The node to prepend.
      * @param relation The relationship type.
      * @param endNode The node at the end of the existing chain.
@@ -397,7 +397,6 @@ export class DBUploader {
 
     /**
      * Checks if a connection exists between two nodes.
-     * @param tx The transaction to use.
      * @param startNode The starting node.
      * @param endNode The ending node.
      * @returns True if a connection exists, false otherwise.
@@ -413,7 +412,6 @@ export class DBUploader {
 
     /**
      * Checks if a specific relationship exists from a node.
-     * @param tx The transaction to use.
      * @param startNode The starting node.
      * @param relation The relationship type.
      * @param endNode An optional ending node to check for.
@@ -430,7 +428,6 @@ export class DBUploader {
 
     /**
      * Removes the connection between two nodes.
-     * @param tx The transaction to use.
      * @param startNode The starting node.
      * @param endNode The ending node.
      */
@@ -444,7 +441,6 @@ export class DBUploader {
 
     /**
      * Merges and links a subject choice node to a parent node.
-     * @param tx The transaction to use.
      * @param choiceData The subject choice data.
      * @param parentNode The parent node.
      */
@@ -504,7 +500,6 @@ export class DBUploader {
 
     /**
      * Adds a specialisation (major or minor) to the database and links it to its parent program.
-     * @param tx The transaction to use.
      * @param specialisation The specialisation data.
      * @param type The type of specialisation ('major' or 'minor').
      * @param parentProgram The parent program node.
@@ -553,7 +548,6 @@ export class DBUploader {
 
     /**
      * Generates and adds prerequisite nodes for a subject.
-     * @param tx The transaction to use.
      * @param subjectNode The subject node.
      * @param logicalPrerequisites The logical prerequisite data.
      */
@@ -586,7 +580,6 @@ export class DBUploader {
 
     /**
      * Gets the IDs of all prerequisite nodes for a given subject.
-     * @param tx The transaction to use.
      * @param subjectNode The subject node.
      * @returns An array of prerequisite node IDs.
      */
@@ -597,7 +590,6 @@ export class DBUploader {
 
     /**
      * Links a program to a subject or subject choice.
-     * @param tx The transaction to use.
      * @param programNode The program node.
      * @param subject The subject or subject choice.
      */

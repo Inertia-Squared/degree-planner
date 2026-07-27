@@ -1,6 +1,6 @@
 import playwright from 'playwright';
 import fs from 'fs/promises';
-import {startTrackingProgress, stopTrackingProgress, TimerObjectType} from "../../../../../api/util";
+import {startTrackingProgress, stopTrackingProgress, TimerObjectType} from "@/api/util";
 import {linksDir} from "@/api/directories";
 
 
